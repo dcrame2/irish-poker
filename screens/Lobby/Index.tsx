@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import style from "./../src/styles/chat.module.css";
+import style from "../../src/styles/chat.module.css";
 
 interface IMsgDataTypes {
   roomId: String | number;
@@ -45,8 +45,12 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
             Name: <b>{username}</b> and Room Id: <b>{roomId}</b>
           </p>
         </div>
-        <div>
-          {chat.map(({ roomId, user, msg, time }, key) => (
+
+        <div className="tests">
+          {users.map((user: { id: string; username: string; room: string }) => {
+            return <p>{user.username}</p>;
+          })}
+          {/* {chat.map(({ roomId, user, msg, time }, key) => (
             <div
               key={key}
               className={
@@ -65,7 +69,7 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
                 {msg}
               </h3>
             </div>
-          ))}
+          ))} */}
         </div>
         <div>
           <form onSubmit={(e) => sendData(e)}>

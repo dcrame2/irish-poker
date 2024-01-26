@@ -48,6 +48,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("start game", (userData) => {
+    console.log(userData, "userData");
     const url = `https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1`;
     axios
       .get(url)
@@ -109,7 +110,7 @@ io.on("connection", (socket) => {
   });
 });
 
-const PORT = process.env.PORT || 3010;
+const PORT = 3001;
 httpServer.listen(PORT, () => {
   console.log(`Socket.io server is running on port ${PORT}`);
 });
