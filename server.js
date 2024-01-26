@@ -29,35 +29,39 @@ io.on("connection", (socket) => {
     const user = userJoin(socket.id, data.userName, data.roomId);
 
     console.log(`User joined ${data.roomId}: ${socket.id}`);
-    console.log(user);
+    // console.log(user);
     socket.join(user.room);
+
+    io.to(user.room).emit("roomUsers", {
+      room: user.room,
+      users: getRoomUsers(user.room),
+    });
 
     // socket.join(roomId);
     // console.log(`user with id-${socket.id} joined room - ${roomId}`);
   });
 
   socket.on("send_msg", (data) => {
-    console.log(data, "DATA");
+    // console.log(data, "DATA");
     //This will send a message to a specific room ID
     socket.to(data.roomId).emit("receive_msg", data);
   });
 
   socket.on("start game", (userData) => {
-    console.log(userData, "UserData");
     const url = `https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1`;
     axios
       .get(url)
       .then((data) => {
-        console.log(data, "MORE DATA");
         const singlePlayer = (deckId, users) => {
           axios
             .get(
-              `https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=4
-            
+              `https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=${
+                userData.users.length * 4
+              }
               `
             )
             .then((data) => {
-              console.log(data, "card data");
+              console.log(data.data.cards, "card data");
               // const players = getPlayersCards(data.data.cards, 4);
               // newArr = players.map((player, i) => {
               //   if (i === 0) {

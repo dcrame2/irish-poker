@@ -1,6 +1,6 @@
 import styles from "../styles/page.module.css";
 import { io } from "socket.io-client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ChatPage from "../../components/chat";
 
 export default function Home() {
@@ -8,6 +8,7 @@ export default function Home() {
   const [userName, setUserName] = useState("");
   const [showSpinner, setShowSpinner] = useState(false);
   const [roomId, setroomId] = useState("");
+  const [users, setUsers] = useState([]);
 
   let socket: any;
   socket = io("http://localhost:3010");
@@ -21,11 +22,17 @@ export default function Home() {
       setTimeout(() => {
         setShowChat(true);
         setShowSpinner(false);
-      }, 4000);
+      }, 1000);
     } else {
       alert("Please fill in Username and Room Id");
     }
   };
+
+  useEffect(() => {
+    socket.on("roomUsers", ({ users }: any) => {
+      setUsers(users);
+    });
+  }, [socket]);
 
   return (
     <div>
@@ -56,7 +63,12 @@ export default function Home() {
         </button>
       </div>
       <div style={{ display: !showChat ? "none" : "" }}>
-        <ChatPage socket={socket} roomId={roomId} username={userName} />
+        <ChatPage
+          users={users}
+          socket={socket}
+          roomId={roomId}
+          username={userName}
+        />
       </div>
     </div>
   );

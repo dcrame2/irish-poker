@@ -9,11 +9,11 @@ interface IMsgDataTypes {
   time: String;
 }
 
-const ChatPage = ({ socket, username, roomId }: any) => {
+const ChatPage = ({ socket, username, roomId, users }: any) => {
   const [currentMsg, setCurrentMsg] = useState("");
   const [chat, setChat] = useState<IMsgDataTypes[]>([]);
 
-  const sendData = async (e: React.FormEvent<HTMLFormElement>) => {
+  const sendData = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (currentMsg !== "") {
       const msgData: IMsgDataTypes = {
@@ -25,8 +25,8 @@ const ChatPage = ({ socket, username, roomId }: any) => {
           ":" +
           new Date(Date.now()).getMinutes(),
       };
-      await socket.emit("start game", { username, roomId });
-      await socket.emit("send_msg", msgData);
+      socket.emit("start game", { users, roomId });
+      socket.emit("send_msg", msgData);
       setCurrentMsg("");
     }
   };
