@@ -22,10 +22,19 @@ const ImageOfCard = styled.img`
 
 const IndividualCardContainer = styled.div`
   display: flex;
+  flex-direction: column;
+  gap: 20px;
 `;
 
 const ButtonsContainer = styled.div`
   display: flex;
+  justify-content: space-between;
+`;
+
+const CardsContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
 `;
 
 interface IMsgDataTypes {
@@ -66,14 +75,8 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
     socket.emit("start game", { users, roomId, cardData: playerData });
     setGameStarted(true);
   };
-  // await socket.emit("send_card_data", {
-  //   users,
-  //   roomId,
-  //   cardData: playerData,
-  // });
 
   useEffect(() => {
-    //TODO: I need to do something about this with the card data going back and forth so I dont have to keep moving it back and forth. Little confusing.
     socket.on("receive_msg", (data: IMsgDataTypes) => {
       console.log(data, "recieve_msg");
       setChat((pre) => [...pre, data]);
@@ -84,11 +87,6 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
       console.log("Received allPlayersCards data:", playersCards);
       setPlayerData(playersCards);
     });
-
-    // socket.on("recieve_card_data", (data: []) => {
-    //   console.log(data, "received card data");
-    //   // setPlayerData(data);
-    // });
   }, [socket]);
 
   // Type for a Signle Card that the Card Game API give me
@@ -162,20 +160,38 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
               console.log(player, "player");
               return (
                 <IndividualCardContainer>
-                  {player.map((singleCard: SingleCard) => {
-                    return (
-                      <>
-                        <IndividualCard>
-                          <p>{singleCard.player}</p>
-                          <ImageOfCard src={singleCard.image} />
-                        </IndividualCard>
-                        {/* <ButtonsContainer>
-                          <button>Red</button>
-                          <button>Green</button>
-                        </ButtonsContainer> */}
-                      </>
-                    );
-                  })}
+                  <CardsContainer>
+                    {player.map((singleCard: SingleCard) => {
+                      return (
+                        <>
+                          <IndividualCard>
+                            <p>{singleCard.player}</p>
+                            <ImageOfCard src={singleCard.image} />
+                          </IndividualCard>
+                        </>
+                      );
+                    })}
+                  </CardsContainer>
+                  <ButtonsContainer>
+                    <div className="btn-container">
+                      <button>Red</button>
+                      <button>Black</button>
+                    </div>
+                    <div className="btn-container">
+                      <button>Lower</button>
+                      <button>Higher</button>
+                    </div>
+                    <div className="btn-container">
+                      <button>In</button>
+                      <button>Out</button>
+                    </div>
+                    <div className="btn-container">
+                      <button>Club</button>
+                      <button>Spade</button>
+                      <button>Diamond</button>
+                      <button>Heart</button>
+                    </div>
+                  </ButtonsContainer>
                 </IndividualCardContainer>
               );
             })

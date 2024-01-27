@@ -87,7 +87,12 @@ io.on("connection", (socket) => {
                   .slice(startIndex, endIndex)
                   .map((obj, index) => {
                     // Add a 'player' property to each object in the subarray
-                    return { ...obj, player: `player${i + 1}_${index + 1}` };
+                    return {
+                      ...obj,
+                      player: `player${i + 1}_${index + 1}_${
+                        userData.users[i].username
+                      }`,
+                    };
                   });
                 allPlayersCards.push(singlePlayersData);
               }
