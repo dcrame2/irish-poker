@@ -62,33 +62,35 @@ io.on("connection", (socket) => {
               `
             )
             .then((data) => {
-              console.log(data.data.cards, "card data");
-              // const players = getPlayersCards(data.data.cards, 4);
-              // newArr = players.map((player, i) => {
-              //   if (i === 0) {
-              //     player.player1 = userData.users[0].id;
-              //   }
-              //   if (i === 1) {
-              //     player.player2 = userData.users[1].id;
-              //   }
-              //   if (i === 2) {
-              //     player.player3 = userData.users[2].id;
-              //   }
-              //   if (i === 3) {
-              //     player.player4 = userData.users[3].id;
-              //   }
-              //   if (i === 4) {
-              //     player.player5 = userData.users[4].id;
-              //   }
-              //   if (i === 5) {
-              //     player.player6 = userData.users[5].id;
-              //   }
-              //   return player;
-              // });
-              // console.log(newArr);
-              // console.log(userData.room);
-              // io.to(userData.room).emit("result", newArr);
-              // return newArr;
+              const allPlayersCardsUnorganized = data.data.cards;
+              // console.log(allPlayersCards, "card data");
+
+              // Number of cards you want in each players hand
+              let cardsPerPlayer = 4;
+
+              // Calculate the number of subarrays needed
+              let numberOfPlayers = Math.ceil(
+                allPlayersCardsUnorganized.length / cardsPerPlayer
+              );
+
+              // Initialize an array to store the subarrays
+              let allPlayersCards = [];
+
+              // Loop through and create subarrays
+              for (let i = 0; i < numberOfPlayers; i++) {
+                let startIndex = i * cardsPerPlayer;
+                let endIndex = startIndex + cardsPerPlayer;
+                let singlePlayersData = allPlayersCardsUnorganized
+                  .slice(startIndex, endIndex)
+                  .map((obj, index) => {
+                    // Add a 'player' property to each object in the subarray
+                    return { ...obj, player: `player${i + 1}_${index + 1}` };
+                  });
+                allPlayersCards.push(singlePlayersData);
+              }
+              console.log(allPlayersCards);
+
+              socket.emit("allPlayersCards", allPlayersCards);
             })
             .catch((err) => {
               console.log(`error ${err}`);

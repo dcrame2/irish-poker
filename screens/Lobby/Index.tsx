@@ -13,6 +13,9 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
   const [currentMsg, setCurrentMsg] = useState("");
   const [chat, setChat] = useState<IMsgDataTypes[]>([]);
 
+  const [playerData, setPlayerData] = useState([]);
+  console.log(playerData);
+
   const sendData = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (currentMsg !== "") {
@@ -35,7 +38,26 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
     socket.on("receive_msg", (data: IMsgDataTypes) => {
       setChat((pre) => [...pre, data]);
     });
+
+    // Listen for the 'subarraysData' event
+    socket.on("allPlayersCards", (playersCards: []) => {
+      console.log("Received allPlayersCards data:", playersCards);
+      setPlayerData(playersCards);
+      // TODO: I will write code here that will need to do kind of like the messages above and I will need to add another toggle that says the images were shown
+      // Do whatever you need to do with the subarrays data on the client side
+    });
   }, [socket]);
+
+  type SingleCard = {
+    player: string;
+    image: string;
+    code: string;
+    images: [];
+    suit: string;
+    value: string;
+  };
+
+  type Player = SingleCard[];
 
   return (
     <div className={style.chat_div}>
@@ -50,7 +72,7 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
           {users.map((user: { id: string; username: string; room: string }) => {
             return <p>{user.username}</p>;
           })}
-          {/* {chat.map(({ roomId, user, msg, time }, key) => (
+          {chat.map(({ roomId, user, msg, time }, key) => (
             <div
               key={key}
               className={
@@ -69,7 +91,7 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
                 {msg}
               </h3>
             </div>
-          ))} */}
+          ))}
         </div>
         <div>
           <form onSubmit={(e) => sendData(e)}>
@@ -83,6 +105,21 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
             <button className={style.chat_button}>Send</button>
           </form>
         </div>
+
+        {playerData
+          ? playerData.map((player: Player) => {
+              console.log(player, "player");
+              return player.map((singleCard: SingleCard) => {
+                return (
+                  <>
+                    <p>{singleCard.player}</p>
+                    <img src={singleCard.image} />
+                  </>
+                );
+              });
+              //
+            })
+          : ""}
       </div>
     </div>
   );
