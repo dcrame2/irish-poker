@@ -29,7 +29,6 @@ io.on("connection", (socket) => {
     const user = userJoin(socket.id, data.userName, data.roomId);
 
     console.log(`User joined ${data.roomId}: ${socket.id}`);
-    // console.log(user);
     socket.join(user.room);
 
     io.to(user.room).emit("roomUsers", {
@@ -41,8 +40,13 @@ io.on("connection", (socket) => {
     // console.log(`user with id-${socket.id} joined room - ${roomId}`);
   });
 
+  socket.on("send_card_data", (data) => {
+    console.log(data.cardData, "send_card_data");
+    socket.to(data.roomId).emit("recieve_card_data", data);
+  });
+
   socket.on("send_msg", (data) => {
-    // console.log(data, "DATA");
+    console.log(data, "send_msg");
     //This will send a message to a specific room ID
     socket.to(data.roomId).emit("receive_msg", data);
   });
@@ -58,8 +62,7 @@ io.on("connection", (socket) => {
             .get(
               `https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=${
                 userData.users.length * 4
-              }
-              `
+              }`
             )
             .then((data) => {
               const allPlayersCardsUnorganized = data.data.cards;
@@ -88,10 +91,10 @@ io.on("connection", (socket) => {
                   });
                 allPlayersCards.push(singlePlayersData);
               }
-              console.log(allPlayersCards);
+              console.log(allPlayersCards, "allPlayersCards");
 
               socket.emit("allPlayersCards", allPlayersCards);
-              io.to(userData.room).emit("allPlayersCards", allPlayersCards);
+              io.to(userData.roomId).emit("allPlayersCards", allPlayersCards);
             })
             .catch((err) => {
               console.log(`error ${err}`);

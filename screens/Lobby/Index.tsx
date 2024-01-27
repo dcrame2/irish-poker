@@ -40,7 +40,7 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
   const [chat, setChat] = useState<IMsgDataTypes[]>([]);
 
   const [playerData, setPlayerData] = useState([]);
-  console.log(playerData);
+  console.log(playerData, "player data");
 
   const sendData = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -66,21 +66,32 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
     socket.emit("start game", { users, roomId, cardData: playerData });
     setGameStarted(true);
   };
+  // await socket.emit("send_card_data", {
+  //   users,
+  //   roomId,
+  //   cardData: playerData,
+  // });
 
   useEffect(() => {
+    //TODO: I need to do something about this with the card data going back and forth so I dont have to keep moving it back and forth. Little confusing.
     socket.on("receive_msg", (data: IMsgDataTypes) => {
+      console.log(data, "recieve_msg");
       setChat((pre) => [...pre, data]);
     });
 
-    // Listen for the 'subarraysData' event
+    // Listen for the 'allPlayersCards' event
     socket.on("allPlayersCards", (playersCards: []) => {
       console.log("Received allPlayersCards data:", playersCards);
       setPlayerData(playersCards);
-      // TODO: I will write code here that will need to do kind of like the messages above and I will need to add another toggle that says the images were shown
-      // Do whatever you need to do with the allPlayersCards data on the client side
     });
+
+    // socket.on("recieve_card_data", (data: []) => {
+    //   console.log(data, "received card data");
+    //   // setPlayerData(data);
+    // });
   }, [socket]);
 
+  // Type for a Signle Card that the Card Game API give me
   type SingleCard = {
     player: string;
     image: string;
@@ -90,6 +101,7 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
     value: string;
   };
 
+  // All the cards in the Player array
   type Player = SingleCard[];
 
   return (
@@ -119,7 +131,7 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
                 className={style.chatProfileSpan}
                 style={{ textAlign: user == username ? "right" : "left" }}
               >
-                {user.charAt(0)}
+                {user}
               </span>
               <h3 style={{ textAlign: user == username ? "right" : "left" }}>
                 {msg}
