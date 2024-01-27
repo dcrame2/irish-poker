@@ -91,12 +91,12 @@ io.on("connection", (socket) => {
               console.log(allPlayersCards);
 
               socket.emit("allPlayersCards", allPlayersCards);
+              io.to(userData.room).emit("allPlayersCards", allPlayersCards);
             })
             .catch((err) => {
               console.log(`error ${err}`);
             });
         };
-
         // Process the data and send a response back to the client
         singlePlayer(data.data.deck_id, data.users);
       })
