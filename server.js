@@ -21,6 +21,8 @@ const io = new Server(httpServer, {
   },
 });
 
+let storedUserData;
+
 io.on("connection", (socket) => {
   console.log("A user connected:", socket.id);
 
@@ -51,8 +53,19 @@ io.on("connection", (socket) => {
     socket.to(data.roomId).emit("receive_msg", data);
   });
 
+  // Listen for the 'updateCardData' event
+  socket.on("updateCardData", (data) => {
+    console.log(data.updatedPlayerData, "updateCardData");
+    // Broadcast the updated card data to all clients in the same room
+    socket.emit("allPlayersCards", data.updatedPlayerData);
+    socket
+      .to(storedUserData.roomId)
+      .emit("allPlayersCards", data.updatedPlayerData);
+  });
+
   socket.on("start game", (userData) => {
     console.log(userData, "userData");
+    storedUserData = userData;
     const url = `https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1`;
     axios
       .get(url)
@@ -111,8 +124,6 @@ io.on("connection", (socket) => {
       .catch((err) => {
         console.log(`error ${err}`);
       });
-
-    io.to(userData.room).emit("game screen");
   });
 
   socket.on("disconnect", () => {
