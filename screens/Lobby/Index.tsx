@@ -393,11 +393,11 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
               );
             })
           : ""}
+        {isCurrentPlayer &&
+          isCurrentPlayer.map((player) => {
+            return <p>{player.player}</p>;
+          })}
       </CardContainer>
-      {isCurrentPlayer &&
-        isCurrentPlayer.map((player) => {
-          return <p>{player.player}</p>;
-        })}
     </Container>
   );
 };
