@@ -102,9 +102,8 @@ io.on("connection", (socket) => {
                     // Add a 'player' property to each object in the subarray
                     return {
                       ...obj,
-                      player: `player${i + 1}_${index + 1}_${
-                        userData.users[i].username
-                      }`,
+                      player: `${userData.users[i].username}`,
+                      socketId: `${userData.users[i].id}`,
                     };
                   });
                 allPlayersCards.push(singlePlayersData);
