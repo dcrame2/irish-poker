@@ -45,7 +45,7 @@ interface IMsgDataTypes {
 }
 
 const ChatPage = ({ socket, username, roomId, users }: any) => {
-  // console.log(socket, "SOCKKETTTT");
+  // console.log(socket.id, "SOCKKETTTT");
   // console.log(users, "USERS");
   const [currentMsg, setCurrentMsg] = useState("");
   const [chat, setChat] = useState<IMsgDataTypes[]>([]);
@@ -56,17 +56,17 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
   const [showFirstCard, setShowFirstCard] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
 
-  console.log(selectedCard, "currentPlayerCard");
+  // console.log(selectedCard, "currentPlayerCard");
 
-  const [selectedColor, setSelectedColor] = useState(null); // State to store the selected color
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0); // State to track the current player index
 
   const [nextPlayerIndex, setNextPlayerIndex] = useState(0);
-  const [isCurrentPlayer, setIsCurrentPlayer] = useState(playerData[0]);
+  const [isCurrentPlayer, setIsCurrentPlayer] = useState(null);
+  // playerData[0]
 
   //TODO: need to set current player to the playerData[0] and then increment them. need to figure out how to set the state for a promised object
 
-  console.log(currentPlayerIndex, "yooooo current player index");
+  // console.log(currentPlayerIndex, "yooooo current player index");
 
   // console.log(isCurrentPlayer, "CURRENT PLATER");
 
@@ -89,49 +89,13 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
       setCurrentMsg("");
     }
   };
-  const [gameStarted, setGameStarted] = useState(false);
 
   const startGameHandler = () => {
     // Emit card data to all players
     socket.emit("start game", { users, roomId, cardData: playerData });
-    setGameStarted(true);
   };
 
   const redOrBlackHandler = () => {
-    //   console.log(playerData, "playerData Checkkkk");
-    //   // Show the first card of the current player
-    //   const currentPlayerCard: SingleCard = playerData[currentPlayerIndex][0];
-    //   setSelectedCard(currentPlayerCard);
-
-    //   // Add a new key-value pair to the card object
-    //   const updatedCard: SingleCard = {
-    //     ...currentPlayerCard,
-    //     selectedColor: "red",
-    //   }; // Change 'red' to the selected color
-    //   console.log(updatedCard, "updatedCard");
-
-    //   // Create a new player list with the updated card
-    //   const updatedPlayerData: PlayerData = playerData.map(
-    //     (player: Player, index) =>
-    //       index === currentPlayerIndex
-    //         ? player.map((card) =>
-    //             card === currentPlayerCard ? updatedCard : card
-    //           )
-    //         : player
-    //   );
-
-    //   console.log({ updatedPlayerData }, "updated");
-
-    //   // Emit the updated player list to the server
-    //   socket.emit("updateCardData", { updatedPlayerData });
-
-    //   // Move to the next player
-    //   setCurrentPlayerIndex((prevIndex) => (prevIndex + 1) % playerData.length);
-    // if (!isCurrentPlayer) {
-    //   // Do nothing if not the current player
-    //   return;
-    // }
-
     const currentPlayerCard: SingleCard = playerData[currentPlayerIndex][0];
 
     // console.log(currentPlayerCard, "currentPlayerCard");
@@ -152,7 +116,7 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
           : player
     );
 
-    console.log(updatedPlayerData, "updated");
+    // console.log(updatedPlayerData, "updated");
 
     socket.emit("updateCardData", {
       updatedPlayerData,
@@ -160,7 +124,7 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
 
     setCurrentPlayerIndex((prevIndex) => (prevIndex + 1) % playerData.length);
     setIsCurrentPlayer(playerData[currentPlayerIndex]);
-    // console.log(playerData[currentPlayerIndex], "Currentplayer");
+    console.log(playerData[currentPlayerIndex], "Currentplayer");
   };
 
   const overUnderHandler = () => {
@@ -197,6 +161,7 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
     // Move to the next player
 
     setCurrentPlayerIndex((prevIndex) => (prevIndex + 1) % playerData.length);
+    setIsCurrentPlayer(playerData[currentPlayerIndex]);
   };
 
   const inOrOutHandler = () => {
@@ -211,7 +176,7 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
       ...currentPlayerCard,
       selectedColor: "red",
     }; // Change 'red' to the selected color
-    console.log(updatedCard, "updatedCard");
+    // console.log(updatedCard, "updatedCard");
 
     // Create a new player list with the updated card
     const updatedPlayerData: PlayerData = playerData.map(
@@ -233,6 +198,7 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
     // Move to the next player
 
     setCurrentPlayerIndex((prevIndex) => (prevIndex + 1) % playerData.length);
+    setIsCurrentPlayer(playerData[currentPlayerIndex]);
   };
   const suitHandler = () => {
     // Show the first card of the current player
@@ -267,6 +233,7 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
 
     // Move to the next player
     setCurrentPlayerIndex((prevIndex) => (prevIndex + 1) % playerData.length);
+    setIsCurrentPlayer(playerData[currentPlayerIndex]);
   };
 
   useEffect(() => {
@@ -279,16 +246,25 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
     socket.on("allPlayersCards", (playersCards: []) => {
       console.log("Received allPlayersCards data:", playersCards);
       setPlayerData(playersCards);
+      // setIsCurrentPlayer(playerData[0]);
+      // Initialize isCurrentPlayer with the first playerData
     });
 
     socket.on("receive_updatedCardData", (updatedPlayersCards: []) => {
-      console.log("Received updatedPlayersCards data:", updatedPlayersCards);
+      // console.log("Received updatedPlayersCards data:", updatedPlayersCards);
       setPlayerData(updatedPlayersCards);
     });
 
-    console.log(playerData[currentPlayerIndex], "Currentplayer");
     setIsCurrentPlayer(playerData[currentPlayerIndex]);
-  }, [socket, currentPlayerIndex]);
+
+    // if (isCurrentPlayer) {
+    // console.log(isCurrentPlayer, "Currentplayer");
+    // }
+  }, [socket, currentPlayerIndex, isCurrentPlayer]);
+
+  useEffect(() => {
+    console.log(isCurrentPlayer, "Currentplayer");
+  }, [isCurrentPlayer]);
 
   // Type for a Signle Card that the Card Game API give me
   type SingleCard = {
@@ -382,38 +358,46 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
                     })}
                   </CardsContainer>
                   <ButtonsContainer>
-                    {/* {socket.id === users[0].id && ( */}
+                    {/* {isCurrentPlayer &&
+                      isCurrentPlayer[0].player === username && ( */}
                     <div className="btn-container">
                       <button onClick={redOrBlackHandler}>Red</button>
                       <button onClick={redOrBlackHandler}>Black</button>
                     </div>
                     {/* )} */}
-                    {playerData[currentPlayerIndex] && (
-                      <div className="btn-container">
-                        <button onClick={overUnderHandler}>Lower</button>
-                        <button onClick={overUnderHandler}>Higher</button>
-                      </div>
-                    )}
-                    {playerData[currentPlayerIndex] && (
-                      <div className="btn-container">
-                        <button onClick={inOrOutHandler}>In</button>
-                        <button onClick={inOrOutHandler}>Out</button>
-                      </div>
-                    )}
-                    {playerData[currentPlayerIndex] && (
-                      <div className="btn-container">
-                        <button onClick={suitHandler}>Club</button>
-                        <button onClick={suitHandler}>Spade</button>
-                        <button onClick={suitHandler}>Diamond</button>
-                        <button onClick={suitHandler}>Heart</button>
-                      </div>
-                    )}
+                    {/* {isCurrentPlayer ||
+                      (playerData[1] && ( */}
+                    <div className="btn-container">
+                      <button onClick={overUnderHandler}>Lower</button>
+                      <button onClick={overUnderHandler}>Higher</button>
+                    </div>
+                    {/* ))} */}
+                    {/* {isCurrentPlayer ||
+                      (playerData[0] && ( */}
+                    <div className="btn-container">
+                      <button onClick={inOrOutHandler}>In</button>
+                      <button onClick={inOrOutHandler}>Out</button>
+                    </div>
+                    {/* ))}
+                     {isCurrentPlayer ||
+                       (playerData[3] && ( */}
+                    <div className="btn-container">
+                      <button onClick={suitHandler}>Club</button>
+                      <button onClick={suitHandler}>Spade</button>
+                      <button onClick={suitHandler}>Diamond</button>
+                      <button onClick={suitHandler}>Heart</button>
+                    </div>
+                    {/* ))} */}
                   </ButtonsContainer>
                 </IndividualCardContainer>
               );
             })
           : ""}
       </CardContainer>
+      {isCurrentPlayer &&
+        isCurrentPlayer.map((player) => {
+          return <p>{player.player}</p>;
+        })}
     </Container>
   );
 };
