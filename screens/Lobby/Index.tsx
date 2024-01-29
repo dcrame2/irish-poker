@@ -45,21 +45,30 @@ interface IMsgDataTypes {
 }
 
 const ChatPage = ({ socket, username, roomId, users }: any) => {
-  console.log(socket, "SOCKKETTTT");
-  console.log(users, "USERS");
+  // console.log(socket, "SOCKKETTTT");
+  // console.log(users, "USERS");
   const [currentMsg, setCurrentMsg] = useState("");
   const [chat, setChat] = useState<IMsgDataTypes[]>([]);
 
   const [playerData, setPlayerData] = useState([]);
+  // console.log(playerData, "PLAYER DATA");
 
   const [showFirstCard, setShowFirstCard] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
 
+  console.log(selectedCard, "currentPlayerCard");
+
   const [selectedColor, setSelectedColor] = useState(null); // State to store the selected color
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0); // State to track the current player index
-  const [isCurrentPlayer, setIsCurrentPlayer] = useState(false);
+
+  const [nextPlayerIndex, setNextPlayerIndex] = useState(0);
+  const [isCurrentPlayer, setIsCurrentPlayer] = useState(playerData[0]);
+
+  //TODO: need to set current player to the playerData[0] and then increment them. need to figure out how to set the state for a promised object
 
   console.log(currentPlayerIndex, "yooooo current player index");
+
+  // console.log(isCurrentPlayer, "CURRENT PLATER");
 
   // console.log(playerData, "all player data");
 
@@ -125,7 +134,7 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
 
     const currentPlayerCard: SingleCard = playerData[currentPlayerIndex][0];
 
-    console.log(currentPlayerCard, "currentPlayerCard");
+    // console.log(currentPlayerCard, "currentPlayerCard");
     setSelectedCard(currentPlayerCard);
 
     const updatedCard: SingleCard = {
@@ -145,10 +154,13 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
 
     console.log(updatedPlayerData, "updated");
 
-    socket.emit("updateCardData", { updatedPlayerData });
+    socket.emit("updateCardData", {
+      updatedPlayerData,
+    });
 
     setCurrentPlayerIndex((prevIndex) => (prevIndex + 1) % playerData.length);
-    console.log(playerData[currentPlayerIndex], "Currentplayer");
+    setIsCurrentPlayer(playerData[currentPlayerIndex]);
+    // console.log(playerData[currentPlayerIndex], "Currentplayer");
   };
 
   const overUnderHandler = () => {
@@ -178,7 +190,9 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
     // console.log(updatedPlayerData, "updated");
 
     // Emit the updated player list to the server
-    socket.emit("updateCardData", { updatedPlayerData });
+    socket.emit("updateCardData", {
+      updatedPlayerData,
+    });
 
     // Move to the next player
 
@@ -212,7 +226,9 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
     // console.log(updatedPlayerData, "updated");
 
     // Emit the updated player list to the server
-    socket.emit("updateCardData", { updatedPlayerData });
+    socket.emit("updateCardData", {
+      updatedPlayerData,
+    });
 
     // Move to the next player
 
@@ -245,7 +261,9 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
     // console.log(updatedPlayerData, "updated");
 
     // Emit the updated player list to the server
-    socket.emit("updateCardData", { updatedPlayerData });
+    socket.emit("updateCardData", {
+      updatedPlayerData,
+    });
 
     // Move to the next player
     setCurrentPlayerIndex((prevIndex) => (prevIndex + 1) % playerData.length);
@@ -269,10 +287,8 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
     });
 
     console.log(playerData[currentPlayerIndex], "Currentplayer");
-    // setIsCurrentPlayer(
-    //   playerData[currentPlayerIndex][0]?.socketId === users?.username
-    // );
-  }, [socket]);
+    setIsCurrentPlayer(playerData[currentPlayerIndex]);
+  }, [socket, currentPlayerIndex]);
 
   // Type for a Signle Card that the Card Game API give me
   type SingleCard = {
@@ -287,7 +303,7 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
 
   // All the cards in the Player array
   type Player = SingleCard[];
-  type PlayerData = SingleCard[][];
+  type PlayerData = {};
 
   return (
     <Container className={style.chat_div}>
