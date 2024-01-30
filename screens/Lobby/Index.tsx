@@ -353,63 +353,63 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
       <CardContainer>
         {allGameData
           ? allGameData.cardData.map((player: Player, playerIndex: number) => {
-              // console.log(player, "seperate players four cards");
               return (
-                <IndividualCardContainer>
-                  <CardsContainer>
-                    {player.map((singleCard: SingleCard, index: number) => {
-                      // console.log(singleCard, "sbingle");
-                      return (
-                        <>
-                          <IndividualCard key={`player-${index}`}>
-                            <p>{singleCard.player}</p>
-                            {singleCard.selectedColor ? (
-                              <ImageOfCard src={singleCard.image} />
-                            ) : (
-                              <ImageOfCard src="green_card.png" />
-                            )}
-                          </IndividualCard>
-                        </>
-                      );
-                    })}
-                  </CardsContainer>
-                  <ButtonsContainer>
-                    {users[currentPlayerIndex].username === username &&
-                      !allGameData?.cardData[currentPlayerIndex][0]
-                        .selectedColor && (
-                        <div className="btn-container">
-                          <button onClick={redOrBlackHandler}>Red</button>
-                          <button onClick={redOrBlackHandler}>Black</button>
-                        </div>
-                      )}
-                    {users[currentPlayerIndex].username === username &&
-                      !allGameData?.cardData[currentPlayerIndex][1]
-                        .selectedColor && (
-                        <div className="btn-container">
-                          <button onClick={overUnderHandler}>Lower</button>
-                          <button onClick={overUnderHandler}>Higher</button>
-                        </div>
-                      )}
-                    {users[currentPlayerIndex].username === username &&
-                      !allGameData?.cardData[currentPlayerIndex][2]
-                        .selectedColor && (
-                        <div className="btn-container">
-                          <button onClick={inOrOutHandler}>In</button>
-                          <button onClick={inOrOutHandler}>Out</button>
-                        </div>
-                      )}
-                    {users[currentPlayerIndex].username === username &&
-                      !allGameData?.cardData[currentPlayerIndex][3]
-                        .selectedColor && (
-                        <div className="btn-container">
-                          <button onClick={suitHandler}>Club</button>
-                          <button onClick={suitHandler}>Spade</button>
-                          <button onClick={suitHandler}>Diamond</button>
-                          <button onClick={suitHandler}>Heart</button>
-                        </div>
-                      )}
-                  </ButtonsContainer>
-                </IndividualCardContainer>
+                <>
+                  <p>{player[playerIndex].player}</p>
+                  <IndividualCardContainer>
+                    <CardsContainer>
+                      {player.map((singleCard: SingleCard, index: number) => {
+                        return (
+                          <>
+                            <IndividualCard key={`player-${index}`}>
+                              {singleCard.selectedColor ? (
+                                <ImageOfCard src={singleCard.image} />
+                              ) : (
+                                <ImageOfCard src="green_card.png" />
+                              )}
+                            </IndividualCard>
+                          </>
+                        );
+                      })}
+                    </CardsContainer>
+                    <ButtonsContainer>
+                      {users[currentPlayerIndex].username === username &&
+                        !allGameData?.cardData[currentPlayerIndex][0]
+                          .selectedColor && (
+                          <div className="btn-container">
+                            <button onClick={redOrBlackHandler}>Red</button>
+                            <button onClick={redOrBlackHandler}>Black</button>
+                          </div>
+                        )}
+                      {users[currentPlayerIndex].username === username &&
+                        !allGameData?.cardData[currentPlayerIndex][1]
+                          .selectedColor && (
+                          <div className="btn-container">
+                            <button onClick={overUnderHandler}>Lower</button>
+                            <button onClick={overUnderHandler}>Higher</button>
+                          </div>
+                        )}
+                      {users[currentPlayerIndex].username === username &&
+                        !allGameData?.cardData[currentPlayerIndex][2]
+                          .selectedColor && (
+                          <div className="btn-container">
+                            <button onClick={inOrOutHandler}>In</button>
+                            <button onClick={inOrOutHandler}>Out</button>
+                          </div>
+                        )}
+                      {users[currentPlayerIndex].username === username &&
+                        !allGameData?.cardData[currentPlayerIndex][3]
+                          .selectedColor && (
+                          <div className="btn-container">
+                            <button onClick={suitHandler}>Club</button>
+                            <button onClick={suitHandler}>Spade</button>
+                            <button onClick={suitHandler}>Diamond</button>
+                            <button onClick={suitHandler}>Heart</button>
+                          </div>
+                        )}
+                    </ButtonsContainer>
+                  </IndividualCardContainer>
+                </>
               );
             })
           : ""}
