@@ -61,8 +61,6 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
 
   const [selectedCard, setSelectedCard] = useState({});
 
-  // console.log(selectedCard, "currentPlayerCard");
-
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0); // State to track the current player index
 
   const [allGameData, setAllGameData] = useState<GameData>();
@@ -282,7 +280,7 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
       setCurrentPlayerIndex(data);
     });
     setIsCurrentPlayer(allGameData?.cardData[currentPlayerIndex]);
-  }, [socket, currentPlayerIndex, , playerData, allGameData]);
+  }, [socket, currentPlayerIndex, playerData, allGameData]);
 
   // Type for a Signle Card that the Card Game API give me
   type SingleCard = {
@@ -308,7 +306,6 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
             Name: <b>{username}</b> and Room Id: <b>{roomId}</b>
           </p>
         </div>
-
         <div className="tests">
           {users.map((user: { id: string; username: string; room: string }) => {
             return <p>{user.username} </p>;
@@ -352,6 +349,7 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
           )}
         </div>
       </div>
+
       <CardContainer>
         {allGameData
           ? allGameData.cardData.map((player: Player, playerIndex: number) => {
@@ -415,17 +413,8 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
               );
             })
           : ""}
-        <p>
-          {
-            allGameData?.users[currentPlayerIndex]?.username
-
-            // isCurrentPlayer &&
-            //   isCurrentPlayer.map((player) => {
-            //     return <p>{player.player}</p>;
-            //   })
-          }
-        </p>
       </CardContainer>
+      {currentPlayerIndex}
     </Container>
   );
 };
