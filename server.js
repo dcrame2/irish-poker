@@ -42,9 +42,16 @@ io.on("connection", (socket) => {
     // console.log(`user with id-${socket.id} joined room - ${roomId}`);
   });
 
-  socket.on("send_card_data", (data) => {
-    console.log(data.cardData, "send_card_data");
-    socket.to(data.roomId).emit("recieve_card_data", data);
+  socket.on("current_index", (data) => {
+    console.log(data, "send_card_data");
+
+    data.currentPlayerIndex =
+      (data.currentPlayerIndex + 1) % data.cardData.length;
+    socket.emit("receive_updatedIndex", data.currentPlayerIndex);
+    socket
+      .to(data.roomId)
+      .emit("receive_updatedIndex", data.currentPlayerIndex);
+    // socket.to(data.roomId).emit("recieve_card_data", data);
   });
 
   socket.on("send_msg", (data) => {
@@ -55,15 +62,19 @@ io.on("connection", (socket) => {
 
   // Listen for the 'updateCardData' event
   socket.on("updateCardData", (data) => {
-    console.log(data.updatedPlayerData, "updateCardData");
+    console.log(data.cardData, "updateCardData");
     // Broadcast the updated card data to all clients in the same room
-    socket.emit("allPlayersCards", data.updatedPlayerData);
-    socket
-      .to(storedUserData.roomId)
-      .emit("allPlayersCards", data.updatedPlayerData);
+    socket.emit("receive_updatedCardData", data.cardData);
+    socket.to(data.roomId).emit("receive_updatedCardData", data.cardData);
   });
 
-  socket.on("start game", (userData) => {
+  socket.on("start game", (data) => {
+    console.log(data, "START GAME");
+    socket.emit("allGameData", data);
+    socket.to(data.roomId).emit("allGameData", data);
+  });
+
+  socket.on("lockin_players", (userData) => {
     console.log(userData, "userData");
     storedUserData = userData;
     const url = `https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1`;
