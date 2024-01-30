@@ -261,22 +261,15 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
 
   useEffect(() => {
     socket.on("receive_msg", (data: IMsgDataTypes) => {
-      // console.log(data, "recieve_msg");
       setChat((pre) => [...pre, data]);
     });
 
-    // Listen for the 'allPlayersCards' event
     socket.on("allPlayersCards", (playersCards: []) => {
       console.log("Received allPlayersCards data:", playersCards);
       setPlayerData(playersCards);
     });
 
-    socket.on("fresh_data", (data: any) => {
-      console.log("fresh_data:", data);
-    });
-
     socket.on("receive_updatedCardData", (updatedPlayersCards: []) => {
-      // console.log("Received updatedPlayersCards data:", updatedPlayersCards);
       setAllGameData({ users, roomId, cardData: updatedPlayersCards });
     });
 
@@ -289,15 +282,7 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
       setCurrentPlayerIndex(data);
     });
     setIsCurrentPlayer(allGameData?.cardData[currentPlayerIndex]);
-
-    // if (isCurrentPlayer) {
-    // console.log(isCurrentPlayer, "Currentplayer");
-    // }
-  }, [socket, currentPlayerIndex, isCurrentPlayer, playerData, allGameData]);
-
-  useEffect(() => {
-    console.log(isCurrentPlayer, "Currentplayer");
-  }, [isCurrentPlayer]);
+  }, [socket, currentPlayerIndex, , playerData, allGameData]);
 
   // Type for a Signle Card that the Card Game API give me
   type SingleCard = {
