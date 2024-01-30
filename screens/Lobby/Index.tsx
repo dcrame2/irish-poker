@@ -415,14 +415,16 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
               );
             })
           : ""}
-        {
-          allGameData?.users[currentPlayerIndex]?.username
+        <p>
+          {
+            allGameData?.users[currentPlayerIndex]?.username
 
-          // isCurrentPlayer &&
-          //   isCurrentPlayer.map((player) => {
-          //     return <p>{player.player}</p>;
-          //   })
-        }
+            // isCurrentPlayer &&
+            //   isCurrentPlayer.map((player) => {
+            //     return <p>{player.player}</p>;
+            //   })
+          }
+        </p>
       </CardContainer>
     </Container>
   );
