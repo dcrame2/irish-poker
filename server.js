@@ -51,7 +51,13 @@ io.on("connection", (socket) => {
     socket
       .to(data.roomId)
       .emit("receive_updatedIndex", data.currentPlayerIndex);
-    // socket.to(data.roomId).emit("recieve_card_data", data);
+  });
+
+  socket.on("send_current_player", (data) => {
+    console.log(data, "current_player");
+
+    socket.emit("receive_current_player", data.isCurrentPlayer);
+    socket.to(data.roomId).emit("receive_current_player", data.isCurrentPlayer);
   });
 
   socket.on("send_msg", (data) => {
@@ -61,15 +67,24 @@ io.on("connection", (socket) => {
   });
 
   // Listen for the 'updateCardData' event
-  socket.on("updateCardData", (data) => {
+  socket.on("updated_card_data", (data) => {
     console.log(data.cardData, "updateCardData");
     // Broadcast the updated card data to all clients in the same room
-    socket.emit("receive_updatedCardData", data.cardData);
-    socket.to(data.roomId).emit("receive_updatedCardData", data.cardData);
+    socket.emit("receive_updated_card_data", data.cardData);
+    socket.to(data.roomId).emit("receive_updated_card_data", data.cardData);
+
+    // Emit the "start_next_round" event after some delay (adjust as needed)
   });
 
-  socket.on("start game", (data) => {
-    console.log(data, "START GAME");
+  socket.on("send_current_round", (data) => {
+    console.log(data, "send_current_round");
+
+    socket.emit("receive_current_round", data.currentRound);
+    socket.to(data.roomId).emit("receive_current_round", data.currentRound);
+  });
+
+  socket.on("start_game", (data) => {
+    console.log(data.cardData, "START GAME");
     socket.emit("allGameData", data);
     socket.to(data.roomId).emit("allGameData", data);
   });
@@ -90,8 +105,6 @@ io.on("connection", (socket) => {
             )
             .then((data) => {
               const allPlayersCardsUnorganized = data.data.cards;
-              // console.log(allPlayersCards, "card data");
-
               // Number of cards you want in each players hand
               let cardsPerPlayer = 4;
 
@@ -111,10 +124,12 @@ io.on("connection", (socket) => {
                   .slice(startIndex, endIndex)
                   .map((obj, index) => {
                     // Add a 'player' property to each object in the subarray
+                    let isCardNext = i === 0 && index === 0;
                     return {
                       ...obj,
                       player: `${userData.users[i].username}`,
                       socketId: `${userData.users[i].id}`,
+                      cardNext: isCardNext,
                     };
                   });
                 allPlayersCards.push(singlePlayersData);
