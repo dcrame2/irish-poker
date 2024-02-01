@@ -72,8 +72,6 @@ io.on("connection", (socket) => {
     // Broadcast the updated card data to all clients in the same room
     socket.emit("receive_updated_card_data", data.cardData);
     socket.to(data.roomId).emit("receive_updated_card_data", data.cardData);
-
-    // Emit the "start_next_round" event after some delay (adjust as needed)
   });
 
   socket.on("send_current_round", (data) => {
