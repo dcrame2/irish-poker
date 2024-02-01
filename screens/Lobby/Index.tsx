@@ -78,7 +78,7 @@ type Player = SingleCard[];
 type PlayerData = {};
 
 const ChatPage = ({ socket, username, roomId, users }: any) => {
-  // console.log(socket.id, "SOCKKETTTT");
+  console.log(socket.id, "SOCKKETTTT");
   // console.log(users, "USERS");
   const [currentMsg, setCurrentMsg] = useState("");
   const [chat, setChat] = useState<IMsgDataTypes[]>([]);
@@ -652,7 +652,7 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
                             <Buttons onClick={redOrBlackHandler}>Heart</Buttons>
                           </BtnContainer>
                         )}
-                      {currentRound === 4 && <p>GAME OVER</p>}
+                      {/* {currentRound === 4 && <p>GAME OVER</p>} */}
                     </MainButtonsContainer>
                   </IndividualCardContainer>
                 </>
@@ -660,19 +660,13 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
             })
           : ""}
       </CardContainer>
-      {isCurrentPlayer && <p>Player up next: {isCurrentPlayer}</p>}
+      {currentRound === 4 ? (
+        <p>GAME IS OVER</p>
+      ) : (
+        <p>Player up next: {isCurrentPlayer}</p>
+      )}
     </Container>
   );
 };
 
 export default ChatPage;
-
-// //SAVE JUST IN CASE
-// const updatedPlayerData: PlayerData = (allGameData?.cardData || []).map(
-//   (player: Player, index) =>
-//     index === currentPlayerIndex
-//       ? player.map((card) =>
-//           card === currentPlayerCard ? updatedCard : card
-//         )
-//       : player
-// );

@@ -128,6 +128,7 @@ io.on("connection", (socket) => {
                     return {
                       ...obj,
                       player: `${userData.users[i].username}`,
+                      // socketId: `${data.users[i].id}`,
                       socketId: `${userData.users[i].id}`,
                       cardNext: isCardNext,
                     };
