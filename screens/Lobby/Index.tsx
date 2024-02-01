@@ -389,47 +389,43 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
                         );
                       })}
                     </CardsContainer>
-                    <MainButtonsContainer>
-                      {users[currentPlayerIndex].username === username &&
-                        currentRound === 0 && (
-                          <BtnContainer className="btn-container">
-                            <Buttons onClick={redOrBlackHandler}>Red</Buttons>
-                            <Buttons onClick={redOrBlackHandler}>Black</Buttons>
-                          </BtnContainer>
-                        )}
-                      {users[currentPlayerIndex].username === username &&
-                        currentRound === 1 && (
-                          <BtnContainer className="btn-container">
-                            <Buttons onClick={redOrBlackHandler}>Lower</Buttons>
-                            <Buttons onClick={redOrBlackHandler}>
-                              Higher
-                            </Buttons>
-                          </BtnContainer>
-                        )}
-                      {users[currentPlayerIndex].username === username &&
-                        currentRound === 2 && (
-                          <BtnContainer className="btn-container">
-                            <Buttons onClick={redOrBlackHandler}>In</Buttons>
-                            <Buttons onClick={redOrBlackHandler}>Out</Buttons>
-                          </BtnContainer>
-                        )}
-                      {users[currentPlayerIndex].username === username &&
-                        currentRound === 3 && (
-                          <BtnContainer className="btn-container">
-                            <Buttons onClick={redOrBlackHandler}>Club</Buttons>
-                            <Buttons onClick={redOrBlackHandler}>Spade</Buttons>
-                            <Buttons onClick={redOrBlackHandler}>
-                              Diamond
-                            </Buttons>
-                            <Buttons onClick={redOrBlackHandler}>Heart</Buttons>
-                          </BtnContainer>
-                        )}
-                    </MainButtonsContainer>
                   </IndividualCardContainer>
                 </>
               );
             })
           : ""}
+        <MainButtonsContainer>
+          {users[currentPlayerIndex].username === username &&
+            currentRound === 0 && (
+              <BtnContainer className="btn-container">
+                <Buttons onClick={redOrBlackHandler}>Red</Buttons>
+                <Buttons onClick={redOrBlackHandler}>Black</Buttons>
+              </BtnContainer>
+            )}
+          {users[currentPlayerIndex].username === username &&
+            currentRound === 1 && (
+              <BtnContainer className="btn-container">
+                <Buttons onClick={redOrBlackHandler}>Lower</Buttons>
+                <Buttons onClick={redOrBlackHandler}>Higher</Buttons>
+              </BtnContainer>
+            )}
+          {users[currentPlayerIndex].username === username &&
+            currentRound === 2 && (
+              <BtnContainer className="btn-container">
+                <Buttons onClick={redOrBlackHandler}>In</Buttons>
+                <Buttons onClick={redOrBlackHandler}>Out</Buttons>
+              </BtnContainer>
+            )}
+          {users[currentPlayerIndex].username === username &&
+            currentRound === 3 && (
+              <BtnContainer className="btn-container">
+                <Buttons onClick={redOrBlackHandler}>Club</Buttons>
+                <Buttons onClick={redOrBlackHandler}>Spade</Buttons>
+                <Buttons onClick={redOrBlackHandler}>Diamond</Buttons>
+                <Buttons onClick={redOrBlackHandler}>Heart</Buttons>
+              </BtnContainer>
+            )}
+        </MainButtonsContainer>
       </CardContainer>
       {currentRound === 4 ? (
         <p>GAME IS OVER</p>
