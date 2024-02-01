@@ -14,7 +14,9 @@ const CardContainer = styled.div`
   flex-direction: column;
 `;
 
-const IndividualCard = styled.div``;
+const IndividualCard = styled.div`
+  min-width: 50px;
+`;
 
 const ImageOfCard = styled.img`
   width: 50px;
@@ -26,10 +28,18 @@ const IndividualCardContainer = styled.div`
   gap: 20px;
 `;
 
-const ButtonsContainer = styled.div`
+const MainButtonsContainer = styled.div`
   display: flex;
   justify-content: space-between;
+  gap: 10px;
 `;
+
+const BtnContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const Buttons = styled.button``;
 
 const CardsContainer = styled.div`
   display: flex;
@@ -120,6 +130,7 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
     socket.emit("send_current_player", {
       roomId,
       isCurrentPlayer,
+      currentRound,
     });
     setGameStarted(true);
     setCardNext(true);
@@ -130,7 +141,7 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
 
   const redOrBlackHandler = () => {
     const currentPlayerCard: SingleCard | undefined =
-      allGameData?.cardData[currentPlayerIndex][0];
+      allGameData?.cardData[currentPlayerIndex][currentRound];
     console.log(currentPlayerCard, "currentPlayerCard");
 
     if (!currentPlayerCard) {
@@ -142,13 +153,13 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
     const updatedCard: SingleCard = {
       ...currentPlayerCard,
       selectedColor: "red",
-      cardNext: false,
+      // cardNext: false,
     };
 
     // Update the cardNext for the next player
     const nextPlayerIndex = (currentPlayerIndex + 1) % users.length;
     const nextPlayerCard: SingleCard =
-      allGameData?.cardData[nextPlayerIndex][0];
+      allGameData?.cardData[nextPlayerIndex][currentRound];
 
     const nextUpdatedCard: SingleCard = {
       ...nextPlayerCard,
@@ -186,8 +197,100 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
     socket.emit("send_current_player", {
       roomId,
       isCurrentPlayer,
+      currentRound,
     });
+
+    // if (
+    //   allGameData?.cardData.every(
+    //     (player: Player) => player[currentRound]?.cardNext === true
+    //   )
+    // ) {
+    //   socket.emit("send_current_round", {
+    //     roomId,
+    //     currentRound: currentRound + 1,
+    //   });
+    // }
   };
+
+  const allPlayersPlayedCurrentRound = () => {
+    return (
+      allGameData?.cardData.every(
+        (player: Player) => player[currentRound]?.cardNext === false
+      ) ||
+      allGameData?.cardData.every(
+        (player: Player) => player[currentRound]?.selectedColor
+      )
+    );
+  };
+
+  // const redOrBlackHandler = () => {
+  //   const currentPlayerCard: SingleCard | undefined =
+  //     allGameData?.cardData[currentPlayerIndex][currentRound - 1];
+
+  //   if (!currentPlayerCard) {
+  //     // Handle the case where currentPlayerCard is undefined
+  //     return;
+  //   }
+
+  //   setSelectedCard(currentPlayerCard);
+
+  //   const updatedCard: SingleCard = {
+  //     ...currentPlayerCard,
+  //     selectedColor: "red",
+  //     cardNext: false,
+  //   };
+
+  //   // Update the cardNext for the next player
+  //   const nextPlayerIndex = (currentPlayerIndex + 1) % users.length;
+  //   const nextPlayerCard: SingleCard =
+  //     allGameData?.cardData[nextPlayerIndex][currentRound - 1];
+
+  //   const nextUpdatedCard: SingleCard = {
+  //     ...nextPlayerCard,
+  //     cardNext: true,
+  //   };
+
+  //   const updatedPlayerData: PlayerData = (allGameData?.cardData || []).map(
+  //     (player: Player, index) =>
+  //       index === currentPlayerIndex
+  //         ? player.map((card, cardIndex) =>
+  //             cardIndex === currentRound - 1 ? updatedCard : card
+  //           )
+  //         : index === nextPlayerIndex
+  //         ? player.map((card, cardIndex) =>
+  //             cardIndex === currentRound - 1 ? nextUpdatedCard : card
+  //           )
+  //         : player
+  //   );
+
+  //   socket.emit("updated_card_data", {
+  //     users,
+  //     roomId,
+  //     cardData: updatedPlayerData,
+  //   });
+
+  //   socket.emit("current_index", {
+  //     users,
+  //     roomId,
+  //     cardData: updatedPlayerData,
+  //     currentPlayerIndex,
+  //   });
+
+  //   socket.emit("send_current_player", {
+  //     roomId,
+  //     isCurrentPlayer,
+  //   });
+
+  //   socket.emit("send_current_round", {
+  //     roomId,
+  //     currentRound,
+  //   });
+
+  //   // Move to the next round if all players have played their current round cards
+  //   if (allPlayersPlayedCurrentRound()) {
+  //     setCurrentRound(currentRound + 1);
+  //   }
+  // };
 
   const overUnderHandler = () => {
     const currentPlayerCard: SingleCard | undefined =
@@ -396,13 +499,26 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
       setCurrentPlayerIndex(data);
     });
 
-    socket.on("receive_current_player", (data: any) => {
-      // console.log(data, "receive_current_player");
-      setIsCurrentPlayer(data);
-    });
+    socket.on(
+      "receive_current_player",
+      ({ isCurrentPlayer, currentRound }: any) => {
+        // console.log(currentRound, "receive_current_player");
+        setIsCurrentPlayer(isCurrentPlayer);
+      }
+    );
+
+    if (
+      allGameData?.cardData.every(
+        (player: Player) => player[currentRound]?.selectedColor
+      )
+    ) {
+      socket.emit("send_current_round", {
+        roomId,
+        currentRound: currentRound + 1,
+      });
+    }
 
     socket.on("receive_current_round", (data: any) => {
-      console.log(data, "receive_current_round");
       setCurrentRound(data);
     });
 
@@ -489,51 +605,55 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
                           <>
                             <IndividualCard key={`player-${index}`}>
                               {singleCard.selectedColor ? (
-                                <ImageOfCard src={singleCard.image} />
+                                // <ImageOfCard src={singleCard.image} />
+                                <p>{singleCard.code}</p>
                               ) : (
-                                <ImageOfCard src="green_card.png" />
+                                <ImageOfCard src="white_card.png" />
                               )}
                             </IndividualCard>
                           </>
                         );
                       })}
                     </CardsContainer>
-                    <ButtonsContainer>
-                      {users[currentPlayerIndex].username === username && (
-                        // allGameData?.cardData[currentPlayerIndex][0]
-                        //   .cardNext === true &&
-                        <div className="btn-container">
-                          <button onClick={redOrBlackHandler}>Red</button>
-                          <button onClick={redOrBlackHandler}>Black</button>
-                        </div>
-                      )}
-                      {users[currentPlayerIndex].username === username && (
-                        // !allGameData?.cardData[currentPlayerIndex][1]
-                        //   .cardNext &&
-                        <div className="btn-container">
-                          <button onClick={overUnderHandler}>Lower</button>
-                          <button onClick={overUnderHandler}>Higher</button>
-                        </div>
-                      )}
-                      {users[currentPlayerIndex].username === username && (
-                        // !allGameData?.cardData[currentPlayerIndex][2]
-                        //   .cardNext &&
-                        <div className="btn-container">
-                          <button onClick={inOrOutHandler}>In</button>
-                          <button onClick={inOrOutHandler}>Out</button>
-                        </div>
-                      )}
-                      {users[currentPlayerIndex].username === username && (
-                        // !allGameData?.cardData[currentPlayerIndex][3]
-                        //   .cardNext &&
-                        <div className="btn-container">
-                          <button onClick={suitHandler}>Club</button>
-                          <button onClick={suitHandler}>Spade</button>
-                          <button onClick={suitHandler}>Diamond</button>
-                          <button onClick={suitHandler}>Heart</button>
-                        </div>
-                      )}
-                    </ButtonsContainer>
+                    <MainButtonsContainer>
+                      {users[currentPlayerIndex].username === username &&
+                        currentRound === 0 && (
+                          <BtnContainer className="btn-container">
+                            <Buttons onClick={redOrBlackHandler}>Red</Buttons>
+                            <Buttons onClick={redOrBlackHandler}>Black</Buttons>
+                          </BtnContainer>
+                        )}
+                      {users[currentPlayerIndex].username === username &&
+                        currentRound === 1 && (
+                          <BtnContainer className="btn-container">
+                            <Buttons onClick={redOrBlackHandler}>Lower</Buttons>
+                            <Buttons onClick={redOrBlackHandler}>
+                              Higher
+                            </Buttons>
+                          </BtnContainer>
+                        )}
+                      {users[currentPlayerIndex].username === username &&
+                        currentRound === 2 && (
+                          <BtnContainer className="btn-container">
+                            <Buttons onClick={redOrBlackHandler}>In</Buttons>
+                            <Buttons onClick={redOrBlackHandler}>Out</Buttons>
+                          </BtnContainer>
+                        )}
+                      {users[currentPlayerIndex].username === username &&
+                        // allGameData?.cardData[currentPlayerIndex][currentRound]
+                        //   .cardNext === true && (
+                        currentRound === 3 && (
+                          <BtnContainer className="btn-container">
+                            <Buttons onClick={redOrBlackHandler}>Club</Buttons>
+                            <Buttons onClick={redOrBlackHandler}>Spade</Buttons>
+                            <Buttons onClick={redOrBlackHandler}>
+                              Diamond
+                            </Buttons>
+                            <Buttons onClick={redOrBlackHandler}>Heart</Buttons>
+                          </BtnContainer>
+                        )}
+                      {currentRound === 4 && <p>GAME OVER</p>}
+                    </MainButtonsContainer>
                   </IndividualCardContainer>
                 </>
               );

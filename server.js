@@ -56,8 +56,8 @@ io.on("connection", (socket) => {
   socket.on("send_current_player", (data) => {
     console.log(data, "current_player");
 
-    socket.emit("receive_current_player", data.isCurrentPlayer);
-    socket.to(data.roomId).emit("receive_current_player", data.isCurrentPlayer);
+    socket.emit("receive_current_player", data);
+    socket.to(data.roomId).emit("receive_current_player", data);
   });
 
   socket.on("send_msg", (data) => {
