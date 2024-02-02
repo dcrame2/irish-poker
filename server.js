@@ -81,11 +81,20 @@ io.on("connection", (socket) => {
     socket.to(data.roomId).emit("receive_current_round", data.currentRound);
   });
 
-  socket.on("send_answer", (data) => {
-    console.log(data, "send_answer");
+  socket.on("send_answer_correct", (data) => {
+    console.log(data.selectionMessage, "send_answer");
 
-    socket.emit("receive_answer", data.selectionMessage);
-    socket.to(data.roomId).emit("receive_answer", data.selectionMessage);
+    socket.emit("receive_answer_correct", data.selectionMessage);
+    // socket.to(data.roomId).emit("receive_answer", data.selectionMessage);
+  });
+
+  socket.on("send_answer_incorrect", (data) => {
+    console.log(data.selectionMessage, "send_answer");
+
+    socket.emit("receive_answer_incorrect", data.selectionMessage);
+    socket
+      .to(data.roomId)
+      .emit("receive_answer_incorrect", data.selectionMessage);
   });
 
   socket.on("start_game", (data) => {

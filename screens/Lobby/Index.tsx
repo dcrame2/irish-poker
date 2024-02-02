@@ -47,6 +47,11 @@ const CardsContainer = styled.div`
   gap: 20px;
 `;
 
+const Message = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
 interface IMsgDataTypes {
   roomId: String | number;
   user: String;
@@ -91,7 +96,12 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
   // Initialize state for the current round
   const [currentRound, setCurrentRound] = useState(0);
 
-  const [message, setMessage] = useState("");
+  const [messageCorrect, setMessageCorrect] = useState(false);
+  const [messageIncorrect, setMessageIncorrect] = useState();
+
+  const otherPlayers = users.filter(
+    (user, index) => user.username !== username
+  );
 
   const sendData = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -144,7 +154,7 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
   const redOrBlackHandler = (option: string) => {
     const currentPlayerCard: SingleCard | undefined =
       allGameData?.cardData[currentPlayerIndex][currentRound];
-    console.log(currentPlayerCard, "currentPlayerCard");
+    console.log(typeof currentPlayerCard, "currentPlayerCard");
 
     if (!currentPlayerCard) {
       // Handle the case where currentPlayerCard is undefined
@@ -152,13 +162,13 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
     }
 
     const updatedCard: SingleCard = {
-      ...currentPlayerCard,
+      ...((currentPlayerCard as SingleCard) || {}),
       selectedOption: option,
     };
 
     // Update the cardNext for the next player
     const nextPlayerIndex = (currentPlayerIndex + 1) % users.length;
-    const nextPlayerCard: SingleCard =
+    const nextPlayerCard: SingleCard | undefined =
       allGameData?.cardData[nextPlayerIndex][currentRound];
 
     const nextUpdatedCard: SingleCard = {
@@ -245,15 +255,17 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
 
     isCorrect = isCorrect && convertToNum(prevValue) !== convertToNum(value);
 
-    let selectionMessage = isCorrect
-      ? `${isCurrentPlayer} got it right! ${option}`
-      : `${isCurrentPlayer} got it wrong! ${option}`;
+    // let selectionMessage = isCorrect
+    //   ? `${isCurrentPlayer} got it right! You choose: ${option} and your card was: ${card?.value} of ${card?.suit}.`
+    //   : `${isCurrentPlayer} got it wrong! ${option}`;
+
+    let selectionMessage = isCorrect ? true : false;
 
     // Display the appropriate message based on the result
     if (isCorrect) {
-      socket.emit("send_answer", { roomId, selectionMessage });
+      socket.emit("send_answer_correct", { roomId, selectionMessage });
     } else {
-      socket.emit("send_answer", { roomId, selectionMessage });
+      socket.emit("send_answer_incorrect", { roomId, selectionMessage });
     }
 
     socket.emit("updated_card_data", {
@@ -321,8 +333,12 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
       setCurrentRound(data);
     });
 
-    socket.on("receive_answer", (data: any) => {
-      setMessage(data);
+    socket.on("receive_answer_correct", (data: any) => {
+      setMessageCorrect(data);
+    });
+
+    socket.on("receive_answer_incorrect", (data: any) => {
+      setMessageIncorrect(data);
     });
 
     setIsCurrentPlayer(users[currentPlayerIndex]?.username);
@@ -466,10 +482,40 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
       {currentRound === 4 ? (
         <p>GAME IS OVER</p>
       ) : (
-        <>
-          {message && <p> {message}</p>}
+        // <Message>
+        //   {message && <p> {message}</p>}
+        //   <p>Player up next: {isCurrentPlayer}</p>
+        // </Message>
+        <Message>
+          {messageCorrect && !messageIncorrect ? (
+            <>
+              <p>
+                {`${isCurrentPlayer} got it right! You choose: ${allGameData?.cardData[currentPlayerIndex][currentRound]?.selectedOption} and your card was: ${allGameData?.cardData[currentPlayerIndex][currentRound]?.value} of ${allGameData?.cardData[currentPlayerIndex][currentRound]?.suit}`}
+              </p>
+
+              <div>
+                {otherPlayers.map((player: Player) => (
+                  // onClick={() => handleButtonClick(player.id)}
+                  <button key={player?.id}>{player?.username}</button>
+                ))}
+              </div>
+            </>
+          ) : (
+            // ""
+            <p>
+              {`${
+                users[currentPlayerIndex - 1]?.username
+              } is picking someone to drink. One moment...`}
+            </p>
+          )}
+          {!messageIncorrect && !messageCorrect ? (
+            <p>{`${isCurrentPlayer} was incorrect and is drinking!`}</p>
+          ) : (
+            ""
+          )}
+
           <p>Player up next: {isCurrentPlayer}</p>
-        </>
+        </Message>
       )}
     </Container>
   );
