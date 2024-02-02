@@ -81,6 +81,13 @@ io.on("connection", (socket) => {
     socket.to(data.roomId).emit("receive_current_round", data.currentRound);
   });
 
+  socket.on("send_answer", (data) => {
+    console.log(data, "send_answer");
+
+    socket.emit("receive_answer", data.selectionMessage);
+    socket.to(data.roomId).emit("receive_answer", data.selectionMessage);
+  });
+
   socket.on("start_game", (data) => {
     console.log(data.cardData, "START GAME");
     socket.emit("allGameData", data);

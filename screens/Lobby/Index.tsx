@@ -68,7 +68,7 @@ type SingleCard = {
   images: [];
   suit: string;
   value: string;
-  selectedColor?: string;
+  selectedOption?: string;
   socketId: string;
   cardNext?: boolean;
 };
@@ -78,16 +78,9 @@ type Player = SingleCard[];
 type PlayerData = {};
 
 const ChatPage = ({ socket, username, roomId, users }: any) => {
-  console.log(socket.id, "SOCKKETTTT");
-  // console.log(users, "USERS");
   const [currentMsg, setCurrentMsg] = useState("");
   const [chat, setChat] = useState<IMsgDataTypes[]>([]);
-
   const [playerData, setPlayerData] = useState([]);
-  // console.log(playerData, "PLAYER DATA");
-
-  const [selectedCard, setSelectedCard] = useState({});
-
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
 
   const [allGameData, setAllGameData] = useState<GameData | undefined>();
@@ -95,11 +88,10 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
 
   const [usersLockedIn, setUsersLockedIn] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
-
-  const [cardNext, setCardNext] = useState(false);
-
   // Initialize state for the current round
   const [currentRound, setCurrentRound] = useState(0);
+
+  const [message, setMessage] = useState("");
 
   const sendData = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -133,10 +125,23 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
       currentRound,
     });
     setGameStarted(true);
-    setCardNext(true);
   };
 
-  const redOrBlackHandler = () => {
+  function convertToNum(value: string) {
+    if (value === "ACE") {
+      return 14;
+    } else if (value === "KING") {
+      return 13;
+    } else if (value === "QUEEN") {
+      return 12;
+    } else if (value === "JACK") {
+      return 11;
+    } else {
+      return Number(value);
+    }
+  }
+
+  const redOrBlackHandler = (option: string) => {
     const currentPlayerCard: SingleCard | undefined =
       allGameData?.cardData[currentPlayerIndex][currentRound];
     console.log(currentPlayerCard, "currentPlayerCard");
@@ -145,11 +150,10 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
       // Handle the case where currentPlayerCard is undefined
       return;
     }
-    setSelectedCard(currentPlayerCard);
 
     const updatedCard: SingleCard = {
       ...currentPlayerCard,
-      selectedColor: "red",
+      selectedOption: option,
     };
 
     // Update the cardNext for the next player
@@ -177,6 +181,81 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
           : player
     );
 
+    const card = allGameData?.cardData[currentPlayerIndex][currentRound];
+    const prevCard =
+      allGameData?.cardData[currentPlayerIndex][currentRound - 1];
+
+    const prevPrevCard =
+      allGameData?.cardData[currentPlayerIndex][currentRound - 2];
+
+    const { suit, value } = card || {};
+    const { value: prevValue } = prevCard || {};
+    const { value: prevPrevValue } = prevPrevCard || {};
+
+    let isCorrect = false;
+
+    switch (option) {
+      case "red":
+        isCorrect = suit === "HEARTS" || suit === "DIAMONDS";
+        break;
+
+      case "black":
+        isCorrect = suit === "SPADES" || suit === "CLUBS";
+        break;
+
+      case "lower":
+        isCorrect = convertToNum(prevValue) > convertToNum(value);
+        break;
+
+      case "higher":
+        isCorrect = convertToNum(prevValue) < convertToNum(value);
+        break;
+
+      case "in":
+        isCorrect =
+          convertToNum(prevValue) > convertToNum(value) &&
+          convertToNum(prevPrevValue) < convertToNum(value);
+        break;
+
+      case "out":
+        isCorrect =
+          convertToNum(prevValue) < convertToNum(value) &&
+          convertToNum(prevPrevValue) > convertToNum(value);
+        break;
+
+      case "spade":
+        isCorrect = suit === "SPADES";
+        break;
+
+      case "diamond":
+        isCorrect = suit === "DIAMONDS";
+        break;
+
+      case "heart":
+        isCorrect = suit === "HEARTS";
+        break;
+
+      case "club":
+        isCorrect = suit === "CLUBS";
+        break;
+
+      default:
+        break;
+    }
+
+    isCorrect = isCorrect && convertToNum(prevValue) !== convertToNum(value);
+
+    let selectionMessage = isCorrect
+      ? `${isCurrentPlayer} got it right! ${option}`
+      : `${isCurrentPlayer} got it wrong! ${option}`;
+
+    // Display the appropriate message based on the result
+    if (isCorrect) {
+      socket.emit("send_answer", { roomId, selectionMessage });
+    } else {
+      socket.emit("send_answer", { roomId, selectionMessage });
+    }
+
     socket.emit("updated_card_data", {
       users,
       roomId,
@@ -194,67 +273,6 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
       roomId,
       isCurrentPlayer,
       currentRound,
-    });
-  };
-
-  const overUnderHandler = () => {
-    const currentPlayerCard: SingleCard | undefined =
-      allGameData?.cardData[currentPlayerIndex][1];
-    console.log(currentPlayerCard, "currentPlayerCard");
-
-    if (!currentPlayerCard) {
-      // Handle the case where currentPlayerCard is undefined
-      return;
-    }
-    setSelectedCard(currentPlayerCard);
-
-    const updatedCard: SingleCard = {
-      ...currentPlayerCard,
-      selectedColor: "red",
-      cardNext: false,
-    };
-
-    // Update the cardNext for the next player
-    const nextPlayerIndex = (currentPlayerIndex + 1) % users.length;
-    const nextPlayerCard: SingleCard =
-      allGameData?.cardData[nextPlayerIndex][1];
-
-    const nextUpdatedCard: SingleCard = {
-      ...nextPlayerCard,
-      cardNext: true,
-    };
-
-    console.log(nextUpdatedCard, "nextUpdatedCard");
-
-    const updatedPlayerData: PlayerData = (allGameData?.cardData || []).map(
-      (player: Player, index) =>
-        index === currentPlayerIndex
-          ? player.map((card) =>
-              card === currentPlayerCard ? updatedCard : card
-            )
-          : index === nextPlayerIndex
-          ? player.map((card) =>
-              card === nextPlayerCard ? nextUpdatedCard : card
-            )
-          : player
-    );
-
-    socket.emit("updated_card_data", {
-      users,
-      roomId,
-      cardData: updatedPlayerData,
-    });
-
-    socket.emit("current_index", {
-      users,
-      roomId,
-      cardData: updatedPlayerData,
-      currentPlayerIndex,
-    });
-
-    socket.emit("send_current_player", {
-      roomId,
-      isCurrentPlayer,
     });
   };
 
@@ -290,7 +308,7 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
 
     if (
       allGameData?.cardData.every(
-        (player: Player) => player[currentRound]?.selectedColor
+        (player: Player) => player[currentRound]?.selectedOption
       )
     ) {
       socket.emit("send_current_round", {
@@ -301,6 +319,10 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
 
     socket.on("receive_current_round", (data: any) => {
       setCurrentRound(data);
+    });
+
+    socket.on("receive_answer", (data: any) => {
+      setMessage(data);
     });
 
     setIsCurrentPlayer(users[currentPlayerIndex]?.username);
@@ -378,7 +400,7 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
                         return (
                           <>
                             <IndividualCard key={`player-${index}`}>
-                              {singleCard.selectedColor ? (
+                              {singleCard.selectedOption ? (
                                 // <ImageOfCard src={singleCard.image} />
                                 <p>{singleCard.code}</p>
                               ) : (
@@ -398,31 +420,45 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
           {users[currentPlayerIndex]?.username === username &&
             currentRound === 0 && (
               <BtnContainer className="btn-container">
-                <Buttons onClick={redOrBlackHandler}>Red</Buttons>
-                <Buttons onClick={redOrBlackHandler}>Black</Buttons>
+                <Buttons onClick={() => redOrBlackHandler("red")}>Red</Buttons>
+                <Buttons onClick={() => redOrBlackHandler("black")}>
+                  Black
+                </Buttons>
               </BtnContainer>
             )}
           {users[currentPlayerIndex]?.username === username &&
             currentRound === 1 && (
               <BtnContainer className="btn-container">
-                <Buttons onClick={redOrBlackHandler}>Lower</Buttons>
-                <Buttons onClick={redOrBlackHandler}>Higher</Buttons>
+                <Buttons onClick={() => redOrBlackHandler("lower")}>
+                  Lower
+                </Buttons>
+                <Buttons onClick={() => redOrBlackHandler("higher")}>
+                  Higher
+                </Buttons>
               </BtnContainer>
             )}
           {users[currentPlayerIndex]?.username === username &&
             currentRound === 2 && (
               <BtnContainer className="btn-container">
-                <Buttons onClick={redOrBlackHandler}>In</Buttons>
-                <Buttons onClick={redOrBlackHandler}>Out</Buttons>
+                <Buttons onClick={() => redOrBlackHandler("in")}>In</Buttons>
+                <Buttons onClick={() => redOrBlackHandler("out")}>Out</Buttons>
               </BtnContainer>
             )}
           {users[currentPlayerIndex]?.username === username &&
             currentRound === 3 && (
               <BtnContainer className="btn-container">
-                <Buttons onClick={redOrBlackHandler}>Club</Buttons>
-                <Buttons onClick={redOrBlackHandler}>Spade</Buttons>
-                <Buttons onClick={redOrBlackHandler}>Diamond</Buttons>
-                <Buttons onClick={redOrBlackHandler}>Heart</Buttons>
+                <Buttons onClick={() => redOrBlackHandler("club")}>
+                  Club
+                </Buttons>
+                <Buttons onClick={() => redOrBlackHandler("spade")}>
+                  Spade
+                </Buttons>
+                <Buttons onClick={() => redOrBlackHandler("diamond")}>
+                  Diamond
+                </Buttons>
+                <Buttons onClick={() => redOrBlackHandler("heart")}>
+                  Heart
+                </Buttons>
               </BtnContainer>
             )}
         </MainButtonsContainer>
@@ -430,10 +466,74 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
       {currentRound === 4 ? (
         <p>GAME IS OVER</p>
       ) : (
-        <p>Player up next: {isCurrentPlayer}</p>
+        <>
+          {message && <p> {message}</p>}
+          <p>Player up next: {isCurrentPlayer}</p>
+        </>
       )}
     </Container>
   );
 };
 
 export default ChatPage;
+
+// const overUnderHandler = () => {
+//   const currentPlayerCard: SingleCard | undefined =
+//     allGameData?.cardData[currentPlayerIndex][1];
+//   console.log(currentPlayerCard, "currentPlayerCard");
+
+//   if (!currentPlayerCard) {
+//     // Handle the case where currentPlayerCard is undefined
+//     return;
+//   }
+//   setSelectedCard(currentPlayerCard);
+
+//   const updatedCard: SingleCard = {
+//     ...currentPlayerCard,
+//     selectedOption: "red",
+//     cardNext: false,
+//   };
+
+//   // Update the cardNext for the next player
+//   const nextPlayerIndex = (currentPlayerIndex + 1) % users.length;
+//   const nextPlayerCard: SingleCard =
+//     allGameData?.cardData[nextPlayerIndex][1];
+
+//   const nextUpdatedCard: SingleCard = {
+//     ...nextPlayerCard,
+//     cardNext: true,
+//   };
+
+//   console.log(nextUpdatedCard, "nextUpdatedCard");
+
+//   const updatedPlayerData: PlayerData = (allGameData?.cardData || []).map(
+//     (player: Player, index) =>
+//       index === currentPlayerIndex
+//         ? player.map((card) =>
+//             card === currentPlayerCard ? updatedCard : card
+//           )
+//         : index === nextPlayerIndex
+//         ? player.map((card) =>
+//             card === nextPlayerCard ? nextUpdatedCard : card
+//           )
+//         : player
+//   );
+
+//   socket.emit("updated_card_data", {
+//     users,
+//     roomId,
+//     cardData: updatedPlayerData,
+//   });
+
+//   socket.emit("current_index", {
+//     users,
+//     roomId,
+//     cardData: updatedPlayerData,
+//     currentPlayerIndex,
+//   });
+
+//   socket.emit("send_current_player", {
+//     roomId,
+//     isCurrentPlayer,
+//   });
+// };
