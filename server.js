@@ -21,8 +21,6 @@ const io = new Server(httpServer, {
   },
 });
 
-let storedUserData;
-
 io.on("connection", (socket) => {
   console.log("A user connected:", socket.id);
 
@@ -30,21 +28,17 @@ io.on("connection", (socket) => {
   socket.on("join_room", (data) => {
     const user = userJoin(socket.id, data.userName, data.roomId);
 
-    console.log(`User joined ${data.roomId}: ${socket.id}`);
+    // console.log(`User joined ${data.roomId}: ${socket.id}`);
     socket.join(user.room);
 
     io.to(user.room).emit("roomUsers", {
       room: user.room,
       users: getRoomUsers(user.room),
     });
-
-    // socket.join(roomId);
-    // console.log(`user with id-${socket.id} joined room - ${roomId}`);
   });
 
   socket.on("current_index", (data) => {
-    console.log(data, "send_card_data");
-
+    // console.log(data, "send_card_data");
     data.currentPlayerIndex =
       (data.currentPlayerIndex + 1) % data.cardData.length;
     socket.emit("receive_updatedIndex", data.currentPlayerIndex);
@@ -61,7 +55,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("send_msg", (data) => {
-    console.log(data, "send_msg");
+    // console.log(data, "send_msg");
     //This will send a message to a specific room ID
     socket.to(data.roomId).emit("receive_msg", data);
   });
@@ -170,7 +164,7 @@ io.on("connection", (socket) => {
   });
 });
 
-const PORT = 3001;
+const PORT = "https://irishpokeronline.netlify.app" | 3001;
 httpServer.listen(PORT, () => {
   console.log(`Socket.io server is running on port ${PORT}`);
 });
