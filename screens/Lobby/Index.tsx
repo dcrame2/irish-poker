@@ -1,7 +1,8 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import style from "../../src/styles/chat.module.css";
 import styled from "styled-components";
+import { motion, useInView } from "framer-motion";
 
 const Container = styled.div`
   display: flex;
@@ -18,7 +19,7 @@ const IndividualCard = styled.div`
   min-width: 50px;
 `;
 
-const ImageOfCard = styled.img`
+const ImageOfCard = styled(motion.img)`
   width: 50px;
 `;
 
@@ -104,6 +105,8 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
     (user: any) => user?.username !== username
   );
 
+  console.log(otherPlayers, "otherPlayers");
+
   const sendData = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (currentMsg !== "") {
@@ -155,7 +158,6 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
   const redOrBlackHandler = (option: string) => {
     const currentPlayerCard: SingleCard | undefined =
       allGameData?.cardData[currentPlayerIndex][currentRound];
-    console.log(typeof currentPlayerCard, "currentPlayerCard");
 
     if (!currentPlayerCard) {
       // Handle the case where currentPlayerCard is undefined
@@ -176,8 +178,6 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
       ...nextPlayerCard,
       cardNext: true,
     };
-
-    console.log(nextUpdatedCard, "nextUpdatedCard");
 
     const updatedPlayerData: PlayerData = (allGameData?.cardData || []).map(
       (player: Player, index) =>
@@ -253,8 +253,6 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
         break;
     }
 
-    // isCorrect = isCorrect && convertToNum(prevValue) !== convertToNum(value);
-
     //TODO: need to add back some logic about the # equaling eachother
 
     let selectionMessage = isCorrect ? true : false;
@@ -264,15 +262,15 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
       socket.emit("send_answer", {
         roomId,
         selectionMessage,
-        // currentUserMessage: `You got it right! You choose: ${isCurrentPlayer} and your card was: ${card?.value} of ${card?.suit}`,
-        currentUsersMessage: `${isCurrentPlayer} got it right! ${isCurrentPlayer} choose: ${option} and your card was: ${card?.value} of ${card?.suit}`,
-        otherUsersMessage: "OTHER USERS MESSAGE",
+        currentUsersMessage: `
+        CORRECT!
+        ${isCurrentPlayer} guessed ${option}! The card was a: ${card?.value.toLowerCase()} of ${card?.suit.toLowerCase()}`,
+        otherUsersMessage: `One moment...${isCurrentPlayer} is choosing who drinks`,
       });
     } else {
       socket.emit("send_answer", {
         roomId,
         selectionMessage,
-        // currentUserMessage: `${isCurrentPlayer} was incorrect and is drinking!`,
         currentUsersMessage: `${isCurrentPlayer} was incorrect and is drinking!`,
         otherUsersMessage: "",
       });
@@ -366,6 +364,8 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
     otherUsersMessage,
   ]);
 
+  const ref = useRef(null);
+
   return (
     <Container className={style.chat_div}>
       <div className={style.chat_border}>
@@ -426,16 +426,60 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
                 <>
                   <p>{player[playerIndex].player}</p>
                   <IndividualCardContainer>
-                    <CardsContainer>
+                    <CardsContainer ref={ref}>
                       {player.map((singleCard: SingleCard, index: number) => {
                         return (
                           <>
+                            {/* allGameData?.cardData[0][0].images.png */}
+
                             <IndividualCard key={`player-${index}`}>
                               {singleCard.selectedOption ? (
-                                <ImageOfCard src={singleCard.image} />
+                                <ImageOfCard
+                                  key={`${singleCard.selectedOption}-${singleCard.image}`}
+                                  initial={{
+                                    opacity: 0,
+                                    rotateX: 360,
+                                    rotateY: 720,
+                                    scale: 0,
+                                  }}
+                                  animate={{
+                                    rotateX: 0,
+                                    opacity: 1,
+                                    rotateY: 0,
+                                    scale: 1,
+                                  }}
+                                  transition={{
+                                    duration: `0.8`,
+                                    ease: "easeInOut",
+                                  }}
+                                  src={singleCard.image}
+                                />
                               ) : (
+                                //     <ImageOfCard
+                                //   src={singleCard.images.svg}
+                                // ></ImageOfCard>
                                 // <p>{singleCard.code}</p>
-                                <ImageOfCard src="green_card.png" />
+
+                                <ImageOfCard
+                                  key={`default-${singleCard.code}`}
+                                  initial={{
+                                    opacity: 0,
+                                    rotateX: 180,
+                                    rotateY: 360,
+                                    scale: 0,
+                                  }}
+                                  animate={{
+                                    rotateX: 0,
+                                    opacity: 1,
+                                    rotateY: 0,
+                                    scale: 1.1,
+                                  }}
+                                  transition={{
+                                    duration: `0.5`,
+                                    ease: "easeInOut",
+                                  }}
+                                  src="green_card.png"
+                                />
                               )}
                             </IndividualCard>
                           </>
@@ -500,20 +544,19 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
         <Message>
           {booleanMessage ? (
             <>
+              <h1>HIIIIIII</h1>
+
               <p>{currentUsersMessage}</p>
-              <div>
-                {otherPlayers.map((player: any) => (
-                  // onClick={() => handleButtonClick(player.id)}
-                  <button key={player?.id}>{player?.username}</button>
-                ))}
-              </div>
+              {otherPlayers?.map((player: any) => (
+                // onClick={() => handleButtonClick(player.id)}
+                <button key={player?.id}>{player?.username}</button>
+              ))}
               <p>{otherUsersMessage}</p>
             </>
           ) : (
             <>
               <p>{currentUsersMessage}</p>
-
-              <p>{isCurrentPlayer === username && otherUsersMessage}</p>
+              <p>{otherUsersMessage}</p>
             </>
           )}
 

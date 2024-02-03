@@ -14,7 +14,7 @@ const {
 
 const io = new Server(httpServer, {
   cors: {
-    origin: "http://localhost:3000", // Replace with your frontend URL
+    origin: "https://irishpokeronline.netlify.app", // Replace with your frontend URL
     methods: ["GET", "POST"],
     allowedHeaders: ["my-custom-header"],
     credentials: true,
@@ -85,6 +85,7 @@ io.on("connection", (socket) => {
 
     socket.emit("receive_answer", data);
     socket.to(data.roomId).emit("receive_answer", broadcastData);
+
     socket.broadcast
       .to(data.roomId)
       .emit("receive_answer_0", data.otherUsersMessage);
