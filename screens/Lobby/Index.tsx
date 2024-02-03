@@ -101,7 +101,7 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
   const [otherUsersMessage, setOtherUsersMessage] = useState();
 
   const otherPlayers = users?.filter(
-    (user: string) => user?.username !== username
+    (user: any) => user?.username !== username
   );
 
   const sendData = (e: React.FormEvent<HTMLFormElement>) => {
@@ -192,7 +192,8 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
           : player
     );
 
-    const card = allGameData?.cardData[currentPlayerIndex][currentRound];
+    const card: Player | any =
+      allGameData?.cardData[currentPlayerIndex][currentRound];
     const prevCard = allGameData?.cardData[currentPlayerIndex][0];
 
     const prevPrevCard = allGameData?.cardData[currentPlayerIndex][1];
