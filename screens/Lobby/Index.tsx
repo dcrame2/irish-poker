@@ -100,8 +100,8 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
   const [currentUsersMessage, setCurrentUsersMessage] = useState();
   const [otherUsersMessage, setOtherUsersMessage] = useState();
 
-  const otherPlayers = users.filter(
-    (user, index) => user.username !== username
+  const otherPlayers = users?.filter(
+    (user: string) => user?.username !== username
   );
 
   const sendData = (e: React.FormEvent<HTMLFormElement>) => {
@@ -169,10 +169,10 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
 
     // Update the cardNext for the next player
     const nextPlayerIndex = (currentPlayerIndex + 1) % users.length;
-    const nextPlayerCard: SingleCard | undefined =
+    const nextPlayerCard: SingleCard | any =
       allGameData?.cardData[nextPlayerIndex][currentRound];
 
-    const nextUpdatedCard: SingleCard = {
+    const nextUpdatedCard: SingleCard | any = {
       ...nextPlayerCard,
       cardNext: true,
     };
@@ -193,15 +193,13 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
     );
 
     const card = allGameData?.cardData[currentPlayerIndex][currentRound];
-    const prevCard =
-      allGameData?.cardData[currentPlayerIndex][currentRound - 1];
+    const prevCard = allGameData?.cardData[currentPlayerIndex][0];
 
-    const prevPrevCard =
-      allGameData?.cardData[currentPlayerIndex][currentRound - 2];
+    const prevPrevCard = allGameData?.cardData[currentPlayerIndex][1];
 
-    const { suit, value } = card || {};
-    const { value: prevValue } = prevCard || {};
-    const { value: prevPrevValue } = prevPrevCard || {};
+    const { suit, value }: any = card || {};
+    const { value: prevValue }: any = prevCard || {};
+    const { value: prevPrevValue }: any = prevPrevCard || {};
 
     let isCorrect = false;
 
@@ -225,13 +223,13 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
       case "in":
         isCorrect =
           convertToNum(prevValue) > convertToNum(value) &&
-          convertToNum(prevPrevValue) < convertToNum(value);
+          convertToNum(prevPrevValue) > convertToNum(value);
         break;
 
       case "out":
         isCorrect =
           convertToNum(prevValue) < convertToNum(value) &&
-          convertToNum(prevPrevValue) > convertToNum(value);
+          convertToNum(prevPrevValue) < convertToNum(value);
         break;
 
       case "spade":
@@ -254,7 +252,9 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
         break;
     }
 
-    isCorrect = isCorrect && convertToNum(prevValue) !== convertToNum(value);
+    // isCorrect = isCorrect && convertToNum(prevValue) !== convertToNum(value);
+
+    //TODO: need to add back some logic about the # equaling eachother
 
     let selectionMessage = isCorrect ? true : false;
 
@@ -264,7 +264,7 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
         roomId,
         selectionMessage,
         // currentUserMessage: `You got it right! You choose: ${isCurrentPlayer} and your card was: ${card?.value} of ${card?.suit}`,
-        currentUsersMessage: `You got it right! You choose: ${option} and your card was: ${card?.value} of ${card?.suit}`,
+        currentUsersMessage: `${isCurrentPlayer} got it right! ${isCurrentPlayer} choose: ${option} and your card was: ${card?.value} of ${card?.suit}`,
         otherUsersMessage: "OTHER USERS MESSAGE",
       });
     } else {
@@ -360,6 +360,9 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
     allGameData,
     isCurrentPlayer,
     currentRound,
+    booleanMessage,
+    currentUsersMessage,
+    otherUsersMessage,
   ]);
 
   return (
@@ -428,10 +431,10 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
                           <>
                             <IndividualCard key={`player-${index}`}>
                               {singleCard.selectedOption ? (
-                                // <ImageOfCard src={singleCard.image} />
-                                <p>{singleCard.code}</p>
+                                <ImageOfCard src={singleCard.image} />
                               ) : (
-                                <ImageOfCard src="white_card.png" />
+                                // <p>{singleCard.code}</p>
+                                <ImageOfCard src="green_card.png" />
                               )}
                             </IndividualCard>
                           </>
@@ -493,19 +496,12 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
       {currentRound === 4 ? (
         <p>GAME IS OVER</p>
       ) : (
-        // <Message>
-        //   {message && <p> {message}</p>}
-        //   <p>Player up next: {isCurrentPlayer}</p>
-        // </Message>
         <Message>
           {booleanMessage ? (
             <>
-              <p>
-                {/* {`${isCurrentPlayer} got it right! You choose: ${allGameData?.cardData[currentPlayerIndex][currentRound]?.selectedOption} and your card was: ${allGameData?.cardData[currentPlayerIndex][currentRound]?.value} of ${allGameData?.cardData[currentPlayerIndex][currentRound]?.suit}`} */}
-                {currentUsersMessage}
-              </p>
+              <p>{currentUsersMessage}</p>
               <div>
-                {otherPlayers.map((player: Player) => (
+                {otherPlayers.map((player: any) => (
                   // onClick={() => handleButtonClick(player.id)}
                   <button key={player?.id}>{player?.username}</button>
                 ))}
@@ -514,10 +510,7 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
             </>
           ) : (
             <>
-              <p>
-                {/* {`${isCurrentPlayer} got it right! You choose: ${allGameData?.cardData[currentPlayerIndex][currentRound]?.selectedOption} and your card was: ${allGameData?.cardData[currentPlayerIndex][currentRound]?.value} of ${allGameData?.cardData[currentPlayerIndex][currentRound]?.suit}`} */}
-                {currentUsersMessage}
-              </p>
+              <p>{currentUsersMessage}</p>
 
               <p>{isCurrentPlayer === username && otherUsersMessage}</p>
             </>

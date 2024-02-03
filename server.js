@@ -84,7 +84,13 @@ io.on("connection", (socket) => {
   socket.on("send_answer", (data) => {
     console.log(data.selectionMessage, "send_answer");
 
+    const broadcastData = {
+      otherUsersMessage: data.otherUsersMessage,
+      currentUsersMessage: data.currentUsersMessage,
+    };
+
     socket.emit("receive_answer", data);
+    socket.to(data.roomId).emit("receive_answer", broadcastData);
     socket.broadcast
       .to(data.roomId)
       .emit("receive_answer_0", data.otherUsersMessage);
