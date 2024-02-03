@@ -11,7 +11,7 @@ export default function UserSetup() {
   const [users, setUsers] = useState([]);
 
   let socket: any;
-  socket = io("https://irishpokeronline.netlify.app");
+  socket = io();
 
   const handleJoin = () => {
     if (userName !== "" && roomId !== "") {

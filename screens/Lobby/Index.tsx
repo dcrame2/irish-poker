@@ -5,8 +5,8 @@ import styled from "styled-components";
 
 const Container = styled.div`
   display: flex;
-  flex-direction: column;
-  gap: 100px;
+  flex-direction: row;
+  gap: 60px;
 `;
 
 const CardContainer = styled.div`
