@@ -472,7 +472,7 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
                                     rotateX: 0,
                                     opacity: 1,
                                     rotateY: 0,
-                                    scale: 1.1,
+                                    scale: 1,
                                   }}
                                   transition={{
                                     duration: `0.5`,
