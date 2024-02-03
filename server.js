@@ -48,35 +48,29 @@ io.on("connection", (socket) => {
   });
 
   socket.on("send_current_player", (data) => {
-    console.log(data, "current_player");
+    // console.log(data, "current_player");
 
     socket.emit("receive_current_player", data);
     socket.to(data.roomId).emit("receive_current_player", data);
   });
 
   socket.on("send_msg", (data) => {
-    // console.log(data, "send_msg");
-    //This will send a message to a specific room ID
     socket.to(data.roomId).emit("receive_msg", data);
   });
 
-  // Listen for the 'updateCardData' event
   socket.on("updated_card_data", (data) => {
-    console.log(data.cardData, "updateCardData");
-    // Broadcast the updated card data to all clients in the same room
+    // console.log(data.cardData, "updateCardData");
     socket.emit("receive_updated_card_data", data.cardData);
     socket.to(data.roomId).emit("receive_updated_card_data", data.cardData);
   });
 
   socket.on("send_current_round", (data) => {
-    console.log(data, "send_current_round");
-
     socket.emit("receive_current_round", data.currentRound);
     socket.to(data.roomId).emit("receive_current_round", data.currentRound);
   });
 
   socket.on("send_answer", (data) => {
-    console.log(data.selectionMessage, "send_answer");
+    console.log(data, "send_answer");
 
     const broadcastData = {
       otherUsersMessage: data.otherUsersMessage,
@@ -84,11 +78,9 @@ io.on("connection", (socket) => {
     };
 
     socket.emit("receive_answer", data);
-    socket.to(data.roomId).emit("receive_answer", broadcastData);
+    socket.to(data.roomId).emit("receive_answer", data);
 
-    socket.broadcast
-      .to(data.roomId)
-      .emit("receive_answer_0", data.otherUsersMessage);
+    socket.broadcast.to(data.roomId).emit("receive_answer_0", data.buttonsTrue);
   });
 
   socket.on("start_game", (data) => {
@@ -115,15 +107,12 @@ io.on("connection", (socket) => {
               const allPlayersCardsUnorganized = data.data.cards;
               // Number of cards you want in each players hand
               let cardsPerPlayer = 4;
-
               // Calculate the number of subarrays needed
               let numberOfPlayers = Math.ceil(
                 allPlayersCardsUnorganized.length / cardsPerPlayer
               );
-
               // Initialize an array to store the subarrays
               let allPlayersCards = [];
-
               // Loop through and create subarrays
               for (let i = 0; i < numberOfPlayers; i++) {
                 let startIndex = i * cardsPerPlayer;
@@ -131,12 +120,11 @@ io.on("connection", (socket) => {
                 let singlePlayersData = allPlayersCardsUnorganized
                   .slice(startIndex, endIndex)
                   .map((obj, index) => {
-                    // Add a 'player' property to each object in the subarray
+                    // This will add additional information to each players casrds that I use later to display messages and control cards.
                     let isCardNext = i === 0 && index === 0;
                     return {
                       ...obj,
                       player: `${userData.users[i].username}`,
-                      // socketId: `${data.users[i].id}`,
                       socketId: `${userData.users[i].id}`,
                       cardNext: isCardNext,
                     };

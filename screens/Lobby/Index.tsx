@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import style from "../../src/styles/chat.module.css";
 import styled from "styled-components";
-import { motion, useInView } from "framer-motion";
+import { motion } from "framer-motion";
 
 const Container = styled.div`
   display: flex;
@@ -100,12 +100,17 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
   const [booleanMessage, setBooleanMessage] = useState(false);
   const [currentUsersMessage, setCurrentUsersMessage] = useState();
   const [otherUsersMessage, setOtherUsersMessage] = useState();
+  const [buttonsTrue, setButtonsTrue] = useState(false);
 
   const otherPlayers = users?.filter(
     (user: any) => user?.username !== username
   );
 
-  console.log(otherPlayers, "otherPlayers");
+  const currentPlayer = users?.filter(
+    (user: any) => user?.username === username
+  );
+
+  console.log(currentPlayer, "current MF");
 
   const sendData = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -266,7 +271,12 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
         CORRECT!
         ${isCurrentPlayer} guessed ${option}! The card was a: ${card?.value.toLowerCase()} of ${card?.suit.toLowerCase()}`,
         otherUsersMessage: `One moment...${isCurrentPlayer} is choosing who drinks`,
+        buttonsTrue: true,
       });
+
+      socket.emit("send_info_to_current_player", {});
+
+      socket.emit("send_info_to_current_user", {});
     } else {
       socket.emit("send_answer", {
         roomId,
@@ -319,12 +329,9 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
       setCurrentPlayerIndex(data);
     });
 
-    socket.on(
-      "receive_current_player",
-      ({ isCurrentPlayer, currentRound }: any) => {
-        setIsCurrentPlayer(isCurrentPlayer);
-      }
-    );
+    socket.on("receive_current_player", ({ isCurrentPlayer }: any) => {
+      setIsCurrentPlayer(isCurrentPlayer);
+    });
 
     if (
       allGameData?.cardData.every(
@@ -342,13 +349,15 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
     });
 
     socket.on("receive_answer", (data: any) => {
+      console.log(data, "receive_answer");
       setBooleanMessage(data.selectionMessage);
       setCurrentUsersMessage(data.currentUsersMessage);
       setOtherUsersMessage(data.otherUsersMessage);
     });
 
     socket.on("receive_answer_0", (data: any) => {
-      setOtherUsersMessage(data);
+      // setOtherUsersMessage(data);
+      setButtonsTrue(data);
     });
 
     setIsCurrentPlayer(users[currentPlayerIndex]?.username);
@@ -455,11 +464,6 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
                                   src={singleCard.image}
                                 />
                               ) : (
-                                //     <ImageOfCard
-                                //   src={singleCard.images.svg}
-                                // ></ImageOfCard>
-                                // <p>{singleCard.code}</p>
-
                                 <ImageOfCard
                                   key={`default-${singleCard.code}`}
                                   initial={{
@@ -547,10 +551,11 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
               <h1>HIIIIIII</h1>
 
               <p>{currentUsersMessage}</p>
-              {otherPlayers?.map((player: any) => (
-                // onClick={() => handleButtonClick(player.id)}
-                <button key={player?.id}>{player?.username}</button>
-              ))}
+              {buttonsTrue &&
+                otherPlayers?.map((player: any) => (
+                  // onClick={() => handleButtonClick(player.id)}
+                  <button key={player?.id}>{player?.username}</button>
+                ))}
               <p>{otherUsersMessage}</p>
             </>
           ) : (
