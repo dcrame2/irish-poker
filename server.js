@@ -164,7 +164,7 @@ io.on("connection", (socket) => {
   });
 });
 
-const PORT = "https://irishpokeronline.netlify.app" || 3001;
+const PORT = 3001;
 httpServer.listen(PORT, () => {
   console.log(`Socket.io server is running on port ${PORT}`);
 });
