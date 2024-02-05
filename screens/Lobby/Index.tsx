@@ -348,6 +348,7 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
       roomId,
       usersToDrink,
     });
+    setButtonsTrue(false);
   };
 
   useEffect(() => {
@@ -416,15 +417,15 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
 
     setIsCurrentPlayer(users[currentPlayerIndex]?.username);
 
-    const timeoutId = setTimeout(() => {
-      if (countdown > 0) {
-        setCountdown((prevCountdown) => prevCountdown - 1);
-      } else {
-        setUsersToDrink([]); // Set usersToDrink to an empty array or null to remove the elements
-      }
-    }, 1000); // 1000 milliseconds = 1 second
+    // const timeoutId = setTimeout(() => {
+    //   if (countdown > 0) {
+    //     setCountdown((prevCountdown) => prevCountdown - 1);
+    //   } else {
+    //     setUsersToDrink([]); // Set usersToDrink to an empty array or null to remove the elements
+    //   }
+    // }, 1000); // 1000 milliseconds = 1 second
 
-    return () => clearTimeout(timeoutId);
+    // return () => clearTimeout(timeoutId);
   }, [
     socket,
     currentPlayerIndex,
@@ -617,7 +618,6 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
                   usersToDrink?.map((user: string, index: number) => {
                     return <p key={user}>{user}</p>;
                   })} */}
-                {countdown > 0 && <p>{countdown}</p>}
                 {usersToDrink &&
                   usersToDrink.map((user: string, index: number) => {
                     return <p key={user}>{user}</p>;
