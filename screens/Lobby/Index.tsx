@@ -3,11 +3,33 @@ import React, { useEffect, useState, useRef } from "react";
 import style from "../../src/styles/chat.module.css";
 import styled from "styled-components";
 import { motion } from "framer-motion";
+import Chat from "../../components/Chat";
+import { Container } from "../../src/styles/Utilities";
 
-const Container = styled.div`
+const MainContainer = styled.div`
   display: flex;
   flex-direction: row;
   gap: 60px;
+
+  /* background-image: url("irish_bg_mobile.png"); */
+  background-color: rgba(27, 200, 0, 0.1);
+  background-blend-mode: multiply;
+
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const MainInnerContainer = styled.div`
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  /* ${Container} */
+  background-color: black;
 `;
 
 const CardContainer = styled.div`
@@ -53,13 +75,6 @@ const Message = styled.div`
   flex-direction: column;
 `;
 
-interface IMsgDataTypes {
-  roomId: String | number;
-  user: String;
-  msg: String;
-  time: String;
-}
-
 interface GameData {
   users: [];
   roomId: string;
@@ -84,8 +99,6 @@ type Player = SingleCard[];
 type PlayerData = {};
 
 const ChatPage = ({ socket, username, roomId, users }: any) => {
-  const [currentMsg, setCurrentMsg] = useState("");
-  const [chat, setChat] = useState<IMsgDataTypes[]>([]);
   const [playerData, setPlayerData] = useState([]);
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
 
@@ -111,24 +124,6 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
   );
 
   console.log(currentPlayer, "current MF");
-
-  const sendData = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (currentMsg !== "") {
-      const msgData: IMsgDataTypes = {
-        roomId,
-        user: username,
-        msg: currentMsg,
-        time:
-          new Date(Date.now()).getHours() +
-          ":" +
-          new Date(Date.now()).getMinutes(),
-      };
-
-      socket.emit("send_msg", msgData);
-      setCurrentMsg("");
-    }
-  };
 
   const lockInPlayersHandler = () => {
     socket.emit("lockin_players", { users, roomId });
@@ -307,10 +302,6 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
   };
 
   useEffect(() => {
-    socket.on("receive_msg", (data: IMsgDataTypes) => {
-      setChat((pre) => [...pre, data]);
-    });
-
     socket.on("allPlayersCards", (playersCards: []) => {
       console.log("Received allPlayersCards data:", playersCards);
       setPlayerData(playersCards);
@@ -376,9 +367,16 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
   const ref = useRef(null);
 
   return (
-    <Container className={style.chat_div}>
-      <div className={style.chat_border}>
-        <div style={{ marginBottom: "1rem" }}>
+    <MainContainer>
+      <MainInnerContainer>
+        <Chat
+          socket={socket}
+          username={username}
+          roomId={roomId}
+          users={users}
+        />
+        <div className={style.chat_border}>
+          {/* <div style={{ marginBottom: "1rem" }}>
           <h2>In Lobby</h2>
           <p>
             Name: <b>{username}</b> and Room Id: <b>{roomId}</b>
@@ -388,187 +386,164 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
           {users.map((user: { id: string; username: string; room: string }) => {
             return <p>{user.username} </p>;
           })}
-          {chat.map(({ roomId, user, msg, time }, key) => (
-            <div
-              key={key}
-              className={
-                user == username
-                  ? style.chatProfileRight
-                  : style.chatProfileLeft
-              }
-            >
-              <span
-                className={style.chatProfileSpan}
-                style={{ textAlign: user == username ? "right" : "left" }}
-              >
-                {user}
-              </span>
-              <h3 style={{ textAlign: user == username ? "right" : "left" }}>
-                {msg}
-              </h3>
-            </div>
-          ))}
+        </div> */}
+          <div>
+            {users.length > 0 && !usersLockedIn ? (
+              <button onClick={lockInPlayersHandler}>Continue</button>
+            ) : (
+              <button onClick={startGameHandler}>Start Game</button>
+            )}
+          </div>
         </div>
-        <div>
-          <form onSubmit={(e) => sendData(e)}>
-            <input
-              className={style.chat_input}
-              type="text"
-              value={currentMsg}
-              placeholder="Type your message.."
-              onChange={(e) => setCurrentMsg(e.target.value)}
-            />
-            <button className={style.chat_button}>Send</button>
-          </form>
-          {users.length > 0 && !usersLockedIn ? (
-            <button onClick={lockInPlayersHandler}>Continue</button>
-          ) : (
-            <button onClick={startGameHandler}>Start Game</button>
-          )}
-        </div>
-      </div>
 
-      <CardContainer>
-        {allGameData
-          ? allGameData.cardData.map((player: Player, playerIndex: number) => {
-              return (
-                <>
-                  <p>{player[playerIndex].player}</p>
-                  <IndividualCardContainer>
-                    <CardsContainer ref={ref}>
-                      {player.map((singleCard: SingleCard, index: number) => {
-                        return (
-                          <>
-                            {/* allGameData?.cardData[0][0].images.png */}
+        <CardContainer>
+          {allGameData
+            ? allGameData.cardData.map(
+                (player: Player, playerIndex: number) => {
+                  return (
+                    <>
+                      <p>{player[playerIndex].player}</p>
+                      <IndividualCardContainer>
+                        <CardsContainer ref={ref}>
+                          {player.map(
+                            (singleCard: SingleCard, index: number) => {
+                              return (
+                                <>
+                                  <IndividualCard key={`player-${index}`}>
+                                    {singleCard.selectedOption ? (
+                                      <ImageOfCard
+                                        key={`${singleCard.selectedOption}-${singleCard.image}`}
+                                        initial={{
+                                          opacity: 0,
+                                          rotateX: 360,
+                                          rotateY: 720,
+                                          scale: 0,
+                                        }}
+                                        animate={{
+                                          rotateX: 0,
+                                          opacity: 1,
+                                          rotateY: 0,
+                                          scale: 1,
+                                        }}
+                                        transition={{
+                                          duration: `0.8`,
+                                          ease: "easeInOut",
+                                        }}
+                                        src={singleCard.image}
+                                      />
+                                    ) : (
+                                      <ImageOfCard
+                                        key={`default-${singleCard.code}`}
+                                        initial={{
+                                          opacity: 0,
+                                          rotateX: 180,
+                                          rotateY: 360,
+                                          scale: 0,
+                                        }}
+                                        animate={{
+                                          rotateX: 0,
+                                          opacity: 1,
+                                          rotateY: 0,
+                                          scale: 1,
+                                        }}
+                                        transition={{
+                                          duration: `0.5`,
+                                          ease: "easeInOut",
+                                        }}
+                                        src="green_card.png"
+                                      />
+                                    )}
+                                  </IndividualCard>
+                                </>
+                              );
+                            }
+                          )}
+                        </CardsContainer>
+                      </IndividualCardContainer>
+                    </>
+                  );
+                }
+              )
+            : ""}
+          <MainButtonsContainer>
+            {users[currentPlayerIndex]?.username === username &&
+              currentRound === 0 && (
+                <BtnContainer className="btn-container">
+                  <Buttons onClick={() => redOrBlackHandler("red")}>
+                    Red
+                  </Buttons>
+                  <Buttons onClick={() => redOrBlackHandler("black")}>
+                    Black
+                  </Buttons>
+                </BtnContainer>
+              )}
+            {users[currentPlayerIndex]?.username === username &&
+              currentRound === 1 && (
+                <BtnContainer className="btn-container">
+                  <Buttons onClick={() => redOrBlackHandler("lower")}>
+                    Lower
+                  </Buttons>
+                  <Buttons onClick={() => redOrBlackHandler("higher")}>
+                    Higher
+                  </Buttons>
+                </BtnContainer>
+              )}
+            {users[currentPlayerIndex]?.username === username &&
+              currentRound === 2 && (
+                <BtnContainer className="btn-container">
+                  <Buttons onClick={() => redOrBlackHandler("in")}>In</Buttons>
+                  <Buttons onClick={() => redOrBlackHandler("out")}>
+                    Out
+                  </Buttons>
+                </BtnContainer>
+              )}
+            {users[currentPlayerIndex]?.username === username &&
+              currentRound === 3 && (
+                <BtnContainer className="btn-container">
+                  <Buttons onClick={() => redOrBlackHandler("club")}>
+                    Club
+                  </Buttons>
+                  <Buttons onClick={() => redOrBlackHandler("spade")}>
+                    Spade
+                  </Buttons>
+                  <Buttons onClick={() => redOrBlackHandler("diamond")}>
+                    Diamond
+                  </Buttons>
+                  <Buttons onClick={() => redOrBlackHandler("heart")}>
+                    Heart
+                  </Buttons>
+                </BtnContainer>
+              )}
+          </MainButtonsContainer>
+        </CardContainer>
+        {currentRound === 4 ? (
+          <p>GAME IS OVER</p>
+        ) : (
+          <Message>
+            {booleanMessage ? (
+              <>
+                <h1>HIIIIIII</h1>
 
-                            <IndividualCard key={`player-${index}`}>
-                              {singleCard.selectedOption ? (
-                                <ImageOfCard
-                                  key={`${singleCard.selectedOption}-${singleCard.image}`}
-                                  initial={{
-                                    opacity: 0,
-                                    rotateX: 360,
-                                    rotateY: 720,
-                                    scale: 0,
-                                  }}
-                                  animate={{
-                                    rotateX: 0,
-                                    opacity: 1,
-                                    rotateY: 0,
-                                    scale: 1,
-                                  }}
-                                  transition={{
-                                    duration: `0.8`,
-                                    ease: "easeInOut",
-                                  }}
-                                  src={singleCard.image}
-                                />
-                              ) : (
-                                <ImageOfCard
-                                  key={`default-${singleCard.code}`}
-                                  initial={{
-                                    opacity: 0,
-                                    rotateX: 180,
-                                    rotateY: 360,
-                                    scale: 0,
-                                  }}
-                                  animate={{
-                                    rotateX: 0,
-                                    opacity: 1,
-                                    rotateY: 0,
-                                    scale: 1,
-                                  }}
-                                  transition={{
-                                    duration: `0.5`,
-                                    ease: "easeInOut",
-                                  }}
-                                  src="green_card.png"
-                                />
-                              )}
-                            </IndividualCard>
-                          </>
-                        );
-                      })}
-                    </CardsContainer>
-                  </IndividualCardContainer>
-                </>
-              );
-            })
-          : ""}
-        <MainButtonsContainer>
-          {users[currentPlayerIndex]?.username === username &&
-            currentRound === 0 && (
-              <BtnContainer className="btn-container">
-                <Buttons onClick={() => redOrBlackHandler("red")}>Red</Buttons>
-                <Buttons onClick={() => redOrBlackHandler("black")}>
-                  Black
-                </Buttons>
-              </BtnContainer>
+                <p>{currentUsersMessage}</p>
+                {buttonsTrue &&
+                  otherPlayers?.map((player: any) => (
+                    // onClick={() => handleButtonClick(player.id)}
+                    <button key={player?.id}>{player?.username}</button>
+                  ))}
+                <p>{otherUsersMessage}</p>
+              </>
+            ) : (
+              <>
+                <p>{currentUsersMessage}</p>
+                <p>{otherUsersMessage}</p>
+              </>
             )}
-          {users[currentPlayerIndex]?.username === username &&
-            currentRound === 1 && (
-              <BtnContainer className="btn-container">
-                <Buttons onClick={() => redOrBlackHandler("lower")}>
-                  Lower
-                </Buttons>
-                <Buttons onClick={() => redOrBlackHandler("higher")}>
-                  Higher
-                </Buttons>
-              </BtnContainer>
-            )}
-          {users[currentPlayerIndex]?.username === username &&
-            currentRound === 2 && (
-              <BtnContainer className="btn-container">
-                <Buttons onClick={() => redOrBlackHandler("in")}>In</Buttons>
-                <Buttons onClick={() => redOrBlackHandler("out")}>Out</Buttons>
-              </BtnContainer>
-            )}
-          {users[currentPlayerIndex]?.username === username &&
-            currentRound === 3 && (
-              <BtnContainer className="btn-container">
-                <Buttons onClick={() => redOrBlackHandler("club")}>
-                  Club
-                </Buttons>
-                <Buttons onClick={() => redOrBlackHandler("spade")}>
-                  Spade
-                </Buttons>
-                <Buttons onClick={() => redOrBlackHandler("diamond")}>
-                  Diamond
-                </Buttons>
-                <Buttons onClick={() => redOrBlackHandler("heart")}>
-                  Heart
-                </Buttons>
-              </BtnContainer>
-            )}
-        </MainButtonsContainer>
-      </CardContainer>
-      {currentRound === 4 ? (
-        <p>GAME IS OVER</p>
-      ) : (
-        <Message>
-          {booleanMessage ? (
-            <>
-              <h1>HIIIIIII</h1>
 
-              <p>{currentUsersMessage}</p>
-              {buttonsTrue &&
-                otherPlayers?.map((player: any) => (
-                  // onClick={() => handleButtonClick(player.id)}
-                  <button key={player?.id}>{player?.username}</button>
-                ))}
-              <p>{otherUsersMessage}</p>
-            </>
-          ) : (
-            <>
-              <p>{currentUsersMessage}</p>
-              <p>{otherUsersMessage}</p>
-            </>
-          )}
-
-          <p>Player up next: {isCurrentPlayer}</p>
-        </Message>
-      )}
-    </Container>
+            <p>Player up next: {isCurrentPlayer}</p>
+          </Message>
+        )}
+      </MainInnerContainer>
+    </MainContainer>
   );
 };
 

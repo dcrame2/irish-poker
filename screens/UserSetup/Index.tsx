@@ -2,6 +2,11 @@ import styles from "../../src/styles/page.module.css";
 import { io } from "socket.io-client";
 import React, { useState, useEffect } from "react";
 import ChatPage from "../../screens/Lobby/Index";
+import styled from "styled-components";
+import { Container } from "../../src/styles/Utilities";
+const MainContainer = styled.div`
+  /* ${Container} */
+`;
 
 export default function UserSetup() {
   const [showChat, setShowChat] = useState(false);
@@ -35,7 +40,7 @@ export default function UserSetup() {
   }, [socket]);
 
   return (
-    <div>
+    <MainContainer>
       <div
         className={styles.main_div}
         style={{ display: showChat ? "none" : "" }}
@@ -62,14 +67,14 @@ export default function UserSetup() {
           )}
         </button>
       </div>
-      <div style={{ display: !showChat ? "none" : "" }}>
-        <ChatPage
-          users={users}
-          socket={socket}
-          roomId={roomId}
-          username={userName}
-        />
-      </div>
-    </div>
+      {/* <div style={{ display: !showChat ? "none" : "" }}> */}
+      <ChatPage
+        users={users}
+        socket={socket}
+        roomId={roomId}
+        username={userName}
+      />
+      {/* </div>  */}
+    </MainContainer>
   );
 }
