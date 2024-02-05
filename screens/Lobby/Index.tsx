@@ -115,6 +115,12 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
   const [otherUsersMessage, setOtherUsersMessage] = useState();
   const [buttonsTrue, setButtonsTrue] = useState(false);
 
+  const [currentUsersMessageTrue, setCurrentUserMessageTrue] = useState("");
+  const [currentUsersMessageFalse, setCurrentUsersMessageFalse] = useState("");
+  const [otherUsersMessageTrue, setOtherUsersMessageTrue] = useState("");
+  const [otherUsersMessageFalse, setOtherUsersMessageFalse] = useState("");
+  const [usersToDrink, setUsersToDrink] = useState<any[]>();
+
   const otherPlayers = users?.filter(
     (user: any) => user?.username !== username
   );
@@ -123,7 +129,7 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
     (user: any) => user?.username === username
   );
 
-  console.log(currentPlayer, "current MF");
+  // console.log(currentPlayer, "current MF");
 
   const lockInPlayersHandler = () => {
     socket.emit("lockin_players", { users, roomId });
@@ -155,7 +161,7 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
     }
   }
 
-  const redOrBlackHandler = (option: string) => {
+  const gameLogicHandler = (option: string) => {
     const currentPlayerCard: SingleCard | undefined =
       allGameData?.cardData[currentPlayerIndex][currentRound];
 
@@ -258,28 +264,51 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
     let selectionMessage = isCorrect ? true : false;
 
     // Display the appropriate message based on the result
-    if (isCorrect) {
-      socket.emit("send_answer", {
-        roomId,
-        selectionMessage,
-        currentUsersMessage: `
-        CORRECT!
-        ${isCurrentPlayer} guessed ${option}! The card was a: ${card?.value.toLowerCase()} of ${card?.suit.toLowerCase()}`,
-        otherUsersMessage: `One moment...${isCurrentPlayer} is choosing who drinks`,
-        buttonsTrue: true,
-      });
+    // if (isCorrect) {
+    //   socket.emit("send_answer", {
+    //     roomId,
+    //     selectionMessage,
+    //     currentUsersMessage: `
+    //     CORRECT!
+    //     ${isCurrentPlayer} guessed ${option}! The card was a: ${card?.value.toLowerCase()} of ${card?.suit.toLowerCase()}`,
+    //     otherUsersMessage: `One moment...${isCurrentPlayer} is choosing who drinks`,
+    //     buttonsTrue: true,
+    //   });
 
-      socket.emit("send_info_to_current_player", {});
+    //   socket.emit("send_info_to_current_player", {});
 
-      socket.emit("send_info_to_current_user", {});
-    } else {
-      socket.emit("send_answer", {
-        roomId,
-        selectionMessage,
-        currentUsersMessage: `${isCurrentPlayer} was incorrect and is drinking!`,
-        otherUsersMessage: "",
-      });
-    }
+    //   socket.emit("send_info_to_current_user", {});
+    // } else {
+    //   socket.emit("send_answer", {
+    //     roomId,
+    //     selectionMessage,
+    //     currentUsersMessage: `${isCurrentPlayer} was incorrect and is drinking!`,
+    //     otherUsersMessage: "",
+    //   });
+    // }
+
+    socket.emit("send_current_player_message", {
+      roomId,
+      selectionMessage,
+      currentUsersMessageTrue: `
+      CORRECT!
+      ${
+        card?.player
+      } guessed ${option}! The card was a: ${card?.value.toLowerCase()} of ${card?.suit.toLowerCase()}`,
+      currentUsersMessageFalse: `${isCurrentPlayer} was incorrect and is drinking!`,
+    });
+
+    socket.emit("send_other_players_message", {
+      roomId,
+      selectionMessage,
+      otherUsersMessageTrue: `One moment...${isCurrentPlayer} is choosing who drinks`,
+      otherUsersMessageFalse: `${isCurrentPlayer} was incorrect and is drinking!`,
+      currentUsersMessageTrue: `
+      CORRECT!
+      ${
+        card?.player
+      } guessed ${option}! The card was a: ${card?.value.toLowerCase()} of ${card?.suit.toLowerCase()}`,
+    });
 
     socket.emit("updated_card_data", {
       users,
@@ -298,6 +327,24 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
       roomId,
       isCurrentPlayer,
       currentRound,
+    });
+  };
+
+  let usersToDrinkArr = [];
+  const whoDrinksHandler = (user: any) => {
+    usersToDrinkArr.push(user);
+    setUsersToDrink((prevUsersToDrink) => [
+      ...(prevUsersToDrink ?? []), // Ensure prevUsersToDrink is an array
+      user,
+    ]);
+    console.log(usersToDrinkArr, "USERS TO DRINK");
+  };
+
+  const confirmWhoDrinksHandler = () => {
+    console.log(usersToDrink);
+    socket.emit("send_users_to_drink", {
+      roomId,
+      usersToDrink,
     });
   };
 
@@ -339,16 +386,30 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
       setCurrentRound(data);
     });
 
-    socket.on("receive_answer", (data: any) => {
-      console.log(data, "receive_answer");
+    socket.on("receive_current_player_message", (data: any) => {
+      console.log(data, "receive_current_player_message");
       setBooleanMessage(data.selectionMessage);
-      setCurrentUsersMessage(data.currentUsersMessage);
-      setOtherUsersMessage(data.otherUsersMessage);
+      setCurrentUserMessageTrue(data.currentUsersMessageTrue);
+      setCurrentUsersMessageFalse(data.currentUsersMessageFalse);
+      setButtonsTrue(true);
     });
 
-    socket.on("receive_answer_0", (data: any) => {
-      // setOtherUsersMessage(data);
-      setButtonsTrue(data);
+    socket.on("receive_other_players_message", (data: any) => {
+      console.log(data, "receive_other_players_message");
+      setOtherUsersMessageTrue(data.otherUsersMessageTrue);
+      setOtherUsersMessageFalse(data.otherUsersMessageFalse);
+      setBooleanMessage(data.selectionMessage);
+      setCurrentUserMessageTrue(data.currentUsersMessageTrue);
+    });
+
+    socket.on("receive_users_to_drink", (data: any) => {
+      console.log(data, "receive_users_to_drink");
+      setUsersToDrink(data);
+      setCurrentUserMessageTrue("");
+      setOtherUsersMessageFalse("");
+      setOtherUsersMessageTrue("");
+      setCurrentUsersMessageFalse("");
+      setButtonsTrue(false);
     });
 
     setIsCurrentPlayer(users[currentPlayerIndex]?.username);
@@ -360,8 +421,12 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
     isCurrentPlayer,
     currentRound,
     booleanMessage,
-    currentUsersMessage,
-    otherUsersMessage,
+    currentUsersMessageTrue,
+    setCurrentUsersMessageFalse,
+    setOtherUsersMessageTrue,
+    setOtherUsersMessageFalse,
+    usersToDrink,
+    buttonsTrue,
   ]);
 
   const ref = useRef(null);
@@ -411,26 +476,27 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
                                 <>
                                   <IndividualCard key={`player-${index}`}>
                                     {singleCard.selectedOption ? (
-                                      <ImageOfCard
-                                        key={`${singleCard.selectedOption}-${singleCard.image}`}
-                                        initial={{
-                                          opacity: 0,
-                                          rotateX: 360,
-                                          rotateY: 720,
-                                          scale: 0,
-                                        }}
-                                        animate={{
-                                          rotateX: 0,
-                                          opacity: 1,
-                                          rotateY: 0,
-                                          scale: 1,
-                                        }}
-                                        transition={{
-                                          duration: `0.8`,
-                                          ease: "easeInOut",
-                                        }}
-                                        src={singleCard.image}
-                                      />
+                                      // <ImageOfCard
+                                      //   key={`${singleCard.selectedOption}-${singleCard.image}`}
+                                      //   initial={{
+                                      //     opacity: 0,
+                                      //     rotateX: 360,
+                                      //     rotateY: 720,
+                                      //     scale: 0,
+                                      //   }}
+                                      //   animate={{
+                                      //     rotateX: 0,
+                                      //     opacity: 1,
+                                      //     rotateY: 0,
+                                      //     scale: 1,
+                                      //   }}
+                                      //   transition={{
+                                      //     duration: `0.8`,
+                                      //     ease: "easeInOut",
+                                      //   }}
+                                      //   src={singleCard.image}
+                                      // />
+                                      <p>{singleCard.code}</p>
                                     ) : (
                                       <ImageOfCard
                                         key={`default-${singleCard.code}`}
@@ -450,7 +516,7 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
                                           duration: `0.5`,
                                           ease: "easeInOut",
                                         }}
-                                        src="green_card.png"
+                                        src="white_card.png"
                                       />
                                     )}
                                   </IndividualCard>
@@ -469,10 +535,8 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
             {users[currentPlayerIndex]?.username === username &&
               currentRound === 0 && (
                 <BtnContainer className="btn-container">
-                  <Buttons onClick={() => redOrBlackHandler("red")}>
-                    Red
-                  </Buttons>
-                  <Buttons onClick={() => redOrBlackHandler("black")}>
+                  <Buttons onClick={() => gameLogicHandler("red")}>Red</Buttons>
+                  <Buttons onClick={() => gameLogicHandler("black")}>
                     Black
                   </Buttons>
                 </BtnContainer>
@@ -480,10 +544,10 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
             {users[currentPlayerIndex]?.username === username &&
               currentRound === 1 && (
                 <BtnContainer className="btn-container">
-                  <Buttons onClick={() => redOrBlackHandler("lower")}>
+                  <Buttons onClick={() => gameLogicHandler("lower")}>
                     Lower
                   </Buttons>
-                  <Buttons onClick={() => redOrBlackHandler("higher")}>
+                  <Buttons onClick={() => gameLogicHandler("higher")}>
                     Higher
                   </Buttons>
                 </BtnContainer>
@@ -491,25 +555,23 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
             {users[currentPlayerIndex]?.username === username &&
               currentRound === 2 && (
                 <BtnContainer className="btn-container">
-                  <Buttons onClick={() => redOrBlackHandler("in")}>In</Buttons>
-                  <Buttons onClick={() => redOrBlackHandler("out")}>
-                    Out
-                  </Buttons>
+                  <Buttons onClick={() => gameLogicHandler("in")}>In</Buttons>
+                  <Buttons onClick={() => gameLogicHandler("out")}>Out</Buttons>
                 </BtnContainer>
               )}
             {users[currentPlayerIndex]?.username === username &&
               currentRound === 3 && (
                 <BtnContainer className="btn-container">
-                  <Buttons onClick={() => redOrBlackHandler("club")}>
+                  <Buttons onClick={() => gameLogicHandler("club")}>
                     Club
                   </Buttons>
-                  <Buttons onClick={() => redOrBlackHandler("spade")}>
+                  <Buttons onClick={() => gameLogicHandler("spade")}>
                     Spade
                   </Buttons>
-                  <Buttons onClick={() => redOrBlackHandler("diamond")}>
+                  <Buttons onClick={() => gameLogicHandler("diamond")}>
                     Diamond
                   </Buttons>
-                  <Buttons onClick={() => redOrBlackHandler("heart")}>
+                  <Buttons onClick={() => gameLogicHandler("heart")}>
                     Heart
                   </Buttons>
                 </BtnContainer>
@@ -522,23 +584,32 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
           <Message>
             {booleanMessage ? (
               <>
-                <h1>HIIIIIII</h1>
-
-                <p>{currentUsersMessage}</p>
+                <p>{currentUsersMessageTrue}</p>
+                <p>{otherUsersMessageTrue}</p>
                 {buttonsTrue &&
                   otherPlayers?.map((player: any) => (
-                    // onClick={() => handleButtonClick(player.id)}
-                    <button key={player?.id}>{player?.username}</button>
+                    <button
+                      onClick={() => whoDrinksHandler(player?.username)}
+                      key={player?.id}
+                    >
+                      {player?.username}
+                    </button>
                   ))}
-                <p>{otherUsersMessage}</p>
+                {buttonsTrue && (
+                  <button onClick={confirmWhoDrinksHandler}>
+                    Confirm Players to Drinks
+                  </button>
+                )}
+                {usersToDrink &&
+                  usersToDrink?.map((user: string, index: number) => {
+                    return <p key={user}>{user}</p>;
+                  })}
               </>
             ) : (
               <>
-                <p>{currentUsersMessage}</p>
-                <p>{otherUsersMessage}</p>
+                <p>{otherUsersMessageFalse}</p>
               </>
             )}
-
             <p>Player up next: {isCurrentPlayer}</p>
           </Message>
         )}

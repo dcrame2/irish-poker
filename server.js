@@ -69,18 +69,26 @@ io.on("connection", (socket) => {
     socket.to(data.roomId).emit("receive_current_round", data.currentRound);
   });
 
-  socket.on("send_answer", (data) => {
-    console.log(data, "send_answer");
+  socket.on("send_current_player_message", (data) => {
+    console.log(data, "send_current_player_message");
 
-    const broadcastData = {
-      otherUsersMessage: data.otherUsersMessage,
-      currentUsersMessage: data.currentUsersMessage,
-    };
+    socket.emit("receive_current_player_message", data);
+  });
 
-    socket.emit("receive_answer", data);
-    socket.to(data.roomId).emit("receive_answer", data);
+  socket.on("send_other_players_message", (data) => {
+    console.log(data, "send_other_players_message");
 
-    socket.broadcast.to(data.roomId).emit("receive_answer_0", data.buttonsTrue);
+    // socket.emit("receive_other_players_message", data);
+    socket.broadcast
+      .to(data.roomId)
+      .emit("receive_other_players_message", data);
+  });
+
+  socket.on("send_users_to_drink", (data) => {
+    console.log(data, "send_users_to_drink");
+
+    socket.emit("receive_users_to_drink", data.usersToDrink);
+    socket.to(data.roomId).emit("receive_users_to_drink", data.usersToDrink);
   });
 
   socket.on("start_game", (data) => {
