@@ -121,6 +121,8 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
   const [otherUsersMessageFalse, setOtherUsersMessageFalse] = useState("");
   const [usersToDrink, setUsersToDrink] = useState<any[]>();
 
+  const [countdown, setCountdown] = useState(5);
+
   const otherPlayers = users?.filter(
     (user: any) => user?.username !== username
   );
@@ -413,6 +415,16 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
     });
 
     setIsCurrentPlayer(users[currentPlayerIndex]?.username);
+
+    const timeoutId = setTimeout(() => {
+      if (countdown > 0) {
+        setCountdown((prevCountdown) => prevCountdown - 1);
+      } else {
+        setUsersToDrink([]); // Set usersToDrink to an empty array or null to remove the elements
+      }
+    }, 1000); // 1000 milliseconds = 1 second
+
+    return () => clearTimeout(timeoutId);
   }, [
     socket,
     currentPlayerIndex,
@@ -427,6 +439,7 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
     setOtherUsersMessageFalse,
     usersToDrink,
     buttonsTrue,
+    countdown,
   ]);
 
   const ref = useRef(null);
@@ -600,8 +613,13 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
                     Confirm Players to Drinks
                   </button>
                 )}
-                {usersToDrink &&
+                {/* {usersToDrink &&
                   usersToDrink?.map((user: string, index: number) => {
+                    return <p key={user}>{user}</p>;
+                  })} */}
+                {countdown > 0 && <p>{countdown}</p>}
+                {usersToDrink &&
+                  usersToDrink.map((user: string, index: number) => {
                     return <p key={user}>{user}</p>;
                   })}
               </>
