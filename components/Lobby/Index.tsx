@@ -37,17 +37,14 @@ const ImageOfCard = styled(motion.img)`
   width: 50px;
 `;
 
-// const IndividualCardContainer = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   gap: 20px;
-//   /* position: absolute; */
-// `;
+const IndividualCardContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+`;
 
 const MainButtonsContainer = styled.div`
   display: flex;
-  /* justify-content: space-between; */
-  /* height: 100%; */
   gap: 10px;
 `;
 
@@ -59,21 +56,16 @@ const BtnContainer = styled.div`
   bottom: 0;
 `;
 
-const Buttons = styled.button``;
-
 const CardsContainer = styled.div`
   display: flex;
   flex-direction: row;
   gap: 20px;
-  /* display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-  gap: 10px; */
 `;
 
 const Message = styled.div`
   display: flex;
   flex-direction: column;
-  max-width: 600px;
+  max-width: 500px;
   align-items: center;
   justify-content: center;
 `;
@@ -102,14 +94,10 @@ const GameContainer = styled.div`
   align-items: center;
   justify-content: center;
   height: 100%;
-  /* position: relative; */
 `;
 
 const CurrentPlayerCard = styled(IndividualCard)`
   z-index: 1;
-  /* transform: scale(1.4); */
-  /* margin-top: 200px; */
-  //
 `;
 
 const OtherPlayersCard = styled(IndividualCard)`
@@ -478,30 +466,30 @@ const GameLobby = ({ socket, username, roomId, users }: any) => {
                         {player.map((singleCard: SingleCard, index: number) => {
                           return (
                             <>
-                              <CardComponent key={`player-${index}`}>
+                              <IndividualCardContainer key={`player-${index}`}>
                                 {singleCard.selectedOption ? (
-                                  // <ImageOfCard
-                                  //   key={`${singleCard.selectedOption}-${singleCard.image}`}
-                                  //   initial={{
-                                  //     opacity: 0,
-                                  //     rotateX: 360,
-                                  //     rotateY: 720,
-                                  //     scale: 0,
-                                  //   }}
-                                  //   animate={{
-                                  //     rotateX: 0,
-                                  //     opacity: 1,
-                                  //     rotateY: 0,
-                                  //     scale: 1,
-                                  //   }}
-                                  //   transition={{
-                                  //     duration: `0.8`,
-                                  //     ease: "easeInOut",
-                                  //   }}
-                                  //   src={singleCard.image}
-                                  // />
-                                  <p>{singleCard.code}</p>
+                                  <ImageOfCard
+                                    key={`${singleCard.selectedOption}-${singleCard.image}`}
+                                    initial={{
+                                      opacity: 0,
+                                      rotateX: 360,
+                                      rotateY: 720,
+                                      scale: 0,
+                                    }}
+                                    animate={{
+                                      rotateX: 0,
+                                      opacity: 1,
+                                      rotateY: 0,
+                                      scale: 1,
+                                    }}
+                                    transition={{
+                                      duration: `0.8`,
+                                      ease: "easeInOut",
+                                    }}
+                                    src={singleCard.image}
+                                  />
                                 ) : (
+                                  // <p>{singleCard.code}</p>
                                   <ImageOfCard
                                     key={`default-${singleCard.code}`}
                                     initial={{
@@ -520,10 +508,10 @@ const GameLobby = ({ socket, username, roomId, users }: any) => {
                                       duration: `0.5`,
                                       ease: "easeInOut",
                                     }}
-                                    src="white_card.png"
+                                    src="green_card.png"
                                   />
                                 )}
-                              </CardComponent>
+                              </IndividualCardContainer>
                             </>
                           );
                         })}
@@ -596,17 +584,17 @@ const GameLobby = ({ socket, username, roomId, users }: any) => {
                   <p>{otherUsersMessageTrue}</p>
                   {buttonsTrue &&
                     otherPlayers?.map((player: any) => (
-                      <button
+                      <Button
                         onClick={() => whoDrinksHandler(player?.username)}
                         key={player?.id}
                       >
                         {player?.username}
-                      </button>
+                      </Button>
                     ))}
                   {buttonsTrue && (
-                    <button onClick={confirmWhoDrinksHandler}>
+                    <Button onClick={confirmWhoDrinksHandler}>
                       Confirm Players to Drinks
-                    </button>
+                    </Button>
                   )}
                   {usersToDrink &&
                     usersToDrink.map((user: string, index: number) => {
