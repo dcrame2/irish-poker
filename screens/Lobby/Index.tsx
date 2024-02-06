@@ -129,20 +129,6 @@ const GameLobby = ({ socket, username, roomId, users }: any) => {
     setGameStarted(true);
   };
 
-  // function convertToNum(value: string) {
-  //   if (value === "ACE") {
-  //     return 14;
-  //   } else if (value === "KING") {
-  //     return 13;
-  //   } else if (value === "QUEEN") {
-  //     return 12;
-  //   } else if (value === "JACK") {
-  //     return 11;
-  //   } else {
-  //     return Number(value);
-  //   }
-  // }
-
   const gameLogicHandler = (option: string) => {
     const currentPlayerCard: SingleCard | undefined =
       allGameData?.cardData[currentPlayerIndex][currentRound];
