@@ -1,4 +1,4 @@
-import UserSetup from "../../screens/UserSetup/Index";
+import UserSetup from "../../components/UserSetup/Index";
 
 export default function Home() {
   return <UserSetup />;

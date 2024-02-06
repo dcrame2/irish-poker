@@ -2,11 +2,12 @@
 import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import { motion } from "framer-motion";
-import Chat from "../../components/Chat";
+import Chat from "../Chat";
 import { Container } from "../../src/styles/Utilities";
 import { convertToNum } from "../../utils/users";
 import { variables } from "@/styles/Variables";
 import { buttonType, h2styles, pSmall, inputType, pLarge } from "@/styles/Type";
+import PlayersInLobby from "./PlayersInLobby/Index";
 
 const MainContainer = styled.div`
   display: flex;
@@ -84,19 +85,6 @@ const Header = styled.h2`
   text-transform: uppercase;
 `;
 
-const PlayersContainer = styled.div`
-  position: relative;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* height: 100%; */
-`;
-
-const Player = styled.div`
-  ${pSmall}
-`;
-
 const Button = styled.button`
   ${buttonType}
 `;
@@ -106,21 +94,6 @@ const GameButtonContainer = styled.div`
   align-items: center;
   justify-content: center;
   margin-top: 20px;
-`;
-
-const PlayerContainer = styled.div`
-  margin-top: 20px;
-  width: 120px;
-  height: 120px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-`;
-
-const CloverIcon = styled.img`
-  width: 40px;
-  height: 40px;
 `;
 
 const GameContainer = styled.div`
@@ -393,7 +366,7 @@ const GameLobby = ({ socket, username, roomId, users }: any) => {
       setAllGameData({ users, roomId, cardData: updatedPlayersCards });
     });
 
-    socket.on("allGameData", (gameData: any) => {
+    socket.on("all_game_data", (gameData: any) => {
       setAllGameData(gameData);
       setGameStarted(gameData.gameStarted);
     });
@@ -457,9 +430,9 @@ const GameLobby = ({ socket, username, roomId, users }: any) => {
     currentRound,
     booleanMessage,
     currentUsersMessageTrue,
-    setCurrentUsersMessageFalse,
-    setOtherUsersMessageTrue,
-    setOtherUsersMessageFalse,
+    currentUsersMessageFalse,
+    otherUsersMessageTrue,
+    otherUsersMessageFalse,
     usersToDrink,
     buttonsTrue,
     countdown,
@@ -480,20 +453,7 @@ const GameLobby = ({ socket, username, roomId, users }: any) => {
           <Header>
             Lobby for Room id: <b>{roomId}</b>
           </Header>
-          {!gameStarted && (
-            <PlayersContainer className="container">
-              {users.map(
-                (user: { id: string; username: string; room: string }) => {
-                  return (
-                    <PlayerContainer className="item">
-                      <CloverIcon src="vercel.svg" alt="clover" />
-                      <Player>{user.username} </Player>
-                    </PlayerContainer>
-                  );
-                }
-              )}
-            </PlayersContainer>
-          )}
+          {!gameStarted && <PlayersInLobby users={users} />}
           {!gameStarted && (
             <GameButtonContainer>
               {users.length > 0 && !usersLockedIn && !gameStarted ? (

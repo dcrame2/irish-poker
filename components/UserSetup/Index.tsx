@@ -1,7 +1,7 @@
 import styles from "../../src/styles/page.module.css";
 import { io } from "socket.io-client";
 import React, { useState, useEffect } from "react";
-import ChatPage from "../../screens/Lobby/Index";
+import ChatPage from "../Lobby/Index";
 import styled from "styled-components";
 import { Container } from "../../src/styles/Utilities";
 const MainContainer = styled.div`

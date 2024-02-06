@@ -93,8 +93,8 @@ io.on("connection", (socket) => {
 
   socket.on("start_game", (data) => {
     console.log(data.cardData, "START GAME");
-    socket.emit("allGameData", data);
-    socket.to(data.roomId).emit("allGameData", data);
+    socket.emit("all_game_data", data);
+    socket.to(data.roomId).emit("all_game_data", data);
   });
 
   socket.on("lockin_players", (userData) => {
