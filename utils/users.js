@@ -32,7 +32,22 @@ function getRoomUsers(room) {
   return users.filter((user) => user.room === room);
 }
 
+function convertToNum(value) {
+  if (value === "ACE") {
+    return 14;
+  } else if (value === "KING") {
+    return 13;
+  } else if (value === "QUEEN") {
+    return 12;
+  } else if (value === "JACK") {
+    return 11;
+  } else {
+    return Number(value);
+  }
+}
+
 module.exports = {
+  convertToNum,
   userJoin,
   getCurrentUser,
   userLeave,

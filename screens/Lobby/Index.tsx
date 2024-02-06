@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { motion } from "framer-motion";
 import Chat from "../../components/Chat";
 import { Container } from "../../src/styles/Utilities";
+import { convertToNum } from "../../utils/users";
 
 const MainContainer = styled.div`
   display: flex;
@@ -112,12 +113,6 @@ const GameLobby = ({ socket, username, roomId, users }: any) => {
     (user: any) => user?.username !== username
   );
 
-  const currentPlayer = users?.filter(
-    (user: any) => user?.username === username
-  );
-
-  // console.log(currentPlayer, "current MF");
-
   const lockInPlayersHandler = () => {
     socket.emit("lockin_players", { users, roomId });
     setUsersLockedIn(true);
@@ -134,19 +129,19 @@ const GameLobby = ({ socket, username, roomId, users }: any) => {
     setGameStarted(true);
   };
 
-  function convertToNum(value: string) {
-    if (value === "ACE") {
-      return 14;
-    } else if (value === "KING") {
-      return 13;
-    } else if (value === "QUEEN") {
-      return 12;
-    } else if (value === "JACK") {
-      return 11;
-    } else {
-      return Number(value);
-    }
-  }
+  // function convertToNum(value: string) {
+  //   if (value === "ACE") {
+  //     return 14;
+  //   } else if (value === "KING") {
+  //     return 13;
+  //   } else if (value === "QUEEN") {
+  //     return 12;
+  //   } else if (value === "JACK") {
+  //     return 11;
+  //   } else {
+  //     return Number(value);
+  //   }
+  // }
 
   const gameLogicHandler = (option: string) => {
     const currentPlayerCard: SingleCard | undefined =

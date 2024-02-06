@@ -8,6 +8,16 @@ const MainContainer = styled.div`
   /* ${Container} */
 `;
 
+const InnerContainer = styled.div`
+  height: 100vh;
+  widows: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 1rem;
+`;
+
 export default function UserSetup() {
   const [showChat, setShowChat] = useState(false);
   const [userName, setUserName] = useState("");
@@ -41,7 +51,7 @@ export default function UserSetup() {
 
   return (
     <MainContainer>
-      <div
+      <InnerContainer
         className={styles.main_div}
         style={{ display: showChat ? "none" : "" }}
       >
@@ -66,7 +76,7 @@ export default function UserSetup() {
             <div className={styles.loading_spinner}></div>
           )}
         </button>
-      </div>
+      </InnerContainer>
       {/* <div style={{ display: !showChat ? "none" : "" }}> */}
       <ChatPage
         users={users}
