@@ -6,6 +6,7 @@ import Chat from "../../components/Chat";
 import { Container } from "../../src/styles/Utilities";
 import { convertToNum } from "../../utils/users";
 import { variables } from "@/styles/Variables";
+import { buttonType, h2styles, pSmall, inputType, pLarge } from "@/styles/Type";
 
 const MainContainer = styled.div`
   display: flex;
@@ -65,6 +66,52 @@ const Message = styled.div`
   flex-direction: column;
 `;
 
+const Header = styled.h2`
+  ${h2styles}
+  text-align: center;
+  border-bottom: 2px solid ${variables.color1};
+  text-transform: uppercase;
+`;
+
+const PlayersContainer = styled.div`
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* height: 100%; */
+`;
+
+const Player = styled.div`
+  ${pLarge}
+`;
+
+const Button = styled.button`
+  ${buttonType}
+`;
+
+const GameButtonContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+`;
+
+const PlayerContainer = styled.div`
+  margin-top: 20px;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+`;
+
+const CloverIcon = styled.img`
+  width: 40px;
+  height: 40px;
+`;
+
 interface GameData {
   users: [];
   roomId: string;
@@ -101,8 +148,6 @@ const GameLobby = ({ socket, username, roomId, users }: any) => {
   const [currentRound, setCurrentRound] = useState(0);
 
   const [booleanMessage, setBooleanMessage] = useState(false);
-  const [currentUsersMessage, setCurrentUsersMessage] = useState();
-  const [otherUsersMessage, setOtherUsersMessage] = useState();
   const [buttonsTrue, setButtonsTrue] = useState(false);
 
   const [currentUsersMessageTrue, setCurrentUserMessageTrue] = useState("");
@@ -116,6 +161,8 @@ const GameLobby = ({ socket, username, roomId, users }: any) => {
   const otherPlayers = users?.filter(
     (user: any) => user?.username !== username
   );
+
+  // Get the container element
 
   const lockInPlayersHandler = () => {
     socket.emit("lockin_players", { users, roomId });
@@ -322,6 +369,28 @@ const GameLobby = ({ socket, username, roomId, users }: any) => {
   };
 
   useEffect(() => {
+    // const container = document.querySelector(".container");
+
+    // // Function to generate a random position
+    // function getRandomPosition() {
+    //   const width = container.offsetWidth;
+    //   const height = container.offsetHeight;
+    //   const x = Math.random() * (width - 50); // Subtract item width
+    //   const y = Math.random() * (height - 50); // Subtract item height
+    //   return { x, y };
+    // }
+
+    // // Function to position items randomly
+    // function positionItems() {
+    //   const items = document.querySelectorAll(".item");
+    //   items.forEach((item) => {
+    //     const { x, y } = getRandomPosition();
+    //     item.style.left = `${x}px`;
+    //     item.style.top = `${y}px`;
+    //   });
+    // }
+    // positionItems();
+    // window.addEventListener("resize", positionItems);
     socket.on("allPlayersCards", (playersCards: []) => {
       console.log("Received allPlayersCards data:", playersCards);
       setPlayerData(playersCards);
@@ -424,35 +493,32 @@ const GameLobby = ({ socket, username, roomId, users }: any) => {
           roomId={roomId}
           users={users}
         />
-        {/* <div className={style.chat_border}> */}
-        {/* <div style={{ marginBottom: "1rem" }}>
-          <h2>In Lobby</h2>
-          <p>
-            Name: <b>{username}</b> and Room Id: <b>{roomId}</b>
-          </p>
-        </div>
-        <div className="tests">
-          {users.map((user: { id: string; username: string; room: string }) => {
-            return <p>{user.username} </p>;
-          })}
-        </div> */}
-
-        {/* </div> */}
-
         <CardContainer>
-          <p>
+          <Header>
+            Lobby for Room id: <b>{roomId}</b>
+          </Header>
+          {/* <p>
             Name: <b>{username}</b> and Room Id: <b>{roomId}</b>
-          </p>
-          {users.map((user: { id: string; username: string; room: string }) => {
-            return <p>Player: {user.username} </p>;
-          })}
-          <div>
-            {users.length > 0 && !usersLockedIn ? (
-              <button onClick={lockInPlayersHandler}>Continue</button>
-            ) : (
-              <button onClick={startGameHandler}>Start Game</button>
+          </p> */}
+          <PlayersContainer className="container">
+            {users.map(
+              (user: { id: string; username: string; room: string }) => {
+                return (
+                  <PlayerContainer className="item">
+                    <CloverIcon src="clover.png" alt="clover" />
+                    <Player>{user.username} </Player>
+                  </PlayerContainer>
+                );
+              }
             )}
-          </div>
+          </PlayersContainer>
+          <GameButtonContainer>
+            {users.length > 0 && !usersLockedIn ? (
+              <Button onClick={lockInPlayersHandler}>Continue</Button>
+            ) : (
+              <Button onClick={startGameHandler}>Start Game</Button>
+            )}
+          </GameButtonContainer>
           {allGameData
             ? allGameData.cardData.map(
                 (player: Player, playerIndex: number) => {

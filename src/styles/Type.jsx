@@ -122,7 +122,8 @@ export const pXSmall = css`
 export const buttonType = css`
   font-family: ${openSans};
   font-size: 1rem;
-  line-height: 2.4rem;
+  /* line-height: 2.4rem; */
+  padding: 10px 12px;
   font-weight: 300;
   text-transform: uppercase;
   color: white;
