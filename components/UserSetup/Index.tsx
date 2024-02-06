@@ -5,7 +5,20 @@ import ChatPage from "../Lobby/Index";
 import styled from "styled-components";
 import { Container } from "../../src/styles/Utilities";
 const MainContainer = styled.div`
-  /* ${Container} */
+  background-image: url("clover.svg");
+  background-repeat: no-repeat;
+  position: relative;
+  z-index: 2;
+  &::before {
+    z-index: 1;
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
 `;
 
 const InnerContainer = styled.div`
