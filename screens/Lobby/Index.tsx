@@ -10,27 +10,12 @@ const MainContainer = styled.div`
   display: flex;
   flex-direction: row;
   gap: 60px;
-
-  /* background-image: url("irish_bg_mobile.png"); */
-  background-color: rgba(27, 200, 0, 0.1);
-  background-blend-mode: multiply;
-
   height: 100vh;
-  width: 100vw;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  widows: 100vw;
+  /* display: grid; */
 `;
 
-const MainInnerContainer = styled.div`
-  display: flex;
-
-  justify-content: center;
-  align-items: center;
-  flex-direction: row;
-  /* ${Container} */
-  background-color: black;
-`;
+const MainInnerContainer = styled.div``;
 
 const CardContainer = styled.div`
   display: flex;
@@ -98,7 +83,7 @@ type SingleCard = {
 type Player = SingleCard[];
 type PlayerData = {};
 
-const ChatPage = ({ socket, username, roomId, users }: any) => {
+const GameLobby = ({ socket, username, roomId, users }: any) => {
   const [playerData, setPlayerData] = useState([]);
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
 
@@ -332,7 +317,7 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
     });
   };
 
-  let usersToDrinkArr = [];
+  let usersToDrinkArr: any = [];
   const whoDrinksHandler = (user: any) => {
     usersToDrinkArr.push(user);
     setUsersToDrink((prevUsersToDrink) => [
@@ -490,28 +475,28 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
                                 <>
                                   <IndividualCard key={`player-${index}`}>
                                     {singleCard.selectedOption ? (
-                                      // <ImageOfCard
-                                      //   key={`${singleCard.selectedOption}-${singleCard.image}`}
-                                      //   initial={{
-                                      //     opacity: 0,
-                                      //     rotateX: 360,
-                                      //     rotateY: 720,
-                                      //     scale: 0,
-                                      //   }}
-                                      //   animate={{
-                                      //     rotateX: 0,
-                                      //     opacity: 1,
-                                      //     rotateY: 0,
-                                      //     scale: 1,
-                                      //   }}
-                                      //   transition={{
-                                      //     duration: `0.8`,
-                                      //     ease: "easeInOut",
-                                      //   }}
-                                      //   src={singleCard.image}
-                                      // />
-                                      <p>{singleCard.code}</p>
+                                      <ImageOfCard
+                                        key={`${singleCard.selectedOption}-${singleCard.image}`}
+                                        initial={{
+                                          opacity: 0,
+                                          rotateX: 360,
+                                          rotateY: 720,
+                                          scale: 0,
+                                        }}
+                                        animate={{
+                                          rotateX: 0,
+                                          opacity: 1,
+                                          rotateY: 0,
+                                          scale: 1,
+                                        }}
+                                        transition={{
+                                          duration: `0.8`,
+                                          ease: "easeInOut",
+                                        }}
+                                        src={singleCard.image}
+                                      />
                                     ) : (
+                                      // <p>{singleCard.code}</p>
                                       <ImageOfCard
                                         key={`default-${singleCard.code}`}
                                         initial={{
@@ -636,4 +621,4 @@ const ChatPage = ({ socket, username, roomId, users }: any) => {
   );
 };
 
-export default ChatPage;
+export default GameLobby;
