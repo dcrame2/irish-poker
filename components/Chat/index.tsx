@@ -94,7 +94,6 @@ interface IMsgDataTypes {
 function Chat({ roomId, username, socket, users }: any) {
   const [chat, setChat] = useState<IMsgDataTypes[]>([]);
   const [currentMsg, setCurrentMsg] = useState("");
-  console.log(chat, "CHAT");
   const sendData = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (currentMsg !== "") {
@@ -121,7 +120,7 @@ function Chat({ roomId, username, socket, users }: any) {
 
   return (
     <ChatContainer>
-      <Header>HEADER</Header>
+      <Header>Chat Room</Header>
       {chat.length === 0 && <NoMessage>No Messages</NoMessage>}
       <ChatsFormContainer>
         <Chats>

@@ -83,7 +83,7 @@ const PlayersContainer = styled.div`
 `;
 
 const Player = styled.div`
-  ${pLarge}
+  ${pSmall}
 `;
 
 const Button = styled.button`
@@ -161,8 +161,6 @@ const GameLobby = ({ socket, username, roomId, users }: any) => {
   const otherPlayers = users?.filter(
     (user: any) => user?.username !== username
   );
-
-  // Get the container element
 
   const lockInPlayersHandler = () => {
     socket.emit("lockin_players", { users, roomId });
@@ -282,30 +280,6 @@ const GameLobby = ({ socket, username, roomId, users }: any) => {
 
     let selectionMessage = isCorrect ? true : false;
 
-    // Display the appropriate message based on the result
-    // if (isCorrect) {
-    //   socket.emit("send_answer", {
-    //     roomId,
-    //     selectionMessage,
-    //     currentUsersMessage: `
-    //     CORRECT!
-    //     ${isCurrentPlayer} guessed ${option}! The card was a: ${card?.value.toLowerCase()} of ${card?.suit.toLowerCase()}`,
-    //     otherUsersMessage: `One moment...${isCurrentPlayer} is choosing who drinks`,
-    //     buttonsTrue: true,
-    //   });
-
-    //   socket.emit("send_info_to_current_player", {});
-
-    //   socket.emit("send_info_to_current_user", {});
-    // } else {
-    //   socket.emit("send_answer", {
-    //     roomId,
-    //     selectionMessage,
-    //     currentUsersMessage: `${isCurrentPlayer} was incorrect and is drinking!`,
-    //     otherUsersMessage: "",
-    //   });
-    // }
-
     socket.emit("send_current_player_message", {
       roomId,
       selectionMessage,
@@ -369,28 +343,6 @@ const GameLobby = ({ socket, username, roomId, users }: any) => {
   };
 
   useEffect(() => {
-    // const container = document.querySelector(".container");
-
-    // // Function to generate a random position
-    // function getRandomPosition() {
-    //   const width = container.offsetWidth;
-    //   const height = container.offsetHeight;
-    //   const x = Math.random() * (width - 50); // Subtract item width
-    //   const y = Math.random() * (height - 50); // Subtract item height
-    //   return { x, y };
-    // }
-
-    // // Function to position items randomly
-    // function positionItems() {
-    //   const items = document.querySelectorAll(".item");
-    //   items.forEach((item) => {
-    //     const { x, y } = getRandomPosition();
-    //     item.style.left = `${x}px`;
-    //     item.style.top = `${y}px`;
-    //   });
-    // }
-    // positionItems();
-    // window.addEventListener("resize", positionItems);
     socket.on("allPlayersCards", (playersCards: []) => {
       console.log("Received allPlayersCards data:", playersCards);
       setPlayerData(playersCards);
@@ -455,16 +407,6 @@ const GameLobby = ({ socket, username, roomId, users }: any) => {
     });
 
     setIsCurrentPlayer(users[currentPlayerIndex]?.username);
-
-    // const timeoutId = setTimeout(() => {
-    //   if (countdown > 0) {
-    //     setCountdown((prevCountdown) => prevCountdown - 1);
-    //   } else {
-    //     setUsersToDrink([]); // Set usersToDrink to an empty array or null to remove the elements
-    //   }
-    // }, 1000); // 1000 milliseconds = 1 second
-
-    // return () => clearTimeout(timeoutId);
   }, [
     socket,
     currentPlayerIndex,
@@ -497,28 +439,29 @@ const GameLobby = ({ socket, username, roomId, users }: any) => {
           <Header>
             Lobby for Room id: <b>{roomId}</b>
           </Header>
-          {/* <p>
-            Name: <b>{username}</b> and Room Id: <b>{roomId}</b>
-          </p> */}
-          <PlayersContainer className="container">
-            {users.map(
-              (user: { id: string; username: string; room: string }) => {
-                return (
-                  <PlayerContainer className="item">
-                    <CloverIcon src="clover.png" alt="clover" />
-                    <Player>{user.username} </Player>
-                  </PlayerContainer>
-                );
-              }
-            )}
-          </PlayersContainer>
-          <GameButtonContainer>
-            {users.length > 0 && !usersLockedIn ? (
-              <Button onClick={lockInPlayersHandler}>Continue</Button>
-            ) : (
-              <Button onClick={startGameHandler}>Start Game</Button>
-            )}
-          </GameButtonContainer>
+          {!gameStarted && (
+            <PlayersContainer className="container">
+              {users.map(
+                (user: { id: string; username: string; room: string }) => {
+                  return (
+                    <PlayerContainer className="item">
+                      <CloverIcon src="vercel.svg" alt="clover" />
+                      <Player>{user.username} </Player>
+                    </PlayerContainer>
+                  );
+                }
+              )}
+            </PlayersContainer>
+          )}
+          {!gameStarted && (
+            <GameButtonContainer>
+              {users.length > 0 && !usersLockedIn && !gameStarted ? (
+                <Button onClick={lockInPlayersHandler}>Lock in players</Button>
+              ) : (
+                <Button onClick={startGameHandler}>Start Game</Button>
+              )}
+            </GameButtonContainer>
+          )}
           {allGameData
             ? allGameData.cardData.map(
                 (player: Player, playerIndex: number) => {
@@ -588,52 +531,58 @@ const GameLobby = ({ socket, username, roomId, users }: any) => {
                 }
               )
             : ""}
-          <MainButtonsContainer>
-            {users[currentPlayerIndex]?.username === username &&
-              currentRound === 0 && (
-                <BtnContainer className="btn-container">
-                  <Buttons onClick={() => gameLogicHandler("red")}>Red</Buttons>
-                  <Buttons onClick={() => gameLogicHandler("black")}>
-                    Black
-                  </Buttons>
-                </BtnContainer>
-              )}
-            {users[currentPlayerIndex]?.username === username &&
-              currentRound === 1 && (
-                <BtnContainer className="btn-container">
-                  <Buttons onClick={() => gameLogicHandler("lower")}>
-                    Lower
-                  </Buttons>
-                  <Buttons onClick={() => gameLogicHandler("higher")}>
-                    Higher
-                  </Buttons>
-                </BtnContainer>
-              )}
-            {users[currentPlayerIndex]?.username === username &&
-              currentRound === 2 && (
-                <BtnContainer className="btn-container">
-                  <Buttons onClick={() => gameLogicHandler("in")}>In</Buttons>
-                  <Buttons onClick={() => gameLogicHandler("out")}>Out</Buttons>
-                </BtnContainer>
-              )}
-            {users[currentPlayerIndex]?.username === username &&
-              currentRound === 3 && (
-                <BtnContainer className="btn-container">
-                  <Buttons onClick={() => gameLogicHandler("club")}>
-                    Club
-                  </Buttons>
-                  <Buttons onClick={() => gameLogicHandler("spade")}>
-                    Spade
-                  </Buttons>
-                  <Buttons onClick={() => gameLogicHandler("diamond")}>
-                    Diamond
-                  </Buttons>
-                  <Buttons onClick={() => gameLogicHandler("heart")}>
-                    Heart
-                  </Buttons>
-                </BtnContainer>
-              )}
-          </MainButtonsContainer>
+          {allGameData && (
+            <MainButtonsContainer>
+              {users[currentPlayerIndex]?.username === username &&
+                currentRound === 0 && (
+                  <BtnContainer className="btn-container">
+                    <Buttons onClick={() => gameLogicHandler("red")}>
+                      Red
+                    </Buttons>
+                    <Buttons onClick={() => gameLogicHandler("black")}>
+                      Black
+                    </Buttons>
+                  </BtnContainer>
+                )}
+              {users[currentPlayerIndex]?.username === username &&
+                currentRound === 1 && (
+                  <BtnContainer className="btn-container">
+                    <Buttons onClick={() => gameLogicHandler("lower")}>
+                      Lower
+                    </Buttons>
+                    <Buttons onClick={() => gameLogicHandler("higher")}>
+                      Higher
+                    </Buttons>
+                  </BtnContainer>
+                )}
+              {users[currentPlayerIndex]?.username === username &&
+                currentRound === 2 && (
+                  <BtnContainer className="btn-container">
+                    <Buttons onClick={() => gameLogicHandler("in")}>In</Buttons>
+                    <Buttons onClick={() => gameLogicHandler("out")}>
+                      Out
+                    </Buttons>
+                  </BtnContainer>
+                )}
+              {users[currentPlayerIndex]?.username === username &&
+                currentRound === 3 && (
+                  <BtnContainer className="btn-container">
+                    <Buttons onClick={() => gameLogicHandler("club")}>
+                      Club
+                    </Buttons>
+                    <Buttons onClick={() => gameLogicHandler("spade")}>
+                      Spade
+                    </Buttons>
+                    <Buttons onClick={() => gameLogicHandler("diamond")}>
+                      Diamond
+                    </Buttons>
+                    <Buttons onClick={() => gameLogicHandler("heart")}>
+                      Heart
+                    </Buttons>
+                  </BtnContainer>
+                )}
+            </MainButtonsContainer>
+          )}
           {currentRound === 4 ? (
             <p>GAME IS OVER</p>
           ) : (
@@ -670,7 +619,7 @@ const GameLobby = ({ socket, username, roomId, users }: any) => {
                   <p>{otherUsersMessageFalse}</p>
                 </>
               )}
-              <p>Player up next: {isCurrentPlayer}</p>
+              {allGameData && <p>Player up next: {isCurrentPlayer}</p>}
             </Message>
           )}
         </CardContainer>
