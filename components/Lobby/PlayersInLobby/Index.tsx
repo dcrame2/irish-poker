@@ -34,7 +34,7 @@ function PlayersInLobby({ users }: any) {
       {users?.map((user: { id: string; username: string; room: string }) => {
         return (
           <PlayerContainer className="item">
-            <CloverIcon src="vercel.svg" alt="clover" />
+            <CloverIcon src="clover.svg" alt="clover" />
             <Player>{user?.username} </Player>
           </PlayerContainer>
         );
