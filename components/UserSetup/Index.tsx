@@ -5,7 +5,7 @@ import ChatPage from "../Lobby/Index";
 import styled from "styled-components";
 import { Container } from "../../src/styles/Utilities";
 const MainContainer = styled.div`
-  background-image: url("clover.svg");
+  /* background-image: url("clover.svg");
   background-repeat: no-repeat;
   position: relative;
   z-index: 2;
@@ -18,7 +18,7 @@ const MainContainer = styled.div`
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
-  }
+  } */
 `;
 
 const InnerContainer = styled.div`
