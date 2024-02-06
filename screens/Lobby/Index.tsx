@@ -36,21 +36,26 @@ const ImageOfCard = styled(motion.img)`
   width: 50px;
 `;
 
-const IndividualCardContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`;
+// const IndividualCardContainer = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   gap: 20px;
+//   /* position: absolute; */
+// `;
 
 const MainButtonsContainer = styled.div`
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
+  /* height: 100%; */
   gap: 10px;
 `;
 
 const BtnContainer = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  gap: 24px;
+  position: absolute;
+  bottom: 0;
 `;
 
 const Buttons = styled.button``;
@@ -59,11 +64,17 @@ const CardsContainer = styled.div`
   display: flex;
   flex-direction: row;
   gap: 20px;
+  /* display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 10px; */
 `;
 
 const Message = styled.div`
   display: flex;
   flex-direction: column;
+  max-width: 600px;
+  align-items: center;
+  justify-content: center;
 `;
 
 const Header = styled.h2`
@@ -110,6 +121,26 @@ const PlayerContainer = styled.div`
 const CloverIcon = styled.img`
   width: 40px;
   height: 40px;
+`;
+
+const GameContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  /* position: relative; */
+`;
+
+const CurrentPlayerCard = styled(IndividualCard)`
+  z-index: 1;
+  /* transform: scale(1.4); */
+  /* margin-top: 200px; */
+  //
+`;
+
+const OtherPlayersCard = styled(IndividualCard)`
+  opacity: 0.5;
 `;
 
 interface GameData {
@@ -162,6 +193,10 @@ const GameLobby = ({ socket, username, roomId, users }: any) => {
     (user: any) => user?.username !== username
   );
 
+  const currentPlayer = users?.filter(
+    (user: any) => user?.username === username
+  );
+
   const lockInPlayersHandler = () => {
     socket.emit("lockin_players", { users, roomId });
     setUsersLockedIn(true);
@@ -169,7 +204,12 @@ const GameLobby = ({ socket, username, roomId, users }: any) => {
   };
 
   const startGameHandler = () => {
-    socket.emit("start_game", { users, roomId, cardData: playerData });
+    socket.emit("start_game", {
+      users,
+      roomId,
+      cardData: playerData,
+      gameStarted: true,
+    });
     socket.emit("send_current_player", {
       roomId,
       isCurrentPlayer,
@@ -355,6 +395,7 @@ const GameLobby = ({ socket, username, roomId, users }: any) => {
 
     socket.on("allGameData", (gameData: any) => {
       setAllGameData(gameData);
+      setGameStarted(gameData.gameStarted);
     });
 
     socket.on("receive_updatedIndex", (data: number) => {
@@ -462,127 +503,129 @@ const GameLobby = ({ socket, username, roomId, users }: any) => {
               )}
             </GameButtonContainer>
           )}
-          {allGameData
-            ? allGameData.cardData.map(
-                (player: Player, playerIndex: number) => {
-                  return (
-                    <>
-                      <p>{player[playerIndex].player}</p>
-                      <IndividualCardContainer>
-                        <CardsContainer ref={ref}>
-                          {player.map(
-                            (singleCard: SingleCard, index: number) => {
-                              return (
-                                <>
-                                  <IndividualCard key={`player-${index}`}>
-                                    {singleCard.selectedOption ? (
-                                      // <ImageOfCard
-                                      //   key={`${singleCard.selectedOption}-${singleCard.image}`}
-                                      //   initial={{
-                                      //     opacity: 0,
-                                      //     rotateX: 360,
-                                      //     rotateY: 720,
-                                      //     scale: 0,
-                                      //   }}
-                                      //   animate={{
-                                      //     rotateX: 0,
-                                      //     opacity: 1,
-                                      //     rotateY: 0,
-                                      //     scale: 1,
-                                      //   }}
-                                      //   transition={{
-                                      //     duration: `0.8`,
-                                      //     ease: "easeInOut",
-                                      //   }}
-                                      //   src={singleCard.image}
-                                      // />
-                                      <p>{singleCard.code}</p>
-                                    ) : (
-                                      <ImageOfCard
-                                        key={`default-${singleCard.code}`}
-                                        initial={{
-                                          opacity: 0,
-                                          rotateX: 180,
-                                          rotateY: 360,
-                                          scale: 0,
-                                        }}
-                                        animate={{
-                                          rotateX: 0,
-                                          opacity: 1,
-                                          rotateY: 0,
-                                          scale: 1,
-                                        }}
-                                        transition={{
-                                          duration: `0.5`,
-                                          ease: "easeInOut",
-                                        }}
-                                        src="white_card.png"
-                                      />
-                                    )}
-                                  </IndividualCard>
-                                </>
-                              );
-                            }
-                          )}
-                        </CardsContainer>
-                      </IndividualCardContainer>
-                    </>
-                  );
-                }
-              )
-            : ""}
-          {allGameData && (
-            <MainButtonsContainer>
-              {users[currentPlayerIndex]?.username === username &&
-                currentRound === 0 && (
-                  <BtnContainer className="btn-container">
-                    <Buttons onClick={() => gameLogicHandler("red")}>
-                      Red
-                    </Buttons>
-                    <Buttons onClick={() => gameLogicHandler("black")}>
-                      Black
-                    </Buttons>
-                  </BtnContainer>
-                )}
-              {users[currentPlayerIndex]?.username === username &&
-                currentRound === 1 && (
-                  <BtnContainer className="btn-container">
-                    <Buttons onClick={() => gameLogicHandler("lower")}>
-                      Lower
-                    </Buttons>
-                    <Buttons onClick={() => gameLogicHandler("higher")}>
-                      Higher
-                    </Buttons>
-                  </BtnContainer>
-                )}
-              {users[currentPlayerIndex]?.username === username &&
-                currentRound === 2 && (
-                  <BtnContainer className="btn-container">
-                    <Buttons onClick={() => gameLogicHandler("in")}>In</Buttons>
-                    <Buttons onClick={() => gameLogicHandler("out")}>
-                      Out
-                    </Buttons>
-                  </BtnContainer>
-                )}
-              {users[currentPlayerIndex]?.username === username &&
-                currentRound === 3 && (
-                  <BtnContainer className="btn-container">
-                    <Buttons onClick={() => gameLogicHandler("club")}>
-                      Club
-                    </Buttons>
-                    <Buttons onClick={() => gameLogicHandler("spade")}>
-                      Spade
-                    </Buttons>
-                    <Buttons onClick={() => gameLogicHandler("diamond")}>
-                      Diamond
-                    </Buttons>
-                    <Buttons onClick={() => gameLogicHandler("heart")}>
-                      Heart
-                    </Buttons>
-                  </BtnContainer>
-                )}
-            </MainButtonsContainer>
-          )}
+          <GameContainer>
+            {allGameData
+              ? allGameData?.cardData.map(
+                  (player: Player, playerIndex: number) => {
+                    const CardComponent =
+                      currentPlayerIndex === playerIndex
+                        ? CurrentPlayerCard
+                        : OtherPlayersCard;
+
+                    return (
+                      <CardsContainer ref={ref}>
+                        <p>{player[playerIndex].player}</p>
+                        {player.map((singleCard: SingleCard, index: number) => {
+                          return (
+                            <>
+                              <CardComponent key={`player-${index}`}>
+                                {singleCard.selectedOption ? (
+                                  // <ImageOfCard
+                                  //   key={`${singleCard.selectedOption}-${singleCard.image}`}
+                                  //   initial={{
+                                  //     opacity: 0,
+                                  //     rotateX: 360,
+                                  //     rotateY: 720,
+                                  //     scale: 0,
+                                  //   }}
+                                  //   animate={{
+                                  //     rotateX: 0,
+                                  //     opacity: 1,
+                                  //     rotateY: 0,
+                                  //     scale: 1,
+                                  //   }}
+                                  //   transition={{
+                                  //     duration: `0.8`,
+                                  //     ease: "easeInOut",
+                                  //   }}
+                                  //   src={singleCard.image}
+                                  // />
+                                  <p>{singleCard.code}</p>
+                                ) : (
+                                  <ImageOfCard
+                                    key={`default-${singleCard.code}`}
+                                    initial={{
+                                      opacity: 0,
+                                      rotateX: 180,
+                                      rotateY: 360,
+                                      scale: 0,
+                                    }}
+                                    animate={{
+                                      rotateX: 0,
+                                      opacity: 1,
+                                      rotateY: 0,
+                                      scale: 1,
+                                    }}
+                                    transition={{
+                                      duration: `0.5`,
+                                      ease: "easeInOut",
+                                    }}
+                                    src="white_card.png"
+                                  />
+                                )}
+                              </CardComponent>
+                            </>
+                          );
+                        })}
+                      </CardsContainer>
+                    );
+                  }
+                )
+              : ""}
+            {allGameData && (
+              <MainButtonsContainer>
+                {users[currentPlayerIndex]?.username === username &&
+                  currentRound === 0 && (
+                    <BtnContainer className="btn-container">
+                      <Button onClick={() => gameLogicHandler("red")}>
+                        Red
+                      </Button>
+                      <Button onClick={() => gameLogicHandler("black")}>
+                        Black
+                      </Button>
+                    </BtnContainer>
+                  )}
+                {users[currentPlayerIndex]?.username === username &&
+                  currentRound === 1 && (
+                    <BtnContainer className="btn-container">
+                      <Button onClick={() => gameLogicHandler("lower")}>
+                        Lower
+                      </Button>
+                      <Button onClick={() => gameLogicHandler("higher")}>
+                        Higher
+                      </Button>
+                    </BtnContainer>
+                  )}
+                {users[currentPlayerIndex]?.username === username &&
+                  currentRound === 2 && (
+                    <BtnContainer className="btn-container">
+                      <Button onClick={() => gameLogicHandler("in")}>In</Button>
+                      <Button onClick={() => gameLogicHandler("out")}>
+                        Out
+                      </Button>
+                    </BtnContainer>
+                  )}
+                {users[currentPlayerIndex]?.username === username &&
+                  currentRound === 3 && (
+                    <BtnContainer className="btn-container">
+                      <Button onClick={() => gameLogicHandler("club")}>
+                        Club
+                      </Button>
+                      <Button onClick={() => gameLogicHandler("spade")}>
+                        Spade
+                      </Button>
+                      <Button onClick={() => gameLogicHandler("diamond")}>
+                        Diamond
+                      </Button>
+                      <Button onClick={() => gameLogicHandler("heart")}>
+                        Heart
+                      </Button>
+                    </BtnContainer>
+                  )}
+              </MainButtonsContainer>
+            )}
+          </GameContainer>
+
           {currentRound === 4 ? (
             <p>GAME IS OVER</p>
           ) : (
@@ -605,10 +648,6 @@ const GameLobby = ({ socket, username, roomId, users }: any) => {
                       Confirm Players to Drinks
                     </button>
                   )}
-                  {/* {usersToDrink &&
-                  usersToDrink?.map((user: string, index: number) => {
-                    return <p key={user}>{user}</p>;
-                  })} */}
                   {usersToDrink &&
                     usersToDrink.map((user: string, index: number) => {
                       return <p key={user}>{user}</p>;

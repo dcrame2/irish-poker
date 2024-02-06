@@ -130,6 +130,16 @@ export const buttonType = css`
   background-color: ${variables.color1};
   border: none;
   width: max-content;
+  min-width: 100px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in;
+  border: 2px solid ${variables.color1};
+  &:hover {
+    transition: background-color 0.3s ease-in;
+    border: 2px solid ${variables.color1};
+    background-color: transparent;
+    transition: background-color 0.3s ease-in;
+  }
 `;
 
 export const inputType = css`
