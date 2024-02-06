@@ -1,11 +1,11 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
-import style from "../../src/styles/chat.module.css";
 import styled from "styled-components";
 import { motion } from "framer-motion";
 import Chat from "../../components/Chat";
 import { Container } from "../../src/styles/Utilities";
 import { convertToNum } from "../../utils/users";
+import { variables } from "@/styles/Variables";
 
 const MainContainer = styled.div`
   display: flex;
@@ -13,10 +13,14 @@ const MainContainer = styled.div`
   gap: 60px;
   height: 100vh;
   widows: 100vw;
-  /* display: grid; */
 `;
 
-const MainInnerContainer = styled.div``;
+const MainInnerContainer = styled.div`
+  border: 2px solid ${variables.color1};
+  width: 100%;
+  display: grid;
+  grid-template-columns: 360px 880fr;
+`;
 
 const CardContainer = styled.div`
   display: flex;
@@ -420,8 +424,8 @@ const GameLobby = ({ socket, username, roomId, users }: any) => {
           roomId={roomId}
           users={users}
         />
-        <div className={style.chat_border}>
-          {/* <div style={{ marginBottom: "1rem" }}>
+        {/* <div className={style.chat_border}> */}
+        {/* <div style={{ marginBottom: "1rem" }}>
           <h2>In Lobby</h2>
           <p>
             Name: <b>{username}</b> and Room Id: <b>{roomId}</b>
@@ -432,6 +436,16 @@ const GameLobby = ({ socket, username, roomId, users }: any) => {
             return <p>{user.username} </p>;
           })}
         </div> */}
+
+        {/* </div> */}
+
+        <CardContainer>
+          <p>
+            Name: <b>{username}</b> and Room Id: <b>{roomId}</b>
+          </p>
+          {users.map((user: { id: string; username: string; room: string }) => {
+            return <p>Player: {user.username} </p>;
+          })}
           <div>
             {users.length > 0 && !usersLockedIn ? (
               <button onClick={lockInPlayersHandler}>Continue</button>
@@ -439,9 +453,6 @@ const GameLobby = ({ socket, username, roomId, users }: any) => {
               <button onClick={startGameHandler}>Start Game</button>
             )}
           </div>
-        </div>
-
-        <CardContainer>
           {allGameData
             ? allGameData.cardData.map(
                 (player: Player, playerIndex: number) => {
@@ -456,28 +467,28 @@ const GameLobby = ({ socket, username, roomId, users }: any) => {
                                 <>
                                   <IndividualCard key={`player-${index}`}>
                                     {singleCard.selectedOption ? (
-                                      <ImageOfCard
-                                        key={`${singleCard.selectedOption}-${singleCard.image}`}
-                                        initial={{
-                                          opacity: 0,
-                                          rotateX: 360,
-                                          rotateY: 720,
-                                          scale: 0,
-                                        }}
-                                        animate={{
-                                          rotateX: 0,
-                                          opacity: 1,
-                                          rotateY: 0,
-                                          scale: 1,
-                                        }}
-                                        transition={{
-                                          duration: `0.8`,
-                                          ease: "easeInOut",
-                                        }}
-                                        src={singleCard.image}
-                                      />
+                                      // <ImageOfCard
+                                      //   key={`${singleCard.selectedOption}-${singleCard.image}`}
+                                      //   initial={{
+                                      //     opacity: 0,
+                                      //     rotateX: 360,
+                                      //     rotateY: 720,
+                                      //     scale: 0,
+                                      //   }}
+                                      //   animate={{
+                                      //     rotateX: 0,
+                                      //     opacity: 1,
+                                      //     rotateY: 0,
+                                      //     scale: 1,
+                                      //   }}
+                                      //   transition={{
+                                      //     duration: `0.8`,
+                                      //     ease: "easeInOut",
+                                      //   }}
+                                      //   src={singleCard.image}
+                                      // />
+                                      <p>{singleCard.code}</p>
                                     ) : (
-                                      // <p>{singleCard.code}</p>
                                       <ImageOfCard
                                         key={`default-${singleCard.code}`}
                                         initial={{
@@ -557,46 +568,46 @@ const GameLobby = ({ socket, username, roomId, users }: any) => {
                 </BtnContainer>
               )}
           </MainButtonsContainer>
-        </CardContainer>
-        {currentRound === 4 ? (
-          <p>GAME IS OVER</p>
-        ) : (
-          <Message>
-            {booleanMessage ? (
-              <>
-                <p>{currentUsersMessageTrue}</p>
-                <p>{otherUsersMessageTrue}</p>
-                {buttonsTrue &&
-                  otherPlayers?.map((player: any) => (
-                    <button
-                      onClick={() => whoDrinksHandler(player?.username)}
-                      key={player?.id}
-                    >
-                      {player?.username}
+          {currentRound === 4 ? (
+            <p>GAME IS OVER</p>
+          ) : (
+            <Message>
+              {booleanMessage ? (
+                <>
+                  <p>{currentUsersMessageTrue}</p>
+                  <p>{otherUsersMessageTrue}</p>
+                  {buttonsTrue &&
+                    otherPlayers?.map((player: any) => (
+                      <button
+                        onClick={() => whoDrinksHandler(player?.username)}
+                        key={player?.id}
+                      >
+                        {player?.username}
+                      </button>
+                    ))}
+                  {buttonsTrue && (
+                    <button onClick={confirmWhoDrinksHandler}>
+                      Confirm Players to Drinks
                     </button>
-                  ))}
-                {buttonsTrue && (
-                  <button onClick={confirmWhoDrinksHandler}>
-                    Confirm Players to Drinks
-                  </button>
-                )}
-                {/* {usersToDrink &&
+                  )}
+                  {/* {usersToDrink &&
                   usersToDrink?.map((user: string, index: number) => {
                     return <p key={user}>{user}</p>;
                   })} */}
-                {usersToDrink &&
-                  usersToDrink.map((user: string, index: number) => {
-                    return <p key={user}>{user}</p>;
-                  })}
-              </>
-            ) : (
-              <>
-                <p>{otherUsersMessageFalse}</p>
-              </>
-            )}
-            <p>Player up next: {isCurrentPlayer}</p>
-          </Message>
-        )}
+                  {usersToDrink &&
+                    usersToDrink.map((user: string, index: number) => {
+                      return <p key={user}>{user}</p>;
+                    })}
+                </>
+              ) : (
+                <>
+                  <p>{otherUsersMessageFalse}</p>
+                </>
+              )}
+              <p>Player up next: {isCurrentPlayer}</p>
+            </Message>
+          )}
+        </CardContainer>
       </MainInnerContainer>
     </MainContainer>
   );

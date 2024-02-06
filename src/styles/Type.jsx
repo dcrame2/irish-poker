@@ -1,6 +1,7 @@
 import { MediaQueries } from "./Utilities";
 import { css } from "styled-components";
 import { keyframes } from "styled-components";
+import { variables } from "./Variables";
 
 const monsterrat = `Montserrat, sans-serif`;
 const openSans = "Open Sans, sans-serif";
@@ -25,18 +26,18 @@ export const h1styles = css`
 
 export const h2styles = css`
   font-family: ${monsterrat};
-  font-size: 5.4rem;
-  line-height: 5.5rem;
+  font-size: 3rem;
+  line-height: 5rem;
   color: #ffff;
 
   @media ${MediaQueries.tablet} {
-    font-size: 3.5rem;
-    line-height: 3.7rem;
+    font-size: 2.5rem;
+    line-height: 3rem;
   }
 
   @media ${MediaQueries.mobile} {
-    font-size: 2.9rem;
-    line-height: 3rem;
+    font-size: 1.9rem;
+    line-height: 2%.5rem;
   }
 `;
 
@@ -120,10 +121,20 @@ export const pXSmall = css`
 
 export const buttonType = css`
   font-family: ${openSans};
-  font-size: 1%.2;
+  font-size: 1rem;
   line-height: 2.4rem;
   font-weight: 300;
   text-transform: uppercase;
   color: white;
-  color: #ffff;
+  background-color: ${variables.color1};
+  border: none;
+  width: max-content;
+`;
+
+export const inputType = css`
+  font-size: 1rem;
+  text-transform: uppercase;
+  padding: 12px 10px;
+  border: none;
+  border: 2px solid ${variables.color1};
 `;
