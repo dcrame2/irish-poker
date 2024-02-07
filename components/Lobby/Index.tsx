@@ -147,7 +147,7 @@ const LobbyInfo = styled.div`
 
 const CorrectMessaging = styled(motion.div)`
   border: 3px solid ${variables.color1};
-  background-color: ${variables.color3};
+  background-color: ${variables.color2};
   padding: 16px;
 `;
 const IncorrectMessaging = styled(motion.div)`
@@ -299,14 +299,20 @@ const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
 
       case "in":
         isCorrect =
-          convertToNum(prevValue) > convertToNum(value) &&
-          convertToNum(prevPrevValue) > convertToNum(value);
+          // prevCard == 3
+          // prevPrevCard = 10
+          (convertToNum(prevValue) < convertToNum(value) &&
+            convertToNum(prevPrevValue) > convertToNum(value)) ||
+          (convertToNum(prevValue) > convertToNum(value) &&
+            convertToNum(prevPrevValue) < convertToNum(value));
         break;
 
       case "out":
         isCorrect =
-          convertToNum(prevValue) < convertToNum(value) &&
-          convertToNum(prevPrevValue) < convertToNum(value);
+          (convertToNum(prevValue) > convertToNum(value) &&
+            convertToNum(prevPrevValue) > convertToNum(value)) ||
+          (convertToNum(prevValue) < convertToNum(value) &&
+            convertToNum(prevPrevValue) < convertToNum(value));
         break;
 
       case "spade":
