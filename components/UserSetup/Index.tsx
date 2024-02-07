@@ -4,11 +4,13 @@ import React, { useState, useEffect } from "react";
 import ChatPage from "../Lobby/Index";
 import styled from "styled-components";
 import { Container } from "../../src/styles/Utilities";
+import { buttonType, h2styles, pSmall, inputType, pLarge } from "@/styles/Type";
 const MainContainer = styled.div`
-  /* background-image: url("clover.svg");
+  background-image: url("clover.svg");
   background-repeat: no-repeat;
   position: relative;
   z-index: 2;
+  background-position: right;
   &::before {
     z-index: 1;
     content: "";
@@ -17,18 +19,29 @@ const MainContainer = styled.div`
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-  } */
+    background-color: rgba(0, 0, 0, 0.9);
+  }
 `;
 
 const InnerContainer = styled.div`
-  height: 100vh;
-  widows: 100vw;
+  /* height: 100vh;
+  widows: 100vw; */
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   gap: 1rem;
+  z-index: 10;
+  position: relative;
+`;
+
+const Input = styled.input`
+  /* width: 75%; */
+  ${inputType}
+`;
+
+const Button = styled.button`
+  ${buttonType}
 `;
 
 export default function UserSetup() {
@@ -68,27 +81,28 @@ export default function UserSetup() {
         className={styles.main_div}
         style={{ display: showChat ? "none" : "" }}
       >
-        <input
+        <h1>Irish Poker</h1>
+        <Input
           className={styles.main_input}
           type="text"
           placeholder="Username"
           onChange={(e) => setUserName(e.target.value)}
           disabled={showSpinner}
         />
-        <input
+        <Input
           className={styles.main_input}
           type="text"
           placeholder="room id"
           onChange={(e) => setroomId(e.target.value)}
           disabled={showSpinner}
         />
-        <button className={styles.main_button} onClick={() => handleJoin()}>
+        <Button className={styles.main_button} onClick={() => handleJoin()}>
           {!showSpinner ? (
             "Join"
           ) : (
             <div className={styles.loading_spinner}></div>
           )}
-        </button>
+        </Button>
       </InnerContainer>
       {/* <div style={{ display: !showChat ? "none" : "" }}> */}
       <ChatPage

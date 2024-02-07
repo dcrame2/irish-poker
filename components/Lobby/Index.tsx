@@ -13,9 +13,6 @@ const Player = styled.div`
   ${pSmall}
 `;
 const PlayerContainer = styled.div`
-  /* margin-top: 20px; */
-  /* width: 120px;
-  height: 120px; */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -36,6 +33,8 @@ const MainContainer = styled.div`
   gap: 60px;
   height: 100vh;
   widows: 100vw;
+  position: relative;
+  z-index: 9;
 `;
 
 const MainInnerContainer = styled.div`
@@ -139,6 +138,11 @@ const PlayerName = styled.p`
 const PlayerUpNext = styled.p`
   ${pSmall}
   margin: 30px 0 20px;
+`;
+
+const LobbyInfo = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
 
 interface GameData {
@@ -478,16 +482,20 @@ const GameLobby = ({ socket, username, roomId, users }: any) => {
           <Header>
             Lobby for Room id: <b>{roomId}</b>
           </Header>
-          {!gameStarted && <PlayersInLobby users={users} />}
-          {!gameStarted && (
-            <GameButtonContainer>
-              {users.length > 0 && !usersLockedIn && !gameStarted ? (
-                <Button onClick={lockInPlayersHandler}>Lock in players</Button>
-              ) : (
-                <Button onClick={startGameHandler}>Start Game</Button>
-              )}
-            </GameButtonContainer>
-          )}
+          <LobbyInfo>
+            {!gameStarted && <PlayersInLobby users={users} />}
+            {!gameStarted && (
+              <GameButtonContainer>
+                {users.length > 0 && !usersLockedIn && !gameStarted ? (
+                  <Button onClick={lockInPlayersHandler}>
+                    Lock in players
+                  </Button>
+                ) : (
+                  <Button onClick={startGameHandler}>Start Game</Button>
+                )}
+              </GameButtonContainer>
+            )}
+          </LobbyInfo>
           <GameContainer>
             {allGameData
               ? allGameData?.cardData.map(
@@ -622,42 +630,43 @@ const GameLobby = ({ socket, username, roomId, users }: any) => {
                   )}
               </MainButtonsContainer>
             )}
-          </GameContainer>
-
-          {currentRound === 4 ? (
-            <p>GAME IS OVER</p>
-          ) : (
-            <Message>
-              {booleanMessage ? (
-                <>
-                  <p>{currentUsersMessageTrue}</p>
-                  <p>{otherUsersMessageTrue}</p>
-                  {buttonsTrue &&
-                    otherPlayers?.map((player: any) => (
-                      <Button
-                        onClick={() => whoDrinksHandler(player?.username)}
-                        key={player?.id}
-                      >
-                        {player?.username}
+            {currentRound === 4 ? (
+              <p>GAME IS OVER</p>
+            ) : (
+              <Message>
+                {booleanMessage ? (
+                  <>
+                    <p>{currentUsersMessageTrue}</p>
+                    <p>{otherUsersMessageTrue}</p>
+                    {buttonsTrue &&
+                      users.length !== 1 &&
+                      otherPlayers?.map((player: any) => (
+                        <Button
+                          onClick={() => whoDrinksHandler(player?.username)}
+                          key={player?.id}
+                        >
+                          {player?.username}
+                        </Button>
+                      ))}
+                    {buttonsTrue && users.length !== 1 && (
+                      <Button onClick={confirmWhoDrinksHandler}>
+                        Confirm Players to Drinks
                       </Button>
-                    ))}
-                  {buttonsTrue && (
-                    <Button onClick={confirmWhoDrinksHandler}>
-                      Confirm Players to Drinks
-                    </Button>
-                  )}
-                  {usersToDrink &&
-                    usersToDrink.map((user: string, index: number) => {
-                      return <p key={user}>{user}</p>;
-                    })}
-                </>
-              ) : (
-                <>
-                  <p>{otherUsersMessageFalse}</p>
-                </>
-              )}
-            </Message>
-          )}
+                    )}
+                    {usersToDrink &&
+                      users.length !== 1 &&
+                      usersToDrink.map((user: string, index: number) => {
+                        return <p key={user}>{user}</p>;
+                      })}
+                  </>
+                ) : (
+                  <>
+                    <p>{otherUsersMessageFalse}</p>
+                  </>
+                )}
+              </Message>
+            )}
+          </GameContainer>
         </CardContainer>
       </MainInnerContainer>
     </MainContainer>

@@ -11,7 +11,7 @@ const ChatContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  /* background-color: #183c24; */
+  background-color: #183c24;
 `;
 
 const ChatsFormContainer = styled.div`
