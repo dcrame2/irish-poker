@@ -26,11 +26,13 @@ const MainContainer = styled.div`
 `;
 
 const InnerContainer = styled(motion.div)`
+  height: 100vh;
+  width: 100vw;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  gap: 1rem;
+  gap: 12px;
   z-index: 10;
   position: relative;
 `;
