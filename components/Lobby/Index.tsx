@@ -566,6 +566,12 @@ const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
                                       rotateY: 0,
                                       scale: 1,
                                     }}
+                                    exit={{
+                                      opacity: 0,
+                                      rotateX: 360,
+                                      rotateY: 720,
+                                      scale: 0,
+                                    }}
                                     transition={{
                                       duration: `0.8`,
                                       ease: "easeInOut",
@@ -578,8 +584,8 @@ const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
                                     key={`default-${singleCard.code}`}
                                     initial={{
                                       opacity: 0,
-                                      rotateX: 180,
-                                      rotateY: 360,
+                                      rotateX: 360,
+                                      rotateY: 720,
                                       scale: 0,
                                     }}
                                     animate={{
@@ -587,6 +593,12 @@ const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
                                       opacity: 1,
                                       rotateY: 0,
                                       scale: 1,
+                                    }}
+                                    exit={{
+                                      opacity: 0,
+                                      rotateX: 360,
+                                      rotateY: 720,
+                                      scale: 0,
                                     }}
                                     transition={{
                                       duration: `0.5`,
