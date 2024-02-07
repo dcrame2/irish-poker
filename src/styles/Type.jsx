@@ -26,12 +26,12 @@ export const h1styles = css`
 
 export const h2styles = css`
   font-family: ${monsterrat};
-  font-size: 3rem;
+  font-size: 2rem;
   line-height: 5rem;
   color: #ffff;
 
   @media ${MediaQueries.tablet} {
-    font-size: 2.5rem;
+    font-size: 1.5rem;
     line-height: 3rem;
   }
 

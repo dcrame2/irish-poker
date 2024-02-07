@@ -9,6 +9,27 @@ import { variables } from "@/styles/Variables";
 import { buttonType, h2styles, pSmall, inputType, pLarge } from "@/styles/Type";
 import PlayersInLobby from "./PlayersInLobby/Index";
 
+const Player = styled.div`
+  ${pSmall}
+`;
+const PlayerContainer = styled.div`
+  /* margin-top: 20px; */
+  /* width: 120px;
+  height: 120px; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+`;
+
+const CloverIcon = styled.img`
+  width: 50px;
+  height: 50px;
+  padding: 6px;
+  border-radius: 50%;
+  border: 1px solid white;
+`;
+
 const MainContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -52,7 +73,7 @@ const BtnContainer = styled.div`
   display: flex;
   flex-direction: row;
   gap: 24px;
-  position: absolute;
+  /* position: absolute; */
   bottom: 0;
 `;
 
@@ -68,6 +89,13 @@ const Message = styled.div`
   max-width: 500px;
   align-items: center;
   justify-content: center;
+`;
+
+const PlayerAndCardContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 50px;
+  margin-bottom: 30px;
 `;
 
 const Header = styled.h2`
@@ -102,6 +130,15 @@ const CurrentPlayerCard = styled(IndividualCard)`
 
 const OtherPlayersCard = styled(IndividualCard)`
   opacity: 0.5;
+`;
+
+const PlayerName = styled.p`
+  ${pSmall}
+`;
+
+const PlayerUpNext = styled.p`
+  ${pSmall}
+  margin: 30px 0 20px;
 `;
 
 interface GameData {
@@ -461,65 +498,78 @@ const GameLobby = ({ socket, username, roomId, users }: any) => {
                         : OtherPlayersCard;
 
                     return (
-                      <CardsContainer ref={ref}>
-                        <p>{player[playerIndex].player}</p>
-                        {player.map((singleCard: SingleCard, index: number) => {
-                          return (
-                            <>
-                              <IndividualCardContainer key={`player-${index}`}>
-                                {singleCard.selectedOption ? (
-                                  <ImageOfCard
-                                    key={`${singleCard.selectedOption}-${singleCard.image}`}
-                                    initial={{
-                                      opacity: 0,
-                                      rotateX: 360,
-                                      rotateY: 720,
-                                      scale: 0,
-                                    }}
-                                    animate={{
-                                      rotateX: 0,
-                                      opacity: 1,
-                                      rotateY: 0,
-                                      scale: 1,
-                                    }}
-                                    transition={{
-                                      duration: `0.8`,
-                                      ease: "easeInOut",
-                                    }}
-                                    src={singleCard.image}
-                                  />
-                                ) : (
-                                  // <p>{singleCard.code}</p>
-                                  <ImageOfCard
-                                    key={`default-${singleCard.code}`}
-                                    initial={{
-                                      opacity: 0,
-                                      rotateX: 180,
-                                      rotateY: 360,
-                                      scale: 0,
-                                    }}
-                                    animate={{
-                                      rotateX: 0,
-                                      opacity: 1,
-                                      rotateY: 0,
-                                      scale: 1,
-                                    }}
-                                    transition={{
-                                      duration: `0.5`,
-                                      ease: "easeInOut",
-                                    }}
-                                    src="green_card.png"
-                                  />
-                                )}
-                              </IndividualCardContainer>
-                            </>
-                          );
-                        })}
-                      </CardsContainer>
+                      <PlayerAndCardContainer>
+                        <PlayerContainer className="item">
+                          <CloverIcon src="clover.svg" alt="clover" />
+                          <Player>{player[playerIndex].player} </Player>
+                        </PlayerContainer>
+                        {/* <PlayerName>{player[playerIndex].player}</PlayerName> */}
+                        <CardsContainer ref={ref}>
+                          {player.map(
+                            (singleCard: SingleCard, index: number) => {
+                              return (
+                                <>
+                                  <IndividualCardContainer
+                                    key={`player-${index}`}
+                                  >
+                                    {singleCard.selectedOption ? (
+                                      <ImageOfCard
+                                        key={`${singleCard.selectedOption}-${singleCard.image}`}
+                                        initial={{
+                                          opacity: 0,
+                                          rotateX: 360,
+                                          rotateY: 720,
+                                          scale: 0,
+                                        }}
+                                        animate={{
+                                          rotateX: 0,
+                                          opacity: 1,
+                                          rotateY: 0,
+                                          scale: 1,
+                                        }}
+                                        transition={{
+                                          duration: `0.8`,
+                                          ease: "easeInOut",
+                                        }}
+                                        src={singleCard.image}
+                                      />
+                                    ) : (
+                                      // <p>{singleCard.code}</p>
+                                      <ImageOfCard
+                                        key={`default-${singleCard.code}`}
+                                        initial={{
+                                          opacity: 0,
+                                          rotateX: 180,
+                                          rotateY: 360,
+                                          scale: 0,
+                                        }}
+                                        animate={{
+                                          rotateX: 0,
+                                          opacity: 1,
+                                          rotateY: 0,
+                                          scale: 1,
+                                        }}
+                                        transition={{
+                                          duration: `0.5`,
+                                          ease: "easeInOut",
+                                        }}
+                                        src="green_card.png"
+                                      />
+                                    )}
+                                  </IndividualCardContainer>
+                                </>
+                              );
+                            }
+                          )}
+                        </CardsContainer>
+                      </PlayerAndCardContainer>
                     );
                   }
                 )
               : ""}
+            {allGameData && (
+              <PlayerUpNext>Player up next: {isCurrentPlayer}</PlayerUpNext>
+            )}
             {allGameData && (
               <MainButtonsContainer>
                 {users[currentPlayerIndex]?.username === username &&
@@ -606,7 +656,6 @@ const GameLobby = ({ socket, username, roomId, users }: any) => {
                   <p>{otherUsersMessageFalse}</p>
                 </>
               )}
-              {allGameData && <p>Player up next: {isCurrentPlayer}</p>}
             </Message>
           )}
         </CardContainer>
