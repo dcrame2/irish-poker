@@ -3,15 +3,16 @@ import { io } from "socket.io-client";
 import React, { useState, useEffect } from "react";
 import GameLobby from "../Lobby/Index";
 import styled from "styled-components";
-import { Container } from "../../src/styles/Utilities";
-import { buttonType, h2styles, pSmall, inputType, pLarge } from "@/styles/Type";
+import { buttonType, inputType } from "@/styles/Type";
 import { AnimatePresence, motion } from "framer-motion";
 const MainContainer = styled.div`
-  /* background-image: url("clover.svg");
+  background-image: url("clover.svg");
   background-repeat: no-repeat;
   position: relative;
   z-index: 2;
   background-position: right;
+  height: 100vh;
+  width: 100vw;
   &::before {
     z-index: 1;
     content: "";
@@ -21,23 +22,20 @@ const MainContainer = styled.div`
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.9);
-  } */
+  }
 `;
 
 const InnerContainer = styled(motion.div)`
-  /* height: 100vh;
-  widows: 100vw; */
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   gap: 1rem;
-  /* z-index: 10; */
+  z-index: 10;
   position: relative;
 `;
 
 const Input = styled.input`
-  /* width: 75%; */
   ${inputType}
 `;
 
@@ -60,7 +58,6 @@ export default function UserSetup() {
       console.log(userName, "userName", roomId, "roomId");
       socket.emit("join_room", { userName, roomId }, showChat);
       setShowSpinner(true);
-      // You can remove this setTimeout and add your own logic
       setShowChat(true);
     } else {
       alert("Please fill in Username and Room Id");

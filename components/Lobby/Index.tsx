@@ -3,10 +3,9 @@ import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import { AnimatePresence, motion } from "framer-motion";
 import Chat from "../Chat";
-import { Container } from "../../src/styles/Utilities";
 import { convertToNum } from "../../utils/users";
 import { variables } from "@/styles/Variables";
-import { buttonType, h2styles, pSmall, inputType, pLarge } from "@/styles/Type";
+import { buttonType, h2styles, pSmall } from "@/styles/Type";
 import PlayersInLobby from "./PlayersInLobby/Index";
 
 const Player = styled.div`
@@ -489,15 +488,15 @@ const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
   const motionProps = {
     initial: {
       opacity: 0,
-      y: 100, // Start from bottom
+      y: 200,
     },
     animate: {
       opacity: 1,
-      y: 0, // Slide up to the center
+      y: 0,
     },
     exit: {
       opacity: 0,
-      y: 100, // Slide down to the bottom
+      y: 200,
     },
     transition: {
       duration: 0.4,
@@ -553,28 +552,28 @@ const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
                             <>
                               <IndividualCardContainer key={`player-${index}`}>
                                 {singleCard.selectedOption ? (
-                                  // <ImageOfCard
-                                  //   key={`${singleCard.selectedOption}-${singleCard.image}`}
-                                  //   initial={{
-                                  //     opacity: 0,
-                                  //     rotateX: 360,
-                                  //     rotateY: 720,
-                                  //     scale: 0,
-                                  //   }}
-                                  //   animate={{
-                                  //     rotateX: 0,
-                                  //     opacity: 1,
-                                  //     rotateY: 0,
-                                  //     scale: 1,
-                                  //   }}
-                                  //   transition={{
-                                  //     duration: `0.8`,
-                                  //     ease: "easeInOut",
-                                  //   }}
-                                  //   src={singleCard.image}
-                                  // />
-                                  <p>{singleCard.code}</p>
+                                  <ImageOfCard
+                                    key={`${singleCard.selectedOption}-${singleCard.image}`}
+                                    initial={{
+                                      opacity: 0,
+                                      rotateX: 360,
+                                      rotateY: 720,
+                                      scale: 0,
+                                    }}
+                                    animate={{
+                                      rotateX: 0,
+                                      opacity: 1,
+                                      rotateY: 0,
+                                      scale: 1,
+                                    }}
+                                    transition={{
+                                      duration: `0.8`,
+                                      ease: "easeInOut",
+                                    }}
+                                    src={singleCard.image}
+                                  />
                                 ) : (
+                                  // <p>{singleCard.code}</p>
                                   <ImageOfCard
                                     key={`default-${singleCard.code}`}
                                     initial={{
@@ -593,7 +592,7 @@ const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
                                       duration: `0.5`,
                                       ease: "easeInOut",
                                     }}
-                                    src="white_card.png"
+                                    src="green_card.png"
                                   />
                                 )}
                               </IndividualCardContainer>

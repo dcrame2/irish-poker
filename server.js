@@ -38,7 +38,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("current_index", (data) => {
-    // console.log(data, "send_card_data");
     data.currentPlayerIndex =
       (data.currentPlayerIndex + 1) % data.cardData.length;
     socket.emit("receive_updatedIndex", data.currentPlayerIndex);
@@ -48,8 +47,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("send_current_player", (data) => {
-    // console.log(data, "current_player");
-
     socket.emit("receive_current_player", data);
     socket.to(data.roomId).emit("receive_current_player", data);
   });
@@ -99,7 +96,6 @@ io.on("connection", (socket) => {
 
   socket.on("lockin_players", (userData) => {
     console.log(userData, "userData");
-    storedUserData = userData;
     const url = `https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1`;
     axios
       .get(url)
