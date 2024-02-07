@@ -60,10 +60,7 @@ export default function UserSetup() {
       socket.emit("join_room", { userName, roomId });
       setShowSpinner(true);
       // You can remove this setTimeout and add your own logic
-      setTimeout(() => {
-        setShowChat(true);
-        setShowSpinner(false);
-      }, 1000);
+      setShowChat(true);
     } else {
       alert("Please fill in Username and Room Id");
     }
@@ -104,14 +101,15 @@ export default function UserSetup() {
           )}
         </Button>
       </InnerContainer>
-      {/* <div style={{ display: !showChat ? "none" : "" }}> */}
-      <ChatPage
-        users={users}
-        socket={socket}
-        roomId={roomId}
-        username={userName}
-      />
-      {/* </div>  */}
+
+      <div style={{ display: !showChat ? "none" : "" }}>
+        <ChatPage
+          users={users}
+          socket={socket}
+          roomId={roomId}
+          username={userName}
+        />
+      </div>
     </MainContainer>
   );
 }
