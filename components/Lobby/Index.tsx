@@ -168,7 +168,7 @@ type SingleCard = {
 type Player = SingleCard[];
 type PlayerData = {};
 
-const GameLobby = ({ socket, username, roomId, users }: any) => {
+const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
   const [playerData, setPlayerData] = useState([]);
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
 
@@ -496,6 +496,7 @@ const GameLobby = ({ socket, username, roomId, users }: any) => {
               </GameButtonContainer>
             )}
           </LobbyInfo>
+
           <GameContainer>
             {allGameData
               ? allGameData?.cardData.map(

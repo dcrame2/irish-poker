@@ -1,10 +1,11 @@
 import styles from "../../src/styles/page.module.css";
 import { io } from "socket.io-client";
 import React, { useState, useEffect } from "react";
-import ChatPage from "../Lobby/Index";
+import GameLobby from "../Lobby/Index";
 import styled from "styled-components";
 import { Container } from "../../src/styles/Utilities";
 import { buttonType, h2styles, pSmall, inputType, pLarge } from "@/styles/Type";
+import { AnimatePresence, motion } from "framer-motion";
 const MainContainer = styled.div`
   /* background-image: url("clover.svg");
   background-repeat: no-repeat;
@@ -23,7 +24,7 @@ const MainContainer = styled.div`
   } */
 `;
 
-const InnerContainer = styled.div`
+const InnerContainer = styled(motion.div)`
   /* height: 100vh;
   widows: 100vw; */
   display: flex;
@@ -31,7 +32,7 @@ const InnerContainer = styled.div`
   align-items: center;
   flex-direction: column;
   gap: 1rem;
-  z-index: 10;
+  /* z-index: 10; */
   position: relative;
 `;
 
@@ -57,7 +58,7 @@ export default function UserSetup() {
   const handleJoin = () => {
     if (userName !== "" && roomId !== "") {
       console.log(userName, "userName", roomId, "roomId");
-      socket.emit("join_room", { userName, roomId });
+      socket.emit("join_room", { userName, roomId }, showChat);
       setShowSpinner(true);
       // You can remove this setTimeout and add your own logic
       setShowChat(true);
@@ -69,47 +70,71 @@ export default function UserSetup() {
   useEffect(() => {
     socket.on("roomUsers", ({ users }: any) => {
       setUsers(users);
+      setShowChat(true);
     });
   }, [socket]);
 
+  const motionProps = {
+    initial: {
+      opacity: 0,
+    },
+    animate: {
+      opacity: 1,
+    },
+    exit: {
+      opacity: 0,
+    },
+    transition: {
+      duration: 0.8,
+    },
+  };
+
   return (
     <MainContainer>
-      <InnerContainer
-        className={styles.main_div}
-        style={{ display: showChat ? "none" : "" }}
-      >
-        {/* <h1>Irish Poker</h1> */}
-        <Input
-          className={styles.main_input}
-          type="text"
-          placeholder="Username"
-          onChange={(e) => setUserName(e.target.value)}
-          disabled={showSpinner}
-        />
-        <Input
-          className={styles.main_input}
-          type="text"
-          placeholder="room id"
-          onChange={(e) => setroomId(e.target.value)}
-          disabled={showSpinner}
-        />
-        <Button className={styles.main_button} onClick={() => handleJoin()}>
-          {!showSpinner ? (
-            "Join"
-          ) : (
-            <div className={styles.loading_spinner}></div>
-          )}
-        </Button>
-      </InnerContainer>
-
-      <div style={{ display: !showChat ? "none" : "" }}>
-        <ChatPage
-          users={users}
-          socket={socket}
-          roomId={roomId}
-          username={userName}
-        />
-      </div>
+      <AnimatePresence mode="wait">
+        {/* {!showChat ? ( */}
+        <InnerContainer
+          {...motionProps}
+          // className={styles.main_div}
+          style={{ display: showChat ? "none" : "" }}
+        >
+          {/* <h1>Irish Poker</h1> */}
+          <Input
+            // className={styles.main_input}
+            type="text"
+            placeholder="Username"
+            onChange={(e) => setUserName(e.target.value)}
+            disabled={showSpinner}
+          />
+          <Input
+            // className={styles.main_input}
+            type="text"
+            placeholder="room id"
+            onChange={(e) => setroomId(e.target.value)}
+            disabled={showSpinner}
+          />
+          <Button onClick={() => handleJoin()}>
+            {!showSpinner ? (
+              "Join"
+            ) : (
+              <div className={styles.loading_spinner}></div>
+            )}
+          </Button>
+        </InnerContainer>
+        {/* ) : ( */}
+        <motion.div
+          style={{ display: !showChat ? "none" : "" }}
+          {...motionProps}
+        >
+          <GameLobby
+            users={users}
+            socket={socket}
+            roomId={roomId}
+            username={userName}
+          />
+        </motion.div>
+        {/* )} */}
+      </AnimatePresence>
     </MainContainer>
   );
 }

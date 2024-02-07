@@ -33,7 +33,7 @@ function PlayersInLobby({ users }: any) {
     <PlayersContainer className="container">
       {users?.map((user: { id: string; username: string; room: string }) => {
         return (
-          <PlayerContainer className="item">
+          <PlayerContainer key={user?.id} className="item">
             <CloverIcon src="clover.svg" alt="clover" />
             <Player>{user?.username} </Player>
           </PlayerContainer>
