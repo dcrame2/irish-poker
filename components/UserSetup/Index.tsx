@@ -98,16 +98,14 @@ export default function UserSetup() {
           // className={styles.main_div}
           style={{ display: showChat ? "none" : "" }}
         >
-          {/* <h1>Irish Poker</h1> */}
+          <h1>Irish Poker</h1>
           <Input
-            // className={styles.main_input}
             type="text"
             placeholder="Username"
             onChange={(e) => setUserName(e.target.value)}
             disabled={showSpinner}
           />
           <Input
-            // className={styles.main_input}
             type="text"
             placeholder="room id"
             onChange={(e) => setroomId(e.target.value)}
