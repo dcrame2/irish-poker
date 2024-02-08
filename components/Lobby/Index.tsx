@@ -777,6 +777,7 @@ const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
           {/* )} */}
 
           {/* <Message> */}
+          {/* TODO: Need to make it so activeModal gets push to all screens so uses know whats good in the hood. I think everything should be time based and there is no way to close the modal with the X so that will get removed and everything will be timed. :))  */}
           {booleanMessage !== null && activeModal && (
             <AnimatePresence mode="wait">
               {booleanMessage ? (
