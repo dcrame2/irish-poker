@@ -7,6 +7,8 @@ import { convertToNum } from "../../utils/users";
 import { variables } from "@/styles/Variables";
 import { buttonType, h2styles, pSmall } from "@/styles/Type";
 import PlayersInLobby from "./PlayersInLobby/Index";
+import { MediaQueries } from "@/styles/Utilities";
+import Close from "../../svg/close/Index";
 
 const Player = styled.div`
   ${pSmall}
@@ -84,7 +86,9 @@ const CardsContainer = styled.div`
 const Message = styled.div`
   display: flex;
   flex-direction: column;
-  max-width: 500px;
+  /* max-width: 500px; */
+  width: 50%;
+  height: 50%;
   align-items: center;
   justify-content: center;
 `;
@@ -148,11 +152,92 @@ const CorrectMessaging = styled(motion.div)`
   border: 3px solid ${variables.color1};
   background-color: ${variables.color2};
   padding: 16px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 11;
+  width: 100vw;
+  height: 100dvh;
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    background: #000;
+    opacity: 0.5;
+    z-index: -1;
+  }
 `;
 const IncorrectMessaging = styled(motion.div)`
   border: 3px solid ${variables.color1};
   background-color: ${variables.color2};
   padding: 16px;
+  border: 3px solid ${variables.color1};
+  background-color: ${variables.color2};
+  padding: 16px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 11;
+  width: 100vw;
+  height: 100dvh;
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    background: #000;
+    opacity: 0.5;
+    z-index: -1;
+  }
+`;
+
+const CloseModal = styled.button`
+  background-color: unset;
+  border: unset;
+  z-index: 100;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
+  width: 34px;
+  height: 34px;
+
+  @media ${MediaQueries.mobile} {
+    width: 44px;
+    height: 44px;
+    padding: 10px;
+    right: 8px;
+    top: 8px;
+  }
+
+  svg {
+    polyline {
+      stroke: #fff;
+      transition: filter ease-out 0.35s;
+    }
+  }
+
+  &:hover,
+  &:focus {
+    svg {
+      polyline {
+        filter: brightness(0.7);
+      }
+    }
+  }
 `;
 
 interface GameData {
@@ -190,7 +275,7 @@ const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
   // Initialize state for the current round
   const [currentRound, setCurrentRound] = useState(0);
 
-  const [booleanMessage, setBooleanMessage] = useState(false);
+  const [booleanMessage, setBooleanMessage] = useState(null);
   const [buttonsTrue, setButtonsTrue] = useState(false);
 
   const [currentUsersMessageTrue, setCurrentUserMessageTrue] = useState("");
@@ -200,6 +285,8 @@ const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
   const [usersToDrink, setUsersToDrink] = useState<any[]>();
 
   const [countdown, setCountdown] = useState(5);
+
+  const [activeModal, setActiveModal] = useState(true);
 
   const otherPlayers = users?.filter(
     (user: any) => user?.username !== username
@@ -379,6 +466,8 @@ const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
       isCurrentPlayer,
       currentRound,
     });
+
+    setActiveModal(true);
   };
 
   let usersToDrinkArr: any = [];
@@ -466,6 +555,12 @@ const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
     });
 
     setIsCurrentPlayer(users[currentPlayerIndex]?.username);
+
+    const timer = setTimeout(() => {
+      setActiveModal(false);
+    }, 5000);
+
+    return () => clearTimeout(timer);
   }, [
     socket,
     currentPlayerIndex,
@@ -501,6 +596,11 @@ const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
     transition: {
       duration: 0.4,
     },
+  };
+
+  const hideModal = () => {
+    setActiveModal(false);
+    setBooleanMessage(null);
   };
 
   return (
@@ -552,34 +652,34 @@ const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
                             <>
                               <IndividualCardContainer key={`player-${index}`}>
                                 {singleCard.selectedOption ? (
-                                  <ImageOfCard
-                                    key={`${singleCard.selectedOption}-${singleCard.image}`}
-                                    initial={{
-                                      opacity: 0,
-                                      rotateX: 360,
-                                      rotateY: 720,
-                                      scale: 0,
-                                    }}
-                                    animate={{
-                                      rotateX: 0,
-                                      opacity: 1,
-                                      rotateY: 0,
-                                      scale: 1,
-                                    }}
-                                    exit={{
-                                      opacity: 0,
-                                      rotateX: 360,
-                                      rotateY: 720,
-                                      scale: 0,
-                                    }}
-                                    transition={{
-                                      duration: `0.8`,
-                                      ease: "easeInOut",
-                                    }}
-                                    src={singleCard.image}
-                                  />
+                                  // <ImageOfCard
+                                  //   key={`${singleCard.selectedOption}-${singleCard.image}`}
+                                  //   initial={{
+                                  //     opacity: 0,
+                                  //     rotateX: 360,
+                                  //     rotateY: 720,
+                                  //     scale: 0,
+                                  //   }}
+                                  //   animate={{
+                                  //     rotateX: 0,
+                                  //     opacity: 1,
+                                  //     rotateY: 0,
+                                  //     scale: 1,
+                                  //   }}
+                                  //   exit={{
+                                  //     opacity: 0,
+                                  //     rotateX: 360,
+                                  //     rotateY: 720,
+                                  //     scale: 0,
+                                  //   }}
+                                  //   transition={{
+                                  //     duration: `0.8`,
+                                  //     ease: "easeInOut",
+                                  //   }}
+                                  //   src={singleCard.image}
+                                  // />
+                                  <p>{singleCard.code}</p>
                                 ) : (
-                                  // <p>{singleCard.code}</p>
                                   <ImageOfCard
                                     key={`default-${singleCard.code}`}
                                     initial={{
@@ -604,7 +704,7 @@ const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
                                       duration: `0.5`,
                                       ease: "easeInOut",
                                     }}
-                                    src="green_card.png"
+                                    src="white_card.png"
                                   />
                                 )}
                               </IndividualCardContainer>
@@ -671,46 +771,53 @@ const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
                   )}
               </MainButtonsContainer>
             )}
-            {currentRound === 4 ? (
-              <p>GAME IS OVER</p>
-            ) : (
-              <Message>
-                <AnimatePresence mode="wait">
-                  {booleanMessage ? (
-                    <CorrectMessaging key={`${socket.id}`} {...motionProps}>
-                      <p>{currentUsersMessageTrue}</p>
-                      <p>{otherUsersMessageTrue}</p>
-                      {buttonsTrue &&
-                        users.length !== 1 &&
-                        otherPlayers?.map((player: any) => (
-                          <Button
-                            onClick={() => whoDrinksHandler(player?.username)}
-                            key={player?.id}
-                          >
-                            {player?.username}
-                          </Button>
-                        ))}
-                      {buttonsTrue && users.length !== 1 && (
-                        <Button onClick={confirmWhoDrinksHandler}>
-                          Confirm Players to Drinks
-                        </Button>
-                      )}
-                      {usersToDrink &&
-                        users.length !== 1 &&
-                        usersToDrink.map((user: string, index: number) => {
-                          return <p key={user}>{user}</p>;
-                        })}
-                    </CorrectMessaging>
-                  ) : (
-                    <IncorrectMessaging key={`${socket.id}-1`} {...motionProps}>
-                      <p>{otherUsersMessageFalse}</p>
-                    </IncorrectMessaging>
-                  )}
-                </AnimatePresence>
-              </Message>
-            )}
+
+            {currentRound === 4 && <p>GAME IS OVER</p>}
           </GameContainer>
           {/* )} */}
+
+          {/* <Message> */}
+          {booleanMessage !== null && activeModal && (
+            <AnimatePresence mode="wait">
+              {booleanMessage ? (
+                <CorrectMessaging key={`${socket.id}`} {...motionProps}>
+                  <CloseModal onClick={hideModal}>
+                    <Close />
+                  </CloseModal>
+                  <p>{currentUsersMessageTrue}</p>
+                  <p>{otherUsersMessageTrue}</p>
+                  {buttonsTrue &&
+                    users.length !== 1 &&
+                    otherPlayers?.map((player: any) => (
+                      <Button
+                        onClick={() => whoDrinksHandler(player?.username)}
+                        key={player?.id}
+                      >
+                        {player?.username}
+                      </Button>
+                    ))}
+                  {buttonsTrue && users.length !== 1 && (
+                    <Button onClick={confirmWhoDrinksHandler}>
+                      Confirm Players to Drinks
+                    </Button>
+                  )}
+                  {usersToDrink &&
+                    users.length !== 1 &&
+                    usersToDrink.map((user: string, index: number) => {
+                      return <p key={user}>{user}</p>;
+                    })}
+                </CorrectMessaging>
+              ) : (
+                <IncorrectMessaging key={`${socket.id}-1`} {...motionProps}>
+                  <CloseModal onClick={hideModal}>
+                    <Close />
+                  </CloseModal>
+                  <p>{otherUsersMessageFalse}</p>
+                </IncorrectMessaging>
+              )}
+            </AnimatePresence>
+          )}
+          {/* </Message> */}
         </CardContainer>
       </MainInnerContainer>
     </MainContainer>
