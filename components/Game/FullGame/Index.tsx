@@ -6,6 +6,11 @@ import { buttonType, h2styles, h3styles, pLarge, pSmall } from "@/styles/Type";
 import { convertToNum } from "../../../utils/users";
 import AllCards from "./AllCards/Index";
 
+interface PlayerAndCardContainerProps {
+  isCurrentPlayer: string;
+  username: string;
+}
+
 const GameContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -14,11 +19,20 @@ const GameContainer = styled.div`
   height: 100%;
 `;
 
-const PlayerAndCardContainer = styled.div`
+const PlayerAndCardContainer = styled.div<PlayerAndCardContainerProps>`
   display: flex;
   flex-direction: row;
   gap: 50px;
   margin-bottom: 30px;
+  background-color: ${(props) =>
+    props?.isCurrentPlayer === props?.username
+      ? " rgba(255, 255, 255, 0.238)"
+      : "transparent"};
+  padding: 12px;
+  transition: all 1.5s ease-in 0.5s;
+  border-radius: 6px;
+  transform: ${(props) =>
+    props?.isCurrentPlayer === props?.username ? "scale(1.3)" : "scale(1)"};
 `;
 
 const PlayerContainer = styled.div`
@@ -37,8 +51,8 @@ const CloverIcon = styled.img`
 `;
 
 const PlayerUpNext = styled.p`
-  ${pSmall}
-  margin: 30px 0 20px;
+  ${pLarge}
+  padding: 30px 0 50px;
 `;
 
 const MainButtonsContainer = styled.div`
@@ -259,13 +273,19 @@ function FullGame({
     });
   };
 
-  useEffect(() => {}, []);
   return (
     <GameContainer>
+      {allGameData && (
+        <PlayerUpNext>Player up next: {isCurrentPlayer}</PlayerUpNext>
+      )}
       {allGameData &&
         allGameData?.cardData.map((player: Player, playerIndex: number) => {
           return (
-            <PlayerAndCardContainer key={`player-${playerIndex}`}>
+            <PlayerAndCardContainer
+              isCurrentPlayer={isCurrentPlayer}
+              username={player[playerIndex].player}
+              key={`player-${playerIndex}`}
+            >
               <PlayerContainer className="item">
                 <CloverIcon src="clover.svg" alt="clover" />
                 <Player>{player[playerIndex].player} </Player>
@@ -274,9 +294,7 @@ function FullGame({
             </PlayerAndCardContainer>
           );
         })}
-      {allGameData && (
-        <PlayerUpNext>Player up next: {isCurrentPlayer}</PlayerUpNext>
-      )}
+
       {allGameData && (
         <MainButtonsContainer>
           {users[currentPlayerIndex]?.username === username &&

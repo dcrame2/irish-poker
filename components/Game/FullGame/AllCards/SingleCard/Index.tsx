@@ -6,7 +6,7 @@ const ImageOfCard = styled(motion.img)`
   width: 70px;
 `;
 
-function SingleCard({ singleCard, imageLink }: any) {
+function SingleCard({ imageLink }: any) {
   return (
     <ImageOfCard
       initial={{

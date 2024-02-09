@@ -159,6 +159,7 @@ function GameNotifications({
     },
     transition: {
       duration: 0.4,
+      delay: 0.5,
     },
   };
 
