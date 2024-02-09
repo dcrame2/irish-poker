@@ -58,7 +58,7 @@ export default function UserSetup() {
   const handleJoin = () => {
     if (userName !== "" && roomId !== "") {
       console.log(userName, "userName", roomId, "roomId");
-      socket.emit("join_room", { userName, roomId }, showChat);
+      socket.emit("join_room", { userName, roomId });
       setShowSpinner(true);
       setShowChat(true);
     } else {
@@ -92,6 +92,7 @@ export default function UserSetup() {
     <MainContainer>
       <AnimatePresence mode="wait">
         <InnerContainer
+          key="key1"
           {...motionProps}
           style={{ display: showChat ? "none" : "" }}
         >
@@ -119,6 +120,7 @@ export default function UserSetup() {
         <motion.div
           style={{ display: !showChat ? "none" : "" }}
           {...motionProps}
+          key="key2"
         >
           <GameLobby
             users={users}

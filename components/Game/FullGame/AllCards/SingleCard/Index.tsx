@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 
 const ImageOfCard = styled(motion.img)`
   width: 50px;
