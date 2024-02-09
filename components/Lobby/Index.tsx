@@ -152,7 +152,10 @@ const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
   const [currentUsersMessageFalse, setCurrentUsersMessageFalse] = useState("");
   const [otherUsersMessageTrue, setOtherUsersMessageTrue] = useState("");
   const [otherUsersMessageFalse, setOtherUsersMessageFalse] = useState("");
-  const [usersToDrink, setUsersToDrink] = useState<any[]>();
+  const [usersToDrink, setUsersToDrink] = useState<any[]>([]);
+
+  const [confirmedUsersToDrink, setConfirmedUsersToDrink] = useState(false);
+  console.log(usersToDrink, "USERS DRANKIN");
 
   const [countdown, setCountdown] = useState(5);
 
@@ -184,8 +187,10 @@ const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
   };
 
   let usersToDrinkArr: any = [];
+
   const whoDrinksHandler = (user: any) => {
     usersToDrinkArr.push(user);
+
     setUsersToDrink((prevUsersToDrink) => [...(prevUsersToDrink ?? []), user]);
     console.log(usersToDrinkArr, "USERS TO DRINK");
   };
@@ -195,7 +200,11 @@ const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
     socket.emit("send_users_to_drink", {
       roomId,
       usersToDrink,
+      activeModal: true,
+      confirmedUsersToDrink: true,
     });
+
+    setActiveModal(false);
     setButtonsTrue(false);
   };
 
@@ -260,12 +269,14 @@ const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
 
     socket.on("receive_users_to_drink", (data: any) => {
       console.log(data, "receive_users_to_drink");
-      setUsersToDrink(data);
+      setUsersToDrink(data.usersToDrink);
       setCurrentUserMessageTrue("");
       setOtherUsersMessageFalse("");
       setOtherUsersMessageTrue("");
       setCurrentUsersMessageFalse("");
       setButtonsTrue(false);
+      setActiveModal(data.activeModal);
+      setConfirmedUsersToDrink(data.confirmedUsersToDrink);
     });
 
     socket.on("receive_modal_active", (data: any) => {
@@ -277,8 +288,15 @@ const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
     setIsCurrentPlayer(users[currentPlayerIndex]?.username);
 
     const timer = setTimeout(() => {
-      setActiveModal(false);
-    }, 3000);
+      if (booleanMessage === false) {
+        setActiveModal(false);
+      }
+      if (usersToDrink !== [] && confirmedUsersToDrink) {
+        setActiveModal(false);
+        setConfirmedUsersToDrink(false);
+        setUsersToDrink([]);
+      }
+    }, 5000);
 
     return () => clearTimeout(timer);
   }, [
@@ -369,6 +387,7 @@ const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
                       </Button>
                     )}
                     {usersToDrink &&
+                      activeModal &&
                       users.length !== 1 &&
                       usersToDrink.map((user: string, index: number) => {
                         return <p key={user}>{user}</p>;

@@ -86,8 +86,8 @@ io.on("connection", (socket) => {
   socket.on("send_users_to_drink", (data) => {
     console.log(data, "send_users_to_drink");
 
-    socket.emit("receive_users_to_drink", data.usersToDrink);
-    socket.to(data.roomId).emit("receive_users_to_drink", data.usersToDrink);
+    socket.emit("receive_users_to_drink", data);
+    socket.to(data.roomId).emit("receive_users_to_drink", data);
   });
 
   socket.on("start_game", (data) => {
