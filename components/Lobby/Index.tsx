@@ -673,33 +673,32 @@ const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
                             <>
                               <IndividualCardContainer key={`player-${index}`}>
                                 {singleCard.selectedOption ? (
-                                  // <ImageOfCard
-                                  //   key={`${singleCard.selectedOption}-${singleCard.image}`}
-                                  //   initial={{
-                                  //     opacity: 0,
-                                  //     rotateX: 360,
-                                  //     rotateY: 720,
-                                  //     scale: 0,
-                                  //   }}
-                                  //   animate={{
-                                  //     rotateX: 0,
-                                  //     opacity: 1,
-                                  //     rotateY: 0,
-                                  //     scale: 1,
-                                  //   }}
-                                  //   exit={{
-                                  //     opacity: 0,
-                                  //     rotateX: 360,
-                                  //     rotateY: 720,
-                                  //     scale: 0,
-                                  //   }}
-                                  //   transition={{
-                                  //     duration: `0.8`,
-                                  //     ease: "easeInOut",
-                                  //   }}
-                                  //   src={singleCard.image}
-                                  // />
-                                  <p>{singleCard.code}</p>
+                                  <ImageOfCard
+                                    key={`${singleCard.selectedOption}-${singleCard.image}`}
+                                    initial={{
+                                      opacity: 0,
+                                      rotateX: 360,
+                                      rotateY: 720,
+                                      scale: 0,
+                                    }}
+                                    animate={{
+                                      rotateX: 0,
+                                      opacity: 1,
+                                      rotateY: 0,
+                                      scale: 1,
+                                    }}
+                                    exit={{
+                                      opacity: 0,
+                                      rotateX: 360,
+                                      rotateY: 720,
+                                      scale: 0,
+                                    }}
+                                    transition={{
+                                      duration: `0.8`,
+                                      ease: "easeInOut",
+                                    }}
+                                    src={singleCard.image}
+                                  />
                                 ) : (
                                   // <p>{singleCard.code}</p>
                                   <ImageOfCard
@@ -726,7 +725,7 @@ const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
                                       duration: `0.5`,
                                       ease: "easeInOut",
                                     }}
-                                    src="white_card.png"
+                                    src="green_card.png"
                                   />
                                 )}
                               </IndividualCardContainer>
