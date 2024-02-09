@@ -94,6 +94,13 @@ io.on("connection", (socket) => {
     socket.to(data.roomId).emit("all_game_data", data);
   });
 
+  socket.on("send_modal_active", (data) => {
+    console.log(data, "send_modal_active");
+
+    socket.emit("receive_modal_active", data);
+    socket.to(data.roomId).emit("receive_modal_active", data);
+  });
+
   socket.on("lockin_players", (userData) => {
     console.log(userData, "userData");
     const url = `https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1`;
