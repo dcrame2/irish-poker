@@ -216,18 +216,22 @@ function FullGame({
             card?.player
           } guessed ${option}! The card was a: ${card?.value.toLowerCase()} of ${card?.suit.toLowerCase()}`,
       currentUsersMessageFalse: `${isCurrentPlayer} was incorrect and is drinking!`,
+      otherUsersMessageTrue: "",
+      buttonsTrue: true,
     });
 
     socket.emit("send_other_players_message", {
+      socketId: users[currentPlayerIndex].id,
       roomId,
       selectionMessage,
       otherUsersMessageTrue: `One moment...${isCurrentPlayer} is choosing who drinks`,
-      otherUsersMessageFalse: `${isCurrentPlayer} was incorrect and is drinking!`,
+      currentUsersMessageFalse: `${isCurrentPlayer} was incorrect and is drinking!`,
       currentUsersMessageTrue: `
           CORRECT!
           ${
             card?.player
           } guessed ${option}! The card was a: ${card?.value.toLowerCase()} of ${card?.suit.toLowerCase()}`,
+      buttonsTrue: false,
     });
 
     socket.emit("updated_card_data", {

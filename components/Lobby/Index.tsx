@@ -186,10 +186,7 @@ const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
   let usersToDrinkArr: any = [];
   const whoDrinksHandler = (user: any) => {
     usersToDrinkArr.push(user);
-    setUsersToDrink((prevUsersToDrink) => [
-      ...(prevUsersToDrink ?? []), // Ensure prevUsersToDrink is an array
-      user,
-    ]);
+    setUsersToDrink((prevUsersToDrink) => [...(prevUsersToDrink ?? []), user]);
     console.log(usersToDrinkArr, "USERS TO DRINK");
   };
 
@@ -244,16 +241,20 @@ const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
     socket.on("receive_current_player_message", (data: any) => {
       console.log(data, "receive_current_player_message");
       setBooleanMessage(data.selectionMessage);
+      setButtonsTrue(data.buttonsTrue);
+
       setCurrentUserMessageTrue(data.currentUsersMessageTrue);
       setCurrentUsersMessageFalse(data.currentUsersMessageFalse);
-      setButtonsTrue(true);
+      setOtherUsersMessageTrue(data.otherUsersMessageTrue);
     });
 
     socket.on("receive_other_players_message", (data: any) => {
       console.log(data, "receive_other_players_message");
-      setOtherUsersMessageTrue(data.otherUsersMessageTrue);
-      setOtherUsersMessageFalse(data.otherUsersMessageFalse);
       setBooleanMessage(data.selectionMessage);
+      setButtonsTrue(data.buttonsTrue);
+
+      setOtherUsersMessageTrue(data.otherUsersMessageTrue);
+      setCurrentUsersMessageFalse(data.currentUsersMessageFalse);
       setCurrentUserMessageTrue(data.currentUsersMessageTrue);
     });
 
@@ -376,7 +377,7 @@ const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
                 ) : (
                   <IncorrectMessaging key={`${socket.id}-1`} {...motionProps}>
                     <HeaderForMessage>Irish Poker</HeaderForMessage>
-                    <Description>{otherUsersMessageFalse}</Description>
+                    <Description>{currentUsersMessageFalse}</Description>
                   </IncorrectMessaging>
                 )}
               </>

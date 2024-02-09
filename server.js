@@ -70,6 +70,7 @@ io.on("connection", (socket) => {
     console.log(data, "send_current_player_message");
 
     socket.emit("receive_current_player_message", data);
+    // socket.to(data.roomId).emit("receive_current_players_message", data);
   });
 
   socket.on("send_other_players_message", (data) => {
@@ -78,6 +79,7 @@ io.on("connection", (socket) => {
     // socket.emit("receive_other_players_message", data);
     socket.broadcast
       .to(data.roomId)
+      .except(data.socketId)
       .emit("receive_other_players_message", data);
   });
 
