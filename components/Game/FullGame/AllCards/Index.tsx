@@ -38,17 +38,17 @@ function AllCards({ player }: any) {
         return (
           <IndividualCardContainer key={`player-${index}`}>
             {singleCard.selectedOption ? (
-              // <SingleCard
-              //   key={`${singleCard.selectedOption}-${singleCard.image}`}
-              //   singleCard={singleCard}
-              //   imageLink={singleCard.image}
-              // />
-              <p>{singleCard.code}</p>
+              <SingleCard
+                key={`${singleCard.selectedOption}-${singleCard.image}`}
+                singleCard={singleCard}
+                imageLink={singleCard.image}
+              />
             ) : (
+              // <p>{singleCard.code}</p>
               <SingleCard
                 key={`default-${singleCard.code}`}
                 singleCard={singleCard}
-                imageLink="white_card.png"
+                imageLink="green_card.png"
               />
             )}
           </IndividualCardContainer>
