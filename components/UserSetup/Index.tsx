@@ -91,10 +91,8 @@ export default function UserSetup() {
   return (
     <MainContainer>
       <AnimatePresence mode="wait">
-        {/* {!showChat ? ( */}
         <InnerContainer
           {...motionProps}
-          // className={styles.main_div}
           style={{ display: showChat ? "none" : "" }}
         >
           <h1>Irish Poker</h1>
@@ -118,7 +116,6 @@ export default function UserSetup() {
             )}
           </Button>
         </InnerContainer>
-        {/* ) : ( */}
         <motion.div
           style={{ display: !showChat ? "none" : "" }}
           {...motionProps}
@@ -130,7 +127,6 @@ export default function UserSetup() {
             username={userName}
           />
         </motion.div>
-        {/* )} */}
       </AnimatePresence>
     </MainContainer>
   );
