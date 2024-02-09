@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
-import { AnimatePresence, motion } from "framer-motion";
 import { MediaQueries } from "@/styles/Utilities";
 import { variables } from "@/styles/Variables";
 import { buttonType, h2styles, h3styles, pLarge, pSmall } from "@/styles/Type";
@@ -211,23 +210,33 @@ function FullGame({
       roomId,
       selectionMessage,
       currentUsersMessageTrue: `
-          CORRECT!
+          <span class="player">
           ${
             card?.player
-          } guessed ${option}! The card was a: ${card?.value.toLowerCase()} of ${card?.suit.toLowerCase()}`,
-      currentUsersMessageFalse: `${isCurrentPlayer} was incorrect and is drinking!`,
+          }</span> guessed <span class="option">${option}</span>! The card was a:  <span class="value">${card?.value.toLowerCase()}</span> of <span class="suit">${card?.suit.toLowerCase()}</span>`,
+      currentUsersMessageFalse: `<span class="player">
+      ${
+        card?.player
+      }</span> guessed <span class="option">${option}</span>! The card was a:  <span class="value">${card?.value.toLowerCase()}</span> of <span class="suit">${card?.suit.toLowerCase()}</span> <div class="message-container">${isCurrentPlayer} was incorrect and is drinking!</div>`,
+      otherUsersMessageTrue: "",
+      buttonsTrue: true,
     });
 
     socket.emit("send_other_players_message", {
+      socketId: users[currentPlayerIndex].id,
       roomId,
       selectionMessage,
       otherUsersMessageTrue: `One moment...${isCurrentPlayer} is choosing who drinks`,
-      otherUsersMessageFalse: `${isCurrentPlayer} was incorrect and is drinking!`,
+      currentUsersMessageFalse: ` <span class="player">
+      ${
+        card?.player
+      }</span> guessed <span class="option">${option}</span>! The card was a:  <span class="value">${card?.value.toLowerCase()}</span> of <span class="suit">${card?.suit.toLowerCase()}</span> <div class="message-container">${isCurrentPlayer} was incorrect and is drinking!</div>!`,
       currentUsersMessageTrue: `
-          CORRECT!
-          ${
-            card?.player
-          } guessed ${option}! The card was a: ${card?.value.toLowerCase()} of ${card?.suit.toLowerCase()}`,
+      <span class="player">
+      ${
+        card?.player
+      }</span> guessed <span class="option">${option}</span>! The card was a:  <span class="value">${card?.value.toLowerCase()}</span> of <span class="suit">${card?.suit.toLowerCase()}</span>`,
+      buttonsTrue: false,
     });
 
     socket.emit("updated_card_data", {
@@ -256,7 +265,7 @@ function FullGame({
       {allGameData &&
         allGameData?.cardData.map((player: Player, playerIndex: number) => {
           return (
-            <PlayerAndCardContainer>
+            <PlayerAndCardContainer key={`player-${playerIndex}`}>
               <PlayerContainer className="item">
                 <CloverIcon src="clover.svg" alt="clover" />
                 <Player>{player[playerIndex].player} </Player>

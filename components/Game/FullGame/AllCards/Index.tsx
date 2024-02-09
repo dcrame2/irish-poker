@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
-import { AnimatePresence, motion } from "framer-motion";
+
 import { MediaQueries } from "@/styles/Utilities";
 import { variables } from "@/styles/Variables";
 import { buttonType, h2styles, h3styles, pLarge, pSmall } from "@/styles/Type";

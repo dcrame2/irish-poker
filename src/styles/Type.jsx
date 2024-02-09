@@ -82,7 +82,7 @@ export const pLarge = css`
   font-size: 2.4rem;
   line-height: 3.2rem;
   font-weight: 300;
-  color: #ffff;
+  /* color: #ffff; */
 
   @media ${MediaQueries.tablet} {
     font-size: 1.4rem;
