@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { motion } from "framer-motion";
 
 const ImageOfCard = styled(motion.img)`
-  width: 50px;
+  width: 70px;
 `;
 
 function SingleCard({ singleCard, imageLink }: any) {

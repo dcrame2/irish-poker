@@ -67,14 +67,14 @@ io.on("connection", (socket) => {
   });
 
   socket.on("send_current_player_message", (data) => {
-    console.log(data, "send_current_player_message");
+    // console.log(data, "send_current_player_message");
 
     socket.emit("receive_current_player_message", data);
     // socket.to(data.roomId).emit("receive_current_players_message", data);
   });
 
   socket.on("send_other_players_message", (data) => {
-    console.log(data, "send_other_players_message");
+    // console.log(data, "send_other_players_message");
 
     // socket.emit("receive_other_players_message", data);
     socket.broadcast
@@ -84,7 +84,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("send_users_to_drink", (data) => {
-    console.log(data, "send_users_to_drink");
+    // console.log(data, "send_users_to_drink");
 
     socket.emit("receive_users_to_drink", data);
     socket.to(data.roomId).emit("receive_users_to_drink", data);
@@ -97,7 +97,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("send_modal_active", (data) => {
-    console.log(data, "send_modal_active");
+    // console.log(data, "send_modal_active");
 
     socket.emit("receive_modal_active", data);
     socket.to(data.roomId).emit("receive_modal_active", data);

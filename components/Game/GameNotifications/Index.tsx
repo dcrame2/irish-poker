@@ -113,7 +113,7 @@ const ButtonContainer = styled.div`
   align-items: center;
   justify-content: center;
   gap: 12px;
-  margin-bottom: 20px;
+  margin: 20px 0;
   flex-wrap: wrap;
 `;
 
@@ -188,17 +188,19 @@ function GameNotifications({
                 )}
               </TextContainer>
               {buttonsTrue && users.length !== 1 && (
-                <ButtonContainer>
+                <>
                   <Description>Select who should drink:</Description>
-                  {otherPlayers?.map((player: any) => (
-                    <Button
-                      onClick={() => whoDrinksHandler(player?.username)}
-                      key={player?.id}
-                    >
-                      {player?.username}
-                    </Button>
-                  ))}
-                </ButtonContainer>
+                  <ButtonContainer>
+                    {otherPlayers?.map((player: any) => (
+                      <Button
+                        onClick={() => whoDrinksHandler(player?.username)}
+                        key={player?.id}
+                      >
+                        {player?.username}
+                      </Button>
+                    ))}
+                  </ButtonContainer>
+                </>
               )}
 
               {buttonsTrue && users.length !== 1 && (
