@@ -5,9 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "none": "next start",
     "lint": "next lint",
-    "node": "nodemon server"
+    "start": "node server"
   },
   "dependencies": {
     "@types/socket.io": "^3.0.2",
