@@ -37,7 +37,7 @@ export const h2styles = css`
 
   @media ${MediaQueries.mobile} {
     font-size: 1.9rem;
-    line-height: 2%.5rem;
+    line-height: 2.5rem;
   }
 `;
 

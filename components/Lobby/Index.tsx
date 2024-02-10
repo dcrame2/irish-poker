@@ -25,10 +25,16 @@ const MainContainer = styled.div`
 `;
 
 const MainInnerContainer = styled.div`
-  border: 2px solid ${variables.color1};
+  /* border: 2px solid ${variables.color1}; */
   width: 100%;
   display: grid;
   grid-template-columns: 360px 880fr;
+  @media ${MediaQueries.mobile} {
+    grid-template-columns: unset;
+    /* display: flex; */
+    /* flex-direction: column-reverse;
+    justify-content: flex-end; */
+  }
 `;
 
 const FullGameContainer = styled.div`
@@ -250,23 +256,27 @@ const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
           <Header>
             Lobby for Room id: <b>{roomId}</b>
           </Header>
-          <LobbyInfo
-            gameStarted={gameStarted}
-            users={users}
-            usersLockedIn={usersLockedIn}
-            startGameHandler={startGameHandler}
-            lockInPlayersHandler={lockInPlayersHandler}
-          />
-          <FullGame
-            username={username}
-            users={users}
-            allGameData={allGameData}
-            currentPlayerIndex={currentPlayerIndex}
-            currentRound={currentRound}
-            isCurrentPlayer={isCurrentPlayer}
-            socket={socket}
-            roomId={roomId}
-          />
+          {!gameStarted && (
+            <LobbyInfo
+              gameStarted={gameStarted}
+              users={users}
+              usersLockedIn={usersLockedIn}
+              startGameHandler={startGameHandler}
+              lockInPlayersHandler={lockInPlayersHandler}
+            />
+          )}
+          {gameStarted && (
+            <FullGame
+              username={username}
+              users={users}
+              allGameData={allGameData}
+              currentPlayerIndex={currentPlayerIndex}
+              currentRound={currentRound}
+              isCurrentPlayer={isCurrentPlayer}
+              socket={socket}
+              roomId={roomId}
+            />
+          )}
           <GameNotifications
             booleanMessage={booleanMessage}
             activeModal={activeModal}

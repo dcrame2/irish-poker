@@ -1,9 +1,13 @@
 import React from "react";
 import styled from "styled-components";
 import { motion } from "framer-motion";
+import { MediaQueries } from "@/styles/Utilities";
 
 const ImageOfCard = styled(motion.img)`
-  width: 70px;
+  width: 50px;
+  @media ${MediaQueries.mobile} {
+    width: 45px;
+  }
 `;
 
 function SingleCard({ imageLink }: any) {

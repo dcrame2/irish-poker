@@ -17,6 +17,7 @@ const GameContainer = styled.div`
   align-items: center;
   justify-content: center;
   height: 100%;
+  position: relative;
 `;
 
 const PlayerAndCardContainer = styled.div<PlayerAndCardContainerProps>`
@@ -33,6 +34,13 @@ const PlayerAndCardContainer = styled.div<PlayerAndCardContainerProps>`
   border-radius: 6px;
   transform: ${(props) =>
     props?.isCurrentPlayer === props?.username ? "scale(1.3)" : "scale(1)"};
+
+  @media ${MediaQueries.mobile} {
+    gap: 18px;
+    padding: 8px;
+    transform: ${(props) =>
+      props?.isCurrentPlayer === props?.username ? "scale(1.1)" : "scale(1)"};
+  }
 `;
 
 const PlayerContainer = styled.div`
@@ -48,6 +56,11 @@ const CloverIcon = styled.img`
   padding: 6px;
   border-radius: 50%;
   border: 1px solid white;
+  @media ${MediaQueries.mobile} {
+    width: 30px;
+    height: 30px;
+    padding: 6px;
+  }
 `;
 
 const PlayerUpNext = styled.p`
@@ -58,18 +71,29 @@ const PlayerUpNext = styled.p`
 const MainButtonsContainer = styled.div`
   display: flex;
   gap: 10px;
+  @media ${MediaQueries.mobile} {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    gap: unset;
+  }
 `;
 
 const BtnContainer = styled.div`
   display: flex;
   flex-direction: row;
   gap: 24px;
-  /* position: absolute; */
-  bottom: 0;
+  @media ${MediaQueries.mobile} {
+    width: 100%;
+    gap: unset;
+  }
 `;
 
 const Button = styled.button`
   ${buttonType}
+  @media ${MediaQueries.mobile} {
+    width: 100%;
+  }
 `;
 
 const Player = styled.div`

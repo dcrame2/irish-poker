@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { motion } from "framer-motion";
 import { variables } from "@/styles/Variables";
 import { buttonType, h2styles, pSmall, inputType } from "@/styles/Type";
+import { MediaQueries } from "@/styles/Utilities";
 
 const ChatContainer = styled.div`
   border-right: 2px solid ${variables.color1};
@@ -12,6 +13,9 @@ const ChatContainer = styled.div`
   flex-direction: column;
   justify-content: space-between;
   /* background-color: #183c24; */
+  @media ${MediaQueries.mobile} {
+    display: none;
+  }
 `;
 
 const ChatsFormContainer = styled.div`
