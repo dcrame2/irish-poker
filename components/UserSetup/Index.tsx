@@ -5,6 +5,7 @@ import GameLobby from "../Lobby/Index";
 import styled from "styled-components";
 import { buttonType, inputType } from "@/styles/Type";
 import { AnimatePresence, motion } from "framer-motion";
+import { variables } from "@/styles/Variables";
 const MainContainer = styled.div`
   background-image: url("clover.svg");
   background-repeat: no-repeat;
@@ -13,6 +14,7 @@ const MainContainer = styled.div`
   background-position: right;
   height: 100vh;
   width: 100vw;
+  /* border: 2px solid ${variables.color1}; */
   &::before {
     z-index: 1;
     content: "";

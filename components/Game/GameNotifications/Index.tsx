@@ -21,6 +21,11 @@ const CorrectMessaging = styled(motion.div)`
   border-radius: 10px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
   text-align: center;
+  @media ${MediaQueries.mobile} {
+    left: 18%;
+    max-width: 300px;
+    width: 100%;
+  }
 
   &::before {
     content: "";
@@ -50,6 +55,11 @@ const IncorrectMessaging = styled(motion.div)`
   overflow-y: auto;
   border-radius: 10px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  @media ${MediaQueries.mobile} {
+    left: 18%;
+    max-width: 300px;
+    width: 100%;
+  }
 
   &::before {
     content: "";

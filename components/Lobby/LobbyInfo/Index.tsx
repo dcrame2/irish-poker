@@ -6,6 +6,8 @@ import styled from "styled-components";
 const LobbyInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
+  height: 100%;
+  justify-content: center;
 `;
 
 const GameButtonContainer = styled.div`

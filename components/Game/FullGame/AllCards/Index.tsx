@@ -10,6 +10,9 @@ const IndividualCardContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
+  @media ${MediaQueries.mobile} {
+    gap: 12px;
+  }
 `;
 
 const CardsContainer = styled.div`
