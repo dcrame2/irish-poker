@@ -55,7 +55,7 @@ export default function UserSetup() {
   const [users, setUsers] = useState([]);
 
   let socket: any;
-  socket = io("http://localhost:1234");
+  socket = io("http://localhost:3001");
 
   const handleJoin = () => {
     if (userName !== "" && roomId !== "") {
