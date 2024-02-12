@@ -5,17 +5,21 @@ import { motion } from "framer-motion";
 import { variables } from "@/styles/Variables";
 import { buttonType, h2styles, pSmall, inputType } from "@/styles/Type";
 import { MediaQueries } from "@/styles/Utilities";
+import Close from "../../svg/close/Index";
 
 const ChatContainer = styled.div`
   border-right: 2px solid ${variables.color1};
-  position: relative;
+  position: absolute;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  /* background-color: #183c24; */
-  @media ${MediaQueries.mobile} {
-    display: none;
-  }
+  z-index: 20;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background-color: ${variables.color2};
 `;
 
 const ChatsFormContainer = styled.div`
@@ -69,7 +73,6 @@ const ChatIcon = styled.span`
   background-color: ${variables.black};
   height: 3rem;
   width: 3rem;
-  /* border-radius: 50%; */
   border: 2px solid ${variables.white};
   display: flex;
   justify-content: center;
@@ -88,6 +91,15 @@ const NoMessage = styled.p`
   text-align: center;
 `;
 
+const CloseContainer = styled.div`
+  width: 30px;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  height: 30px;
+  z-index: 21;
+`;
+
 interface IMsgDataTypes {
   roomId: String | number;
   user: String;
@@ -95,7 +107,7 @@ interface IMsgDataTypes {
   time: String;
 }
 
-function Chat({ roomId, username, socket, users }: any) {
+function Chat({ roomId, username, socket, users, setShowChat }: any) {
   const [chat, setChat] = useState<IMsgDataTypes[]>([]);
   const [currentMsg, setCurrentMsg] = useState("");
   const sendData = (e: React.FormEvent<HTMLFormElement>) => {
@@ -122,9 +134,16 @@ function Chat({ roomId, username, socket, users }: any) {
     });
   }, [socket]);
 
+  const closeChatHandler = () => {
+    setShowChat(false);
+  };
+
   return (
     <ChatContainer>
       <Header>Chat Room</Header>
+      <CloseContainer onClick={closeChatHandler}>
+        <Close />
+      </CloseContainer>
       {chat.length === 0 && <NoMessage>No Messages</NoMessage>}
       <ChatsFormContainer>
         <Chats>
