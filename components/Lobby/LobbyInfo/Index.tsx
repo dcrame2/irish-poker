@@ -1,16 +1,36 @@
-import React from "react";
+import React, { useState } from "react";
 import PlayersInLobby from "./PlayersInLobby/Index";
 import { buttonType } from "@/styles/Type";
 import styled from "styled-components";
 import { useAnimationFrame } from "framer-motion";
 import CurrentPlayer from "./CurrentPlayer/Index";
 import { variables } from "@/styles/Variables";
+import Chat from "../../Chat";
 
 const LobbyInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
   justify-content: center;
+`;
+
+const MessageIconContainer = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: ${variables.darkGreen};
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  border: none;
+`;
+
+const MessageIcon = styled.img`
+  width: 30px;
+  height: 30px;
 `;
 
 const GameButtonContainer = styled.div`
@@ -46,11 +66,28 @@ function LobbyInfo({
   startGameHandler,
   username,
   roomId,
+  socket,
 }: any) {
+  const [showChat, setShowChat] = useState(false);
+  const showChatHandler = () => {
+    setShowChat(true);
+  };
   return (
     <LobbyInfoContainer>
       {!gameStarted && (
         <>
+          <MessageIconContainer onClick={showChatHandler}>
+            <MessageIcon src="chat_icon.svg" />
+          </MessageIconContainer>
+          {showChat && (
+            <Chat
+              socket={socket}
+              username={username}
+              roomId={roomId}
+              users={users}
+              setShowChat={setShowChat}
+            />
+          )}
           <CurrentPlayer users={users} username={username} roomId={roomId} />
           <PlayersInLobby users={users} />
           <GameButtonContainer>

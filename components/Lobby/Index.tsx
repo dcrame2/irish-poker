@@ -246,12 +246,12 @@ const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
   return (
     <MainContainer>
       <MainInnerContainer>
-        <Chat
+        {/* <Chat
           socket={socket}
           username={username}
           roomId={roomId}
           users={users}
-        />
+        /> */}
         <FullGameContainer>
           {/* <Header>
             Lobby for Room id: <b>{roomId}</b>
@@ -265,6 +265,7 @@ const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
               startGameHandler={startGameHandler}
               lockInPlayersHandler={lockInPlayersHandler}
               username={username}
+              socket={socket}
             />
           )}
           {gameStarted && (
