@@ -6,25 +6,27 @@ import { buttonType, h2styles, pLarge, pSmall } from "@/styles/Type";
 import { MediaQueries } from "@/styles/Utilities";
 
 const CorrectMessaging = styled(motion.div)`
-  border: 3px solid ${variables.color1};
+  border-top: 3px solid ${variables.color1};
   background-color: ${variables.color2};
   padding: 16px;
   position: fixed;
   left: 50%;
   top: 35%;
-  transform: translate(-50%, -50%);
+  /* transform: translate(-50%, -50%); */
   z-index: 11;
   width: 60vw;
-  max-width: 400px;
-  min-height: 300px;
+  /* max-width: 400px;
+  min-height: 300px; */
   overflow-y: auto;
-  border-radius: 10px;
+  border-radius: 24px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
   text-align: center;
   @media ${MediaQueries.mobile} {
-    left: 18%;
-    max-width: 300px;
+    left: unset;
+    top: 50%;
+    /* max-width: 300px; */
     width: 100%;
+    height: 100%;
   }
 
   &::before {
@@ -41,24 +43,26 @@ const CorrectMessaging = styled(motion.div)`
   }
 `;
 const IncorrectMessaging = styled(motion.div)`
-  border: 3px solid ${variables.color4};
+  border-top: 3px solid ${variables.color4};
   background-color: ${variables.color2};
   padding: 16px;
   position: fixed;
   left: 50%;
   top: 35%;
-  transform: translate(-50%, -50%);
+  /* transform: translate(-50%, -50%); */
   z-index: 11;
   width: 60vw;
-  max-width: 400px;
-  max-height: 300px;
+  /* max-width: 400px;
+  max-height: 300px; */
   overflow-y: auto;
-  border-radius: 10px;
+  border-radius: 24px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
   @media ${MediaQueries.mobile} {
-    left: 18%;
-    max-width: 300px;
+    left: unset;
+    top: 50%;
+    /* max-width: 300px; */
     width: 100%;
+    height: 100%;
   }
 
   &::before {

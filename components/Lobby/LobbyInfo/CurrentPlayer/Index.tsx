@@ -32,11 +32,12 @@ const SquareContainer = styled.div`
   padding: 12px;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 8px;
   background-color: ${variables.color1};
   border-radius: 12px;
   min-height: 160px;
   justify-content: center;
+  /* TODO: ADD BOX SHADOWS  */
+  /* box-shadow: 0px 10px 15px -3px rgba(157, 29, 29, 0.1); */
 `;
 
 const LobbyRoomInfo = styled.div`
@@ -45,7 +46,6 @@ const LobbyRoomInfo = styled.div`
   padding: 12px;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 8px;
   background-color: ${variables.color1};
   border-radius: 12px;
   min-height: 160px;

@@ -12,12 +12,25 @@ interface PlayerAndCardContainerProps {
 }
 
 const GameContainer = styled.div`
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100%;
+  background-color: ${variables.darkGreen};
+`;
+
+const GameInnerContainer = styled.div`
   position: relative;
+  display: flex;
+  border-radius: 120px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80%;
+  width: 90%;
+  border: 25px solid ${variables.black};
+  background-color: ${variables.middleGreen};
 `;
 
 const PlayerAndCardContainer = styled.div<PlayerAndCardContainerProps>`
@@ -64,8 +77,18 @@ const CloverIcon = styled.img`
 `;
 
 const PlayerUpNext = styled.p`
-  ${pLarge}
-  padding: 30px 0 50px;
+  /* ${pLarge} */
+  /* padding: 30px 0 50px; */
+  /* margin-top: 8px; */
+  display: flex;
+  justify-content: center;
+  padding: 4px 8px;
+  align-items: center;
+  gap: 8px;
+  background-color: ${variables.white};
+  border-radius: 16px;
+  min-width: fit-content;
+  color: ${variables.black};
 `;
 
 const MainButtonsContainer = styled.div`
@@ -299,26 +322,27 @@ function FullGame({
 
   return (
     <GameContainer>
-      {allGameData && (
-        <PlayerUpNext>Player up next: {isCurrentPlayer}</PlayerUpNext>
-      )}
-      {allGameData &&
-        allGameData?.cardData.map((player: Player, playerIndex: number) => {
-          return (
-            <PlayerAndCardContainer
-              isCurrentPlayer={isCurrentPlayer}
-              username={player[playerIndex].player}
-              key={`player-${playerIndex}`}
-            >
-              <PlayerContainer className="item">
-                <CloverIcon src="clover.svg" alt="clover" />
-                <Player>{player[playerIndex].player} </Player>
-              </PlayerContainer>
-              <AllCards player={player} />
-            </PlayerAndCardContainer>
-          );
-        })}
+      {allGameData && <PlayerUpNext>{isCurrentPlayer} turn</PlayerUpNext>}
+      <GameInnerContainer>
+        {allGameData &&
+          allGameData?.cardData.map((player: Player, playerIndex: number) => {
+            return (
+              <PlayerAndCardContainer
+                isCurrentPlayer={isCurrentPlayer}
+                username={player[playerIndex].player}
+                key={`player-${playerIndex}`}
+              >
+                <PlayerContainer className="item">
+                  <CloverIcon src="clover.svg" alt="clover" />
+                  <Player>{player[playerIndex].player} </Player>
+                </PlayerContainer>
+                <AllCards player={player} />
+              </PlayerAndCardContainer>
+            );
+          })}
 
+        {currentRound === 4 && <p>GAME IS OVER</p>}
+      </GameInnerContainer>
       {allGameData && (
         <MainButtonsContainer>
           {users[currentPlayerIndex]?.username === username &&
@@ -357,8 +381,6 @@ function FullGame({
             )}
         </MainButtonsContainer>
       )}
-
-      {currentRound === 4 && <p>GAME IS OVER</p>}
     </GameContainer>
   );
 }

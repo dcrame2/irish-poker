@@ -10,8 +10,8 @@ const PlayersContainer = styled.div`
   position: relative;
   /* width: 100%; */
   display: flex;
-  /* align-items: center;
-  justify-content: center; */
+  align-items: center;
+  min-height: 100px;
   margin-top: 20px;
 `;
 

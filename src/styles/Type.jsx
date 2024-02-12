@@ -126,15 +126,15 @@ export const pXSmall = css`
 export const buttonType = css`
   font-family: ${openSans};
   font-size: 1rem;
-  /* line-height: 2.4rem; */
+  border-radius: 12px;
   padding: 10px 12px;
   font-weight: 300;
-  text-transform: uppercase;
   color: white;
-  background-color: ${variables.color1};
+  background-color: ${variables.darkGreen};
   border: none;
   width: max-content;
   min-width: 100px;
+  ${pBase}
   cursor: pointer;
   transition: background-color 0.3s ease-in;
   border: 2px solid ${variables.color1};
@@ -148,7 +148,6 @@ export const buttonType = css`
 
 export const inputType = css`
   font-size: 1rem;
-  text-transform: uppercase;
   padding: 12px 10px;
   border: none;
   border: 2px solid ${variables.color1};
