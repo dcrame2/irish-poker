@@ -41,7 +41,7 @@ const io = new Server(httpServer, {
   cors: {
     origin: "https://irishpokeronline.netlify.app/", // Replace with your frontend URL
     methods: ["GET", "POST"],
-    allowedHeaders: ["my-custom-header"],
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   },
 });
