@@ -2,6 +2,8 @@ import React from "react";
 import PlayersInLobby from "./PlayersInLobby/Index";
 import { buttonType } from "@/styles/Type";
 import styled from "styled-components";
+import { useAnimationFrame } from "framer-motion";
+import CurrentPlayer from "./CurrentPlayer/Index";
 
 const LobbyInfoContainer = styled.div`
   display: flex;
@@ -27,11 +29,14 @@ function LobbyInfo({
   usersLockedIn,
   lockInPlayersHandler,
   startGameHandler,
+  username,
+  roomId,
 }: any) {
   return (
     <LobbyInfoContainer>
       {!gameStarted && (
         <>
+          <CurrentPlayer users={users} username={username} roomId={roomId} />
           <PlayersInLobby users={users} />
           <GameButtonContainer>
             {users.length > 0 && !usersLockedIn && !gameStarted ? (

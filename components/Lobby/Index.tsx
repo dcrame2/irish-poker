@@ -253,16 +253,18 @@ const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
           users={users}
         />
         <FullGameContainer>
-          <Header>
+          {/* <Header>
             Lobby for Room id: <b>{roomId}</b>
-          </Header>
+          </Header> */}
           {!gameStarted && (
             <LobbyInfo
+              roomId={roomId}
               gameStarted={gameStarted}
               users={users}
               usersLockedIn={usersLockedIn}
               startGameHandler={startGameHandler}
               lockInPlayersHandler={lockInPlayersHandler}
+              username={username}
             />
           )}
           {gameStarted && (

@@ -88,6 +88,10 @@ export const pLarge = css`
     font-size: 1.4rem;
     line-height: 1.8rem;
   }
+  @media ${MediaQueries.mobile} {
+    font-size: 2.3rem;
+    line-height: 1.8rem;
+  }
 `;
 
 export const pBase = css`
