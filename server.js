@@ -1,17 +1,35 @@
+// const http = require("http");
+// const { Server } = require("socket.io");
+// const cors = require("cors");
+// const axios = require("axios");
+
+// const httpServer = http.createServer();
+
+// const {
+//   userJoin,
+//   getCurrentUser,
+//   userLeave,
+//   getRoomUsers,
+// } = require("./utils/users");
+
+// const io = new Server(httpServer, {
+//   cors: {
+//     origin: "http://localhost:3000", // Replace with your frontend URL
+//     methods: ["GET", "POST"],
+//     allowedHeaders: ["my-custom-header"],
+//     credentials: true,
+//   },
+// });
+const express = require("express");
+const cors = require("cors");
 const http = require("http");
 const { Server } = require("socket.io");
-const cors = require("cors");
 const axios = require("axios");
 
-const httpServer = http.createServer();
+const app = express();
+app.use(cors());
 
-const {
-  userJoin,
-  getCurrentUser,
-  userLeave,
-  getRoomUsers,
-} = require("./utils/users");
-
+const httpServer = http.createServer(app);
 const io = new Server(httpServer, {
   cors: {
     origin: "http://localhost:3000", // Replace with your frontend URL
@@ -167,8 +185,13 @@ io.on("connection", (socket) => {
   });
 });
 
-const PORT = process.env.PORT || 3001;
+// const PORT = process.env.PORT || 3001;
 
+// httpServer.listen(PORT, () => {
+//   console.log(`Socket.io server is running on port ${PORT}`);
+// });
+
+const PORT = process.env.PORT || 3001;
 httpServer.listen(PORT, () => {
-  console.log(`Socket.io server is running on port ${PORT}`);
+  console.log(`Express server and Socket.IO are running on port ${PORT}`);
 });
