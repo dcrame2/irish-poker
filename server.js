@@ -39,7 +39,7 @@ app.use(cors());
 const httpServer = http.createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: "http://localhost:3000", // Replace with your frontend URL
+    origin: "https://irishpokeronline.netlify.app/", // Replace with your frontend URL
     methods: ["GET", "POST"],
     allowedHeaders: ["my-custom-header"],
     credentials: true,
