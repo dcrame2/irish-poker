@@ -224,9 +224,6 @@ function GameNotifications({
               {usersToDrink && activeModal && users.length !== 1 && (
                 <WhoDrinksContainer>
                   <Description>Players to drink:</Description>
-
-                  <Description>{`Modal will close in ${countdown} seconds`}</Description>
-
                   {usersToDrink.map((user: string, index: number) => {
                     return <Description key={user}>{user}</Description>;
                   })}
