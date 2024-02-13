@@ -19,6 +19,7 @@ const GameContainer = styled.div`
   align-items: center;
   justify-content: center;
   background-color: ${variables.darkGreen};
+  gap: 20px;
 `;
 
 const GameInnerContainer = styled.div`
