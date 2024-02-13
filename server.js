@@ -1,25 +1,3 @@
-// const http = require("http");
-// const { Server } = require("socket.io");
-// const cors = require("cors");
-// const axios = require("axios");
-
-// const httpServer = http.createServer();
-
-// const {
-//   userJoin,
-//   getCurrentUser,
-//   userLeave,
-//   getRoomUsers,
-// } = require("./utils/users");
-
-// const io = new Server(httpServer, {
-//   cors: {
-//     origin: "http://localhost:3000", // Replace with your frontend URL
-//     methods: ["GET", "POST"],
-//     allowedHeaders: ["my-custom-header"],
-//     credentials: true,
-//   },
-// });
 const express = require("express");
 const cors = require("cors");
 const http = require("http");
@@ -46,8 +24,6 @@ const io = new Server(httpServer, {
     credentials: true,
   },
 });
-
-// const io = new Server(httpServer);
 
 io.on("connection", (socket) => {
   console.log("A user connected:", socket.id);
