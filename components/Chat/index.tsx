@@ -107,7 +107,7 @@ interface IMsgDataTypes {
   time: String;
 }
 
-function Chat({ roomId, username, socket, users, setShowChat }: any) {
+function Chat({ roomId, username, socket, users, setShowChat, showChat }: any) {
   const [chat, setChat] = useState<IMsgDataTypes[]>([]);
   const [currentMsg, setCurrentMsg] = useState("");
   const sendData = (e: React.FormEvent<HTMLFormElement>) => {
@@ -139,46 +139,50 @@ function Chat({ roomId, username, socket, users, setShowChat }: any) {
   };
 
   return (
-    <ChatContainer>
-      <Header>Chat Room</Header>
-      <CloseContainer onClick={closeChatHandler}>
-        <Close />
-      </CloseContainer>
-      {chat.length === 0 && <NoMessage>No Messages</NoMessage>}
-      <ChatsFormContainer>
-        <Chats>
-          {chat.map(({ roomId, user, msg, time }, key) => (
-            <IndividualChat
-              key={`${key}-${msg}`}
-              className={
-                user == username ? "chatProfileRight" : "chatProfileLeft"
-              }
-            >
-              <ChatIcon
-                style={{ textAlign: user == username ? "right" : "left" }}
-              >
-                {user}
-              </ChatIcon>
-              <MessageText
-                style={{ textAlign: user == username ? "right" : "left" }}
-              >
-                {msg}
-              </MessageText>
-            </IndividualChat>
-          ))}
-        </Chats>
+    <>
+      {showChat && (
+        <ChatContainer>
+          <Header>Chat Room</Header>
+          <CloseContainer onClick={closeChatHandler}>
+            <Close />
+          </CloseContainer>
+          {chat.length === 0 && <NoMessage>No Messages</NoMessage>}
+          <ChatsFormContainer>
+            <Chats>
+              {chat.map(({ roomId, user, msg, time }, key) => (
+                <IndividualChat
+                  key={`${key}-${msg}`}
+                  className={
+                    user == username ? "chatProfileRight" : "chatProfileLeft"
+                  }
+                >
+                  <ChatIcon
+                    style={{ textAlign: user == username ? "right" : "left" }}
+                  >
+                    {user}
+                  </ChatIcon>
+                  <MessageText
+                    style={{ textAlign: user == username ? "right" : "left" }}
+                  >
+                    {msg}
+                  </MessageText>
+                </IndividualChat>
+              ))}
+            </Chats>
 
-        <Form onSubmit={(e) => sendData(e)}>
-          <Input
-            type="text"
-            value={currentMsg}
-            placeholder="Type your message.."
-            onChange={(e) => setCurrentMsg(e.target.value)}
-          />
-          <Button>Send</Button>
-        </Form>
-      </ChatsFormContainer>
-    </ChatContainer>
+            <Form onSubmit={(e) => sendData(e)}>
+              <Input
+                type="text"
+                value={currentMsg}
+                placeholder="Type your message.."
+                onChange={(e) => setCurrentMsg(e.target.value)}
+              />
+              <Button>Send</Button>
+            </Form>
+          </ChatsFormContainer>
+        </ChatContainer>
+      )}
+    </>
   );
 }
 

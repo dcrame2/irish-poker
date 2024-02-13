@@ -47,8 +47,12 @@ const Button = styled.button`
   ${buttonType}
 `;
 
+const Logo = styled.img`
+  width: 100%;
+`;
+
 export default function UserSetup() {
-  const [showChat, setShowChat] = useState(false);
+  const [showChats, setShowChats] = useState(false);
   const [userName, setUserName] = useState("");
   const [showSpinner, setShowSpinner] = useState(false);
   const [roomId, setroomId] = useState("");
@@ -63,7 +67,7 @@ export default function UserSetup() {
       console.log(userName, "userName", roomId, "roomId");
       socket.emit("join_room", { userName, roomId });
       setShowSpinner(true);
-      setShowChat(true);
+      setShowChats(true);
     } else {
       alert("Please fill in Username and Room Id");
     }
@@ -72,7 +76,6 @@ export default function UserSetup() {
   useEffect(() => {
     socket.on("roomUsers", ({ users }: any) => {
       setUsers(users);
-      setShowChat(true);
     });
   }, [socket]);
 
@@ -97,9 +100,9 @@ export default function UserSetup() {
         <InnerContainer
           key="key1"
           {...motionProps}
-          style={{ display: showChat ? "none" : "" }}
+          style={{ display: showChats ? "none" : "" }}
         >
-          <h1>Irish Poker</h1>
+          <Logo src="irish_poker_logo.png" alt="Logo" />
           <Input
             type="text"
             placeholder="Username"
@@ -121,11 +124,12 @@ export default function UserSetup() {
           </Button>
         </InnerContainer>
         <motion.div
-          style={{ display: !showChat ? "none" : "" }}
+          // style={{ display: !showChat ? "none" : "" }}
           {...motionProps}
           key="key2"
         >
           <GameLobby
+            showChats={showChats}
             users={users}
             socket={socket}
             roomId={roomId}
