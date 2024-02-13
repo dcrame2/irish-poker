@@ -48,6 +48,7 @@ function AllCards({ player }: any) {
               />
             ) : (
               // <p>{singleCard.code}</p>
+              // <p>{singleCard.code}</p>
               <SingleCard
                 key={`default-${singleCard.code}`}
                 singleCard={singleCard}

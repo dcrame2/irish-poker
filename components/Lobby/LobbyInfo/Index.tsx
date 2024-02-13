@@ -34,18 +34,10 @@ const MessageIcon = styled.img`
 `;
 
 const GameButtonContainer = styled.div`
-  /* display: flex;
-  align-items: stretch;
-  justify-content: center;
-  margin-top: 20px;
-  gap: 20px;
-  width: 100%; */
-
   background-color: ${variables.color1};
   border-radius: 12px;
   margin: 0 12px;
   position: relative;
-  /* width: 100%; */
   display: flex;
   gap: 20px;
   justify-content: center;
