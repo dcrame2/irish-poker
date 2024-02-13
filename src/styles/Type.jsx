@@ -5,9 +5,10 @@ import { variables } from "./Variables";
 
 const monsterrat = `Montserrat, sans-serif`;
 const openSans = "Open Sans, sans-serif";
+const jost = "Jost, sans-serif";
 
 export const h1styles = css`
-  font-family: ${openSans};
+  font-family: ${jost};
   text-transform: uppercase;
   font-size: 8rem;
   line-height: 9.4rem;
@@ -25,7 +26,7 @@ export const h1styles = css`
 `;
 
 export const h2styles = css`
-  font-family: ${monsterrat};
+  font-family: ${jost};
   font-size: 2rem;
   line-height: 5rem;
   color: #ffff;
@@ -42,7 +43,7 @@ export const h2styles = css`
 `;
 
 export const h3styles = css`
-  font-family: ${openSans};
+  font-family: ${jost};
   font-size: 5.2rem;
   line-height: 6.3rem;
   font-weight: 300;
@@ -60,7 +61,7 @@ export const h3styles = css`
 `;
 
 export const h4styles = css`
-  font-family: ${openSans};
+  font-family: ${jost};
   font-size: 2rem;
   line-height: 3.4rem;
   font-weight: 300;
@@ -78,7 +79,7 @@ export const h4styles = css`
 `;
 
 export const pLarge = css`
-  font-family: ${openSans};
+  font-family: ${jost};
   font-size: 2.4rem;
   line-height: 3.2rem;
   font-weight: 300;
@@ -95,7 +96,7 @@ export const pLarge = css`
 `;
 
 export const pBase = css`
-  font-family: ${openSans};
+  font-family: ${jost};
   font-size: 1.5rem;
   line-height: 1.7rem;
   font-weight: 300;
@@ -105,18 +106,31 @@ export const pBase = css`
     font-size: 1.3rem;
     line-height: 1.4rem;
   }
+  @media ${MediaQueries.mobile} {
+    font-size: 1.1rem;
+    line-height: 1.4rem;
+  }
 `;
 
 export const pSmall = css`
-  font-family: ${openSans};
+  font-family: ${jost};
   font-size: 1.1rem;
   line-height: 1.3rem;
   font-weight: 300;
   color: #ffff;
+
+  @media ${MediaQueries.tablet} {
+    font-size: 1rem;
+    line-height: 1.1rem;
+  }
+  @media ${MediaQueries.mobile} {
+    font-size: 1rem;
+    line-height: 1.1rem;
+  }
 `;
 
 export const pXSmall = css`
-  font-family: ${openSans};
+  font-family: ${jost};
   font-size: 1rem;
   line-height: 1.2rem;
   font-weight: 300;
@@ -124,7 +138,7 @@ export const pXSmall = css`
 `;
 
 export const buttonType = css`
-  font-family: ${openSans};
+  font-family: ${jost};
   font-size: 1rem;
   border-radius: 12px;
   padding: 10px 12px;
@@ -143,6 +157,9 @@ export const buttonType = css`
     border: 2px solid ${variables.color1};
     background-color: transparent;
     transition: background-color 0.3s ease-in;
+  }
+  @media ${MediaQueries.mobile} {
+    padding: 5px 6px;
   }
 `;
 

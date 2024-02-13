@@ -10,7 +10,7 @@ import Close from "../../svg/close/Index";
 const ChatContainer = styled.div`
   border-right: 2px solid ${variables.color1};
   position: absolute;
-  height: 100vh;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

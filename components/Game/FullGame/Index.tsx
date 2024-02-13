@@ -32,6 +32,9 @@ const GameInnerContainer = styled.div`
   width: 90%;
   border: 25px solid ${variables.black};
   background-color: ${variables.middleGreen};
+  background-image: url("table_bg.jpeg");
+  background-repeat: no-repeat;
+  background-size: cover;
 `;
 
 const PlayerAndCardContainer = styled.div<PlayerAndCardContainerProps>`
@@ -174,6 +177,7 @@ function FullGame({
   isCurrentPlayer,
   username,
   socket,
+  countdown,
   roomId,
   setShowChat,
   showChat,
@@ -297,11 +301,11 @@ function FullGame({
           <span class="player">
           ${
             card?.player
-          }</span> guessed <span class="option">${option}</span>! The card was a:  <span class="value">${card?.value.toLowerCase()}</span> of <span class="suit">${card?.suit.toLowerCase()}</span>`,
+          }</span> guessed <span class="option">${option}</span>! <br/> The card was a:  <span class="value">${card?.value.toLowerCase()}</span> of <span class="suit">${card?.suit.toLowerCase()}</span>`,
       currentUsersMessageFalse: `<span class="player">
       ${
         card?.player
-      }</span> guessed <span class="option">${option}</span>! The card was a:  <span class="value">${card?.value.toLowerCase()}</span> of <span class="suit">${card?.suit.toLowerCase()}</span> <div class="message-container">${isCurrentPlayer} was incorrect and is drinking!</div>`,
+      }</span> guessed <span class="option">${option}</span>! <br/> The card was a:  <span class="value">${card?.value.toLowerCase()}</span> of <span class="suit">${card?.suit.toLowerCase()}</span> <div class="message-container">${isCurrentPlayer} was incorrect and is drinking!</div>`,
       otherUsersMessageTrue: "",
       buttonsTrue: true,
     });
@@ -314,12 +318,12 @@ function FullGame({
       currentUsersMessageFalse: ` <span class="player">
       ${
         card?.player
-      }</span> guessed <span class="option">${option}</span>! The card was a:  <span class="value">${card?.value.toLowerCase()}</span> of <span class="suit">${card?.suit.toLowerCase()}</span> <div class="message-container">${isCurrentPlayer} was incorrect and is drinking!</div>!`,
+      }</span> guessed <span class="option">${option}</span>! <br/> The card was a:  <span class="value">${card?.value.toLowerCase()}</span> of <span class="suit">${card?.suit.toLowerCase()}</span> <div class="message-container">${isCurrentPlayer} was incorrect and is drinking!</div>`,
       currentUsersMessageTrue: `
       <span class="player">
       ${
         card?.player
-      }</span> guessed <span class="option">${option}</span>! The card was a:  <span class="value">${card?.value.toLowerCase()}</span> of <span class="suit">${card?.suit.toLowerCase()}</span>`,
+      }</span> guessed <span class="option">${option}</span>! <br/> The card was a:  <span class="value">${card?.value.toLowerCase()}</span> of <span class="suit">${card?.suit.toLowerCase()}</span>`,
       buttonsTrue: false,
     });
 
@@ -340,6 +344,11 @@ function FullGame({
       roomId,
       isCurrentPlayer,
       currentRound,
+    });
+
+    socket.emit("countdown", {
+      roomId,
+      countdown: countdown,
     });
   };
 

@@ -18,14 +18,13 @@ const MainContainer = styled.div`
   display: flex;
   flex-direction: row;
   gap: 60px;
-  height: 100vh;
-  widows: 100vw;
+  height: 100dvh;
+  /* widows: 100vw; */
   position: relative;
   z-index: 9;
 `;
 
 const MainInnerContainer = styled.div`
-  /* border: 2px solid ${variables.color1}; */
   width: 100%;
   display: grid;
   grid-template-columns: 360px 880fr;
@@ -94,7 +93,9 @@ const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
 
   const [countdown, setCountdown] = useState(5);
 
-  const [activeModal, setActiveModal] = useState(true);
+  const [activeModal, setActiveModal] = useState<boolean>();
+  // console.log(activeModal, "ACTIVE MODAL");
+  // console.log(countdown, "countdown");
 
   const lockInPlayersHandler = () => {
     socket.emit("lockin_players", { users, roomId });
@@ -135,6 +136,7 @@ const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
 
     setActiveModal(false);
     setButtonsTrue(false);
+    setCountdown(5);
   };
 
   useEffect(() => {
@@ -214,7 +216,34 @@ const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
 
     setIsCurrentPlayer(users[currentPlayerIndex]?.username);
 
-    const timer = setTimeout(() => {
+    // const timer = setTimeout(() => {
+    //   if (booleanMessage === false) {
+    //     setActiveModal(false);
+    //   }
+    //   if (usersToDrink !== undefined && confirmedUsersToDrink) {
+    //     setActiveModal(false);
+    //     setConfirmedUsersToDrink(false);
+    //     setUsersToDrink(undefined);
+    //   }
+    // }, 5000);
+
+    // return () => clearTimeout(timer);
+
+    // Listen for countdown updates from the Socket.IO server
+    socket.on("receive_countdown", (data: any) => {
+      console.log(data.countdown, "COUNTDOWN");
+      setCountdown(data.countdown);
+    });
+
+    // Decrement the countdown every second while the modal is active
+    const countdownTimer = setInterval(() => {
+      if (activeModal && countdown > 0) {
+        setCountdown((prevCountdown) => prevCountdown - 1);
+      }
+    }, 1000);
+
+    // Handle closing the modal when countdown reaches zero
+    if (countdown === 0) {
       if (booleanMessage === false) {
         setActiveModal(false);
       }
@@ -223,9 +252,16 @@ const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
         setConfirmedUsersToDrink(false);
         setUsersToDrink(undefined);
       }
-    }, 5000);
+      setCountdown(5);
+    }
 
-    return () => clearTimeout(timer);
+    // Clean up on unmount
+    return () => {
+      clearInterval(countdownTimer);
+      socket.off("receive_countdown");
+    };
+
+    // return () => clearTimeout(timer);
   }, [
     socket,
     currentPlayerIndex,
@@ -241,6 +277,7 @@ const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
     usersToDrink,
     buttonsTrue,
     countdown,
+    activeModal,
   ]);
 
   return (
@@ -253,9 +290,6 @@ const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
           users={users}
         /> */}
         <FullGameContainer>
-          {/* <Header>
-            Lobby for Room id: <b>{roomId}</b>
-          </Header> */}
           {!gameStarted && (
             <LobbyInfo
               roomId={roomId}
@@ -278,6 +312,7 @@ const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
               isCurrentPlayer={isCurrentPlayer}
               socket={socket}
               roomId={roomId}
+              countdown={countdown}
             />
           )}
           <GameNotifications
@@ -294,6 +329,7 @@ const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
             currentUsersMessageFalse={currentUsersMessageFalse}
             username={username}
             confirmedUsersToDrink={confirmedUsersToDrink}
+            countdown={countdown}
           />
         </FullGameContainer>
       </MainInnerContainer>

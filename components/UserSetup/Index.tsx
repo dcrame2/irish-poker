@@ -12,7 +12,7 @@ const MainContainer = styled.div`
   position: relative;
   z-index: 2;
   background-position: right;
-  height: 100vh;
+  height: 100dvh;
   width: 100vw;
   /* border: 2px solid ${variables.color1}; */
   &::before {
@@ -124,7 +124,7 @@ export default function UserSetup() {
           </Button>
         </InnerContainer>
         <motion.div
-          // style={{ display: !showChat ? "none" : "" }}
+          style={{ display: !showChats ? "none" : "" }}
           {...motionProps}
           key="key2"
         >

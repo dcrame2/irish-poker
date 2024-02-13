@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import styled from "styled-components";
 import { variables } from "@/styles/Variables";
-import { buttonType, h2styles, pLarge, pSmall } from "@/styles/Type";
+import { buttonType, h2styles, pLarge, pSmall, pBase } from "@/styles/Type";
 import { MediaQueries } from "@/styles/Utilities";
 
 const CorrectMessaging = styled(motion.div)`
@@ -23,7 +23,7 @@ const CorrectMessaging = styled(motion.div)`
   text-align: center;
   @media ${MediaQueries.mobile} {
     left: unset;
-    top: 50%;
+    top: 60%;
     /* max-width: 300px; */
     width: 100%;
     height: 100%;
@@ -59,7 +59,7 @@ const IncorrectMessaging = styled(motion.div)`
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
   @media ${MediaQueries.mobile} {
     left: unset;
-    top: 50%;
+    top: 60%;
     /* max-width: 300px; */
     width: 100%;
     height: 100%;
@@ -106,8 +106,7 @@ const TextContainer = styled.div`
   margin: 25px 0;
   span {
     text-transform: uppercase;
-    ${pSmall}
-    &.player {
+    ${pBase}/* &.player {
       color: purple;
     }
     &.option {
@@ -118,7 +117,7 @@ const TextContainer = styled.div`
     }
     &.suit {
       color: orange;
-    }
+    } */
   }
 `;
 
@@ -157,6 +156,7 @@ function GameNotifications({
   currentUsersMessageFalse,
   confirmedUsersToDrink,
   username,
+  countdown,
 }: any) {
   const motionProps = {
     initial: {
@@ -180,6 +180,7 @@ function GameNotifications({
   const otherPlayers = users?.filter(
     (user: any) => user?.username !== username
   );
+
   return (
     <AnimatePresence mode="wait">
       {booleanMessage !== null && activeModal && (
@@ -195,7 +196,6 @@ function GameNotifications({
                 <Description
                   dangerouslySetInnerHTML={{ __html: currentUsersMessageTrue }}
                 />
-
                 {otherUsersMessageTrue !== "" && (
                   <OtherCorrectContainer>
                     <Description>{otherUsersMessageTrue}</Description>
@@ -218,7 +218,7 @@ function GameNotifications({
                 </>
               )}
 
-              {buttonsTrue && users.length !== 1 && (
+              {buttonsTrue && users.length !== 1 && usersToDrink && (
                 <Button onClick={confirmWhoDrinksHandler}>
                   Confirm Players to Drinks
                 </Button>
@@ -226,6 +226,9 @@ function GameNotifications({
               {usersToDrink && activeModal && users.length !== 1 && (
                 <WhoDrinksContainer>
                   <Description>Players to drink:</Description>
+
+                  <Description>{`Modal will close in ${countdown} seconds`}</Description>
+
                   {usersToDrink.map((user: string, index: number) => {
                     return <Description key={user}>{user}</Description>;
                   })}
@@ -239,6 +242,9 @@ function GameNotifications({
                 <Description
                   dangerouslySetInnerHTML={{ __html: currentUsersMessageFalse }}
                 ></Description>
+                {activeModal && (
+                  <Description>{`Modal will close in ${countdown} seconds`}</Description>
+                )}
               </TextContainer>
             </IncorrectMessaging>
           )}
