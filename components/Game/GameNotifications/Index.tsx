@@ -23,8 +23,7 @@ const CorrectMessaging = styled(motion.div)`
   text-align: center;
   @media ${MediaQueries.mobile} {
     left: unset;
-    top: 60%;
-    /* max-width: 300px; */
+    top: 50%;
     width: 100%;
     height: 100%;
   }
@@ -59,8 +58,7 @@ const IncorrectMessaging = styled(motion.div)`
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
   @media ${MediaQueries.mobile} {
     left: unset;
-    top: 60%;
-    /* max-width: 300px; */
+    top: 50%;
     width: 100%;
     height: 100%;
   }
