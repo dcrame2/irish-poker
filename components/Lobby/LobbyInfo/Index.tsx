@@ -58,6 +58,10 @@ const Button = styled.button`
   ${buttonType}
 `;
 
+const Logo = styled.img`
+  width: 100%;
+`;
+
 function LobbyInfo({
   gameStarted,
   users,
@@ -79,15 +83,17 @@ function LobbyInfo({
           <MessageIconContainer onClick={showChatHandler}>
             <MessageIcon src="chat_icon.svg" />
           </MessageIconContainer>
-          {showChat && (
-            <Chat
-              socket={socket}
-              username={username}
-              roomId={roomId}
-              users={users}
-              setShowChat={setShowChat}
-            />
-          )}
+          {/* {showChat && ( */}
+          <Chat
+            socket={socket}
+            username={username}
+            roomId={roomId}
+            users={users}
+            setShowChat={setShowChat}
+            showChat={showChat}
+          />
+          {/* )} */}
+          <Logo src="irish_poker_logo.png" alt="Logo" />
           <CurrentPlayer users={users} username={username} roomId={roomId} />
           <PlayersInLobby users={users} />
           <GameButtonContainer>

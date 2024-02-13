@@ -5,6 +5,7 @@ import { variables } from "@/styles/Variables";
 import { buttonType, h2styles, h3styles, pLarge, pSmall } from "@/styles/Type";
 import { convertToNum } from "../../../utils/users";
 import AllCards from "./AllCards/Index";
+import Chat from "../../Chat";
 
 interface PlayerAndCardContainerProps {
   isCurrentPlayer: string;
@@ -123,6 +124,25 @@ const Player = styled.div`
   ${pSmall}
 `;
 
+const MessageIconContainer = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: ${variables.darkGreen};
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  border: none;
+`;
+
+const MessageIcon = styled.img`
+  width: 30px;
+  height: 30px;
+`;
+
 interface GameData {
   users: [];
   roomId: string;
@@ -155,6 +175,9 @@ function FullGame({
   username,
   socket,
   roomId,
+  setShowChat,
+  showChat,
+  showChatHandler,
 }: any) {
   const gameLogicHandler = (option: string) => {
     const currentPlayerCard: SingleCard | undefined =
@@ -322,6 +345,18 @@ function FullGame({
 
   return (
     <GameContainer>
+      {/* <MessageIconContainer onClick={showChatHandler}>
+        <MessageIcon src="chat_icon.svg" />
+      </MessageIconContainer>
+  
+      <Chat
+        socket={socket}
+        username={username}
+        roomId={roomId}
+        users={users}
+        setShowChat={setShowChat}
+        showChat={showChat}
+      /> */}
       {allGameData && <PlayerUpNext>{isCurrentPlayer} turn</PlayerUpNext>}
       <GameInnerContainer>
         {allGameData &&
