@@ -200,6 +200,11 @@ function FullGame({
   showChat,
   showChatHandler,
   setGameStarted,
+  setPlayerData,
+  setCurrentRound,
+  setUsersLockedIn,
+  setCurrentPlayerIndex,
+  setUsers,
 }: any) {
   const gameLogicHandler = (option: string) => {
     const currentPlayerCard: SingleCard | undefined =
@@ -372,6 +377,20 @@ function FullGame({
 
   const backToLobbyHandler = () => {
     setGameStarted(false);
+    setPlayerData([]);
+    setCurrentRound(0);
+    setUsersLockedIn(false);
+    setCurrentPlayerIndex(0);
+    setUsers(users);
+    socket.emit("send_reset_game", {
+      roomId,
+      gameStarted: false,
+      cardData: [],
+      currentRound: 0,
+      usersLockedIn: false,
+      currentPlayerIndex: 0,
+      users: users,
+    });
   };
 
   return (
@@ -414,7 +433,7 @@ function FullGame({
 
         {currentRound === 4 && (
           <>
-            <p>GAME IS OVER</p>
+            <p>GAME OVER</p>
             <Button onClick={backToLobbyHandler}>Back to Lobby</Button>
           </>
         )}

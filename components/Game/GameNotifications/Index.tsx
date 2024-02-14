@@ -6,7 +6,7 @@ import { buttonType, boxShadows, pLarge, pSmall, pBase } from "@/styles/Type";
 import { MediaQueries } from "@/styles/Utilities";
 
 const CorrectMessaging = styled(motion.div)`
-  border-top: 3px solid ${variables.color1};
+  border-top: 3px solid ${variables.middleGreen};
   background-color: ${variables.color2};
   padding: 16px;
   position: fixed;
@@ -82,10 +82,10 @@ const IncorrectMessaging = styled(motion.div)`
 `;
 
 const HeaderForCorrectMessage = styled.p`
-  color: ${variables.color1};
+  color: ${variables.middleGreen};
   ${pLarge}
   text-align: center;
-  padding-bottom: 20px;
+  /* padding-bottom: 20px; */
   /* border-bottom: 2px ${variables.white} solid; */
 `;
 

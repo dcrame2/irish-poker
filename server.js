@@ -17,8 +17,8 @@ app.use(cors());
 const httpServer = http.createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: "https://irishpokeronline.netlify.app",
-    // origin: "http://localhost:3000",
+    // origin: "https://irishpokeronline.netlify.app",
+    origin: "http://localhost:3000",
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
@@ -111,6 +111,12 @@ io.on("connection", (socket) => {
     console.log(data.countdown, "COUNTDOWN");
     socket.emit("receive_countdown", data);
     socket.to(data.roomId).emit("receive_countdown", data);
+  });
+
+  socket.on("send_reset_game", (data) => {
+    console.log(data, "receive_reset_game");
+    socket.emit("receive_reset_game", data);
+    socket.to(data.roomId).emit("receive_reset_game", data);
   });
 
   socket.on("lockin_players", (userData) => {
