@@ -293,6 +293,7 @@ const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
               socket={socket}
               roomId={roomId}
               countdown={countdown}
+              setGameStarted={setGameStarted}
             />
           )}
           <GameNotifications

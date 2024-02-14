@@ -199,6 +199,7 @@ function FullGame({
   setShowChat,
   showChat,
   showChatHandler,
+  setGameStarted,
 }: any) {
   const gameLogicHandler = (option: string) => {
     const currentPlayerCard: SingleCard | undefined =
@@ -369,6 +370,10 @@ function FullGame({
     });
   };
 
+  const backToLobbyHandler = () => {
+    setGameStarted(false);
+  };
+
   return (
     <GameContainer>
       {/* <MessageIconContainer onClick={showChatHandler}>
@@ -398,10 +403,6 @@ function FullGame({
                 username={player[playerIndex].player}
                 key={`player-${playerIndex}`}
               >
-                {/* <PlayerContainer className="item">
-                  <CloverIcon src="clover.svg" alt="clover" />
-                  <Player>{player[playerIndex].player} </Player>
-                </PlayerContainer> */}
                 <PlayerContainer>
                   <CloverIcon src="clover.svg" alt="clover" />
                   <Player>{player[playerIndex].player} </Player>
@@ -411,7 +412,12 @@ function FullGame({
             );
           })}
 
-        {currentRound === 4 && <p>GAME IS OVER</p>}
+        {currentRound === 4 && (
+          <>
+            <p>GAME IS OVER</p>
+            <Button onClick={backToLobbyHandler}>Back to Lobby</Button>
+          </>
+        )}
       </GameInnerContainer>
       {allGameData && (
         <MainButtonsContainer>

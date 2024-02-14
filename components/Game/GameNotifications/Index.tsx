@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import styled from "styled-components";
 import { variables } from "@/styles/Variables";
-import { buttonType, h2styles, pLarge, pSmall, pBase } from "@/styles/Type";
+import { buttonType, boxShadows, pLarge, pSmall, pBase } from "@/styles/Type";
 import { MediaQueries } from "@/styles/Utilities";
 
 const CorrectMessaging = styled(motion.div)`
@@ -109,6 +109,7 @@ const TextContainer = styled.div`
   background-color: ${variables.darkGreen};
   border-radius: 12px;
   padding: 24px 12px;
+  /* ${boxShadows} */
   /* margin: 0 12px; */
   span {
     text-transform: uppercase;
@@ -141,35 +142,28 @@ const ButtonContainer = styled.div`
 `;
 
 const WhoDrinksContainer = styled.div`
-  /* margin-top: 24px; */
   display: flex;
   gap: 8px;
   flex-direction: row;
   text-align: center;
   margin: 8px 0;
-  /* background-color: ${variables.darkGreen}; */
   border-radius: 12px;
-  /* padding: 24px 12px; */
-
   align-items: center;
   justify-content: center;
 `;
 
 const OtherCorrectContainer = styled.div`
   text-align: center;
-  /* margin: 25px 0; */
   background-color: ${variables.darkGreen};
   border-radius: 12px;
   padding: 24px 12px;
   display: flex;
   align-items: center;
+  /* ${boxShadows} */
   justify-content: center;
 `;
 
-const CorrectContainer = styled.div`
-  /* display: flex; */
-  /* gap: 8px; */
-`;
+const CorrectContainer = styled.div``;
 
 const PlayerContainer = styled.div`
   margin-top: 8px;
@@ -196,13 +190,13 @@ const Player = styled.div`
 const SelectingUsersToDrinkContainer = styled.div`
   text-align: center;
   flex-direction: column;
-  /* margin: 25px 0; */
   background-color: ${variables.color1};
   border-radius: 12px;
   padding: 24px 12px;
   display: flex;
   align-items: center;
   justify-content: center;
+  ${boxShadows}
 `;
 
 const UserMessageFalse = styled.div`
@@ -211,6 +205,7 @@ const UserMessageFalse = styled.div`
   background-color: ${variables.color4};
   border-radius: 12px;
   margin: 16px 0 48px;
+  ${boxShadows}
 `;
 
 function GameNotifications({
