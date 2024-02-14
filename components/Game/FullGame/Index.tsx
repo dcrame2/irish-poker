@@ -43,8 +43,8 @@ const GameInnerContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 89%;
-  width: 95%;
+  height: 88vh;
+  width: 95vw;
   border: 20px solid ${variables.black};
   background-color: ${variables.middleGreen};
   background-image: url("table_bg.webp");

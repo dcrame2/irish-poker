@@ -2,7 +2,14 @@ import React, { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import styled from "styled-components";
 import { variables } from "@/styles/Variables";
-import { buttonType, boxShadows, pLarge, pSmall, pBase } from "@/styles/Type";
+import {
+  buttonType,
+  boxShadows,
+  boxShadowsRed,
+  pLarge,
+  pSmall,
+  pBase,
+} from "@/styles/Type";
 import { MediaQueries } from "@/styles/Utilities";
 
 const CorrectMessaging = styled(motion.div)`
@@ -205,7 +212,7 @@ const UserMessageFalse = styled.div`
   background-color: ${variables.color4};
   border-radius: 12px;
   margin: 16px 0 48px;
-  ${boxShadows}
+  ${boxShadowsRed}
 `;
 
 function GameNotifications({
