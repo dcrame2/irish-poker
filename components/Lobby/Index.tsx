@@ -27,12 +27,9 @@ const MainContainer = styled.div`
 const MainInnerContainer = styled.div`
   width: 100%;
   display: grid;
-  grid-template-columns: 360px 880fr;
+  /* grid-template-columns: 360px 880fr; */
   @media ${MediaQueries.mobile} {
     grid-template-columns: unset;
-    /* display: flex; */
-    /* flex-direction: column-reverse;
-    justify-content: flex-end; */
   }
 `;
 
