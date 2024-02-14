@@ -113,6 +113,12 @@ io.on("connection", (socket) => {
     socket.to(data.roomId).emit("receive_countdown", data);
   });
 
+  socket.on("send_reset_game", (data) => {
+    console.log(data, "receive_reset_game");
+    socket.emit("receive_reset_game", data);
+    socket.to(data.roomId).emit("receive_reset_game", data);
+  });
+
   socket.on("lockin_players", (userData) => {
     console.log(userData, "userData");
     const url = `https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1`;

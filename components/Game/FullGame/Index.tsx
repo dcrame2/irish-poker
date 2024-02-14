@@ -43,8 +43,8 @@ const GameInnerContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 89%;
-  width: 95%;
+  height: 88vh;
+  width: 95vw;
   border: 20px solid ${variables.black};
   background-color: ${variables.middleGreen};
   background-image: url("table_bg.webp");
@@ -200,6 +200,11 @@ function FullGame({
   showChat,
   showChatHandler,
   setGameStarted,
+  setPlayerData,
+  setCurrentRound,
+  setUsersLockedIn,
+  setCurrentPlayerIndex,
+  setUsers,
 }: any) {
   const gameLogicHandler = (option: string) => {
     const currentPlayerCard: SingleCard | undefined =
@@ -372,6 +377,20 @@ function FullGame({
 
   const backToLobbyHandler = () => {
     setGameStarted(false);
+    setPlayerData([]);
+    setCurrentRound(0);
+    setUsersLockedIn(false);
+    setCurrentPlayerIndex(0);
+    setUsers(users);
+    socket.emit("send_reset_game", {
+      roomId,
+      gameStarted: false,
+      cardData: [],
+      currentRound: 0,
+      usersLockedIn: false,
+      currentPlayerIndex: 0,
+      users: users,
+    });
   };
 
   return (
@@ -414,7 +433,7 @@ function FullGame({
 
         {currentRound === 4 && (
           <>
-            <p>GAME IS OVER</p>
+            <p>GAME OVER</p>
             <Button onClick={backToLobbyHandler}>Back to Lobby</Button>
           </>
         )}

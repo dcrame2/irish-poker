@@ -182,3 +182,9 @@ export const boxShadows = css`
   -moz-box-shadow: 2px 4px 0px 2px ${variables.darkGreen};
   box-shadow: 2px 4px 0px 2px ${variables.darkGreen};
 `;
+
+export const boxShadowsRed = css`
+  -webkit-box-shadow: 2px 4px 0px 2px ${variables.color5};
+  -moz-box-shadow: 2px 4px 0px 2px ${variables.color5};
+  box-shadow: 2px 4px 0px 2px ${variables.color5};
+`;

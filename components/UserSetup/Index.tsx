@@ -135,6 +135,7 @@ export default function UserSetup() {
             socket={socket}
             roomId={roomId}
             username={userName}
+            setUsers={setUsers}
           />
         </motion.div>
       </AnimatePresence>

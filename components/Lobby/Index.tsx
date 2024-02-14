@@ -66,7 +66,14 @@ type SingleCard = {
 type Player = SingleCard[];
 type PlayerData = {};
 
-const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
+const GameLobby = ({
+  socket,
+  username,
+  roomId,
+  users,
+  showChat,
+  setUsers,
+}: any) => {
   const [playerData, setPlayerData] = useState([]);
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
 
@@ -110,9 +117,10 @@ const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
     socket.emit("send_current_player", {
       roomId,
       isCurrentPlayer,
-      currentRound,
+      currentRound: 0,
     });
     setGameStarted(true);
+    setCurrentRound(0);
   };
 
   let usersToDrinkArr: any = [];
@@ -137,6 +145,15 @@ const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
   };
 
   useEffect(() => {
+    socket.on("receive_reset_game", (data: any) => {
+      console.log(data, "receive_reset_game");
+      setGameStarted(data.gameStarted);
+      setPlayerData(data.cardData);
+      setCurrentRound(data.currentRound);
+      setUsersLockedIn(data.usersLockedIn);
+      setCurrentPlayerIndex(data.currentPlayerIndex);
+      setUsers(data.users);
+    });
     socket.on("allPlayersCards", (playersCards: []) => {
       console.log("Received allPlayersCards data:", playersCards);
       setPlayerData(playersCards);
@@ -257,7 +274,6 @@ const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
     usersToDrink,
     buttonsTrue,
     countdown,
-    activeModal,
   ]);
 
   return (
@@ -294,6 +310,11 @@ const GameLobby = ({ socket, username, roomId, users, showChat }: any) => {
               roomId={roomId}
               countdown={countdown}
               setGameStarted={setGameStarted}
+              setCurrentRound={setCurrentRound}
+              setPlayerData={setPlayerData}
+              setUsersLockedIn={setUsersLockedIn}
+              setCurrentPlayerIndex={setCurrentPlayerIndex}
+              setUsers={setUsers}
             />
           )}
           <GameNotifications
