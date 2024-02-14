@@ -11,21 +11,23 @@ const CorrectMessaging = styled(motion.div)`
   padding: 16px;
   position: fixed;
   left: 50%;
-  top: 35%;
+  /* top: 35%; */
   /* transform: translate(-50%, -50%); */
   z-index: 11;
   width: 60vw;
   /* max-width: 400px;
   min-height: 300px; */
   overflow-y: auto;
-  border-radius: 24px;
+  border-radius: 24px 24px 0 0;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
   text-align: center;
   @media ${MediaQueries.mobile} {
+    /* padding: 48px 0; */
     left: unset;
-    top: 50%;
+    /* top: 50%; */
     width: 100%;
-    height: 100%;
+    bottom: 0;
+    height: fit-content;
   }
 
   &::before {
@@ -47,20 +49,22 @@ const IncorrectMessaging = styled(motion.div)`
   padding: 16px;
   position: fixed;
   left: 50%;
-  top: 35%;
+  /* top: 35%; */
   /* transform: translate(-50%, -50%); */
   z-index: 11;
   width: 60vw;
   /* max-width: 400px;
   max-height: 300px; */
   overflow-y: auto;
-  border-radius: 24px;
+  border-radius: 24px 24px 0 0;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
   @media ${MediaQueries.mobile} {
+    /* padding: 48px 0; */
     left: unset;
-    top: 50%;
+    /* top: 50%; */
     width: 100%;
-    height: 100%;
+    bottom: 0;
+    height: fit-content;
   }
 
   &::before {
@@ -101,7 +105,11 @@ const Description = styled.p`
 
 const TextContainer = styled.div`
   text-align: center;
-  margin: 25px 0;
+  margin: 25px 0 8px;
+  background-color: ${variables.color1};
+  border-radius: 12px;
+  padding: 24px 12px;
+  /* margin: 0 12px; */
   span {
     text-transform: uppercase;
     ${pBase}/* &.player {
@@ -119,25 +127,82 @@ const TextContainer = styled.div`
   }
 `;
 
+const IncorrectTextContainer = styled.div`
+  text-align: center;
+`;
+
 const ButtonContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
-  margin: 20px 0;
+  margin: 8px 0;
   flex-wrap: wrap;
 `;
 
 const WhoDrinksContainer = styled.div`
+  /* margin-top: 24px; */
   display: flex;
-  flex-direction: column;
-  gap: 20px;
+  gap: 8px;
+  flex-direction: row;
+  text-align: center;
+  margin: 8px 0;
+  /* background-color: ${variables.darkGreen}; */
+  border-radius: 12px;
+  /* padding: 24px 12px; */
+
+  align-items: center;
+  justify-content: center;
 `;
 
 const OtherCorrectContainer = styled.div`
-  padding: 20px;
   text-align: center;
-  border: 2px solid ${variables.white};
+  /* margin: 25px 0; */
+  background-color: ${variables.darkGreen};
+  border-radius: 12px;
+  padding: 24px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const CorrectContainer = styled.div`
+  /* display: flex; */
+  /* gap: 8px; */
+`;
+
+const PlayerContainer = styled.div`
+  margin-top: 8px;
+  display: flex;
+  justify-content: center;
+  padding: 4px 8px;
+  align-items: center;
+  gap: 8px;
+  background-color: ${variables.white};
+  border-radius: 16px;
+  min-width: fit-content;
+`;
+
+const CloverIcon = styled.img`
+  width: 20px;
+  height: 20px;
+`;
+
+const Player = styled.div`
+  ${pSmall}
+  color: ${variables.darkGreen};
+`;
+
+const SelectingUsersToDrinkContainer = styled.div`
+  text-align: center;
+  flex-direction: column;
+  /* margin: 25px 0; */
+  background-color: ${variables.darkGreen};
+  border-radius: 12px;
+  padding: 24px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 function GameNotifications({
@@ -190,60 +255,80 @@ function GameNotifications({
               ) : (
                 <HeaderForCorrectMessage>WHO DRINKS</HeaderForCorrectMessage>
               )}
-              <TextContainer>
-                <Description
-                  dangerouslySetInnerHTML={{ __html: currentUsersMessageTrue }}
-                />
-                {otherUsersMessageTrue !== "" && (
-                  <OtherCorrectContainer>
-                    <Description>{otherUsersMessageTrue}</Description>
-                  </OtherCorrectContainer>
-                )}
-              </TextContainer>
-              {buttonsTrue && users.length !== 1 && (
-                <>
-                  <Description>Select who should drink:</Description>
-                  <ButtonContainer>
-                    {otherPlayers?.map((player: any) => (
-                      <Button
-                        onClick={() => whoDrinksHandler(player?.username)}
-                        key={player?.id}
-                      >
-                        {player?.username}
-                      </Button>
-                    ))}
-                  </ButtonContainer>
-                </>
+              {!confirmedUsersToDrink && (
+                <CorrectContainer>
+                  <TextContainer>
+                    <Description
+                      dangerouslySetInnerHTML={{
+                        __html: currentUsersMessageTrue,
+                      }}
+                    />
+                  </TextContainer>
+                  {otherUsersMessageTrue !== "" && (
+                    <OtherCorrectContainer>
+                      <Description>{otherUsersMessageTrue}</Description>
+                    </OtherCorrectContainer>
+                  )}
+                </CorrectContainer>
               )}
+              {buttonsTrue && (
+                <SelectingUsersToDrinkContainer>
+                  {buttonsTrue && users.length !== 1 && (
+                    <>
+                      <Description>Select who should drink:</Description>
+                      <ButtonContainer>
+                        {otherPlayers?.map((player: any) => (
+                          <Button
+                            onClick={() => whoDrinksHandler(player?.username)}
+                            key={player?.id}
+                          >
+                            {player?.username}
+                          </Button>
+                        ))}
+                      </ButtonContainer>
+                    </>
+                  )}
 
-              {buttonsTrue && users.length !== 1 && usersToDrink && (
-                <Button onClick={confirmWhoDrinksHandler}>
-                  Confirm Players to Drinks
-                </Button>
+                  {buttonsTrue && users.length !== 1 && usersToDrink && (
+                    <Button onClick={confirmWhoDrinksHandler}>
+                      Confirm Players to Drinks
+                    </Button>
+                  )}
+                </SelectingUsersToDrinkContainer>
               )}
               {usersToDrink && activeModal && users.length !== 1 && (
-                <WhoDrinksContainer>
-                  <Description>Players to drink:</Description>
+                <>
+                  {" "}
+                  <WhoDrinksContainer>
+                    {/* <Description>Players to drink:</Description> */}
 
+                    {usersToDrink.map((user: string, index: number) => {
+                      return (
+                        <PlayerContainer key={user} className="item">
+                          <CloverIcon src="clover.svg" alt="clover" />
+                          <Player>{user} </Player>
+                        </PlayerContainer>
+                      );
+                      // return <Description key={user}>{user}</Description>;
+                    })}
+                  </WhoDrinksContainer>
+                  {/* {confirmedUsersToDrink && ( */}
                   <Description>{`Modal will close in ${countdown} seconds`}</Description>
-
-                  {usersToDrink.map((user: string, index: number) => {
-                    return <Description key={user}>{user}</Description>;
-                  })}
-                </WhoDrinksContainer>
+                  {/* )} */}
+                </>
               )}
             </CorrectMessaging>
           ) : (
             <IncorrectMessaging key={`${socket.id}-1`} {...motionProps}>
               <HeaderForIncorrectMessage>INCORRECT</HeaderForIncorrectMessage>
-              <TextContainer>
+              <IncorrectTextContainer>
                 <Description
                   dangerouslySetInnerHTML={{ __html: currentUsersMessageFalse }}
                 ></Description>
                 {activeModal && (
                   <Description>{`Modal will close in ${countdown} seconds`}</Description>
                 )}
-              </TextContainer>
+              </IncorrectTextContainer>
             </IncorrectMessaging>
           )}
         </>
