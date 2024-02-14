@@ -86,7 +86,7 @@ const HeaderForCorrectMessage = styled.p`
   ${pLarge}
   text-align: center;
   padding-bottom: 20px;
-  border-bottom: 2px ${variables.white} solid;
+  /* border-bottom: 2px ${variables.white} solid; */
 `;
 
 const HeaderForIncorrectMessage = styled.p`
@@ -106,7 +106,7 @@ const Description = styled.p`
 const TextContainer = styled.div`
   text-align: center;
   margin: 25px 0 8px;
-  background-color: ${variables.color1};
+  background-color: ${variables.darkGreen};
   border-radius: 12px;
   padding: 24px 12px;
   /* margin: 0 12px; */
@@ -136,7 +136,7 @@ const ButtonContainer = styled.div`
   align-items: center;
   justify-content: center;
   gap: 12px;
-  margin: 8px 0;
+  margin: 8px 0 0;
   flex-wrap: wrap;
 `;
 
@@ -197,12 +197,20 @@ const SelectingUsersToDrinkContainer = styled.div`
   text-align: center;
   flex-direction: column;
   /* margin: 25px 0; */
-  background-color: ${variables.darkGreen};
+  background-color: ${variables.color1};
   border-radius: 12px;
   padding: 24px 12px;
   display: flex;
   align-items: center;
   justify-content: center;
+`;
+
+const UserMessageFalse = styled.div`
+  padding: 12px 24px;
+  ${pBase}
+  background-color: ${variables.color4};
+  border-radius: 12px;
+  margin: 16px 0 48px;
 `;
 
 function GameNotifications({
@@ -251,7 +259,7 @@ function GameNotifications({
           {booleanMessage ? (
             <CorrectMessaging key={`${socket.id}`} {...motionProps}>
               {!confirmedUsersToDrink ? (
-                <HeaderForCorrectMessage>CORRECT</HeaderForCorrectMessage>
+                <HeaderForCorrectMessage>LUCKY</HeaderForCorrectMessage>
               ) : (
                 <HeaderForCorrectMessage>WHO DRINKS</HeaderForCorrectMessage>
               )}
@@ -298,10 +306,7 @@ function GameNotifications({
               )}
               {usersToDrink && activeModal && users.length !== 1 && (
                 <>
-                  {" "}
                   <WhoDrinksContainer>
-                    {/* <Description>Players to drink:</Description> */}
-
                     {usersToDrink.map((user: string, index: number) => {
                       return (
                         <PlayerContainer key={user} className="item">
@@ -309,7 +314,6 @@ function GameNotifications({
                           <Player>{user} </Player>
                         </PlayerContainer>
                       );
-                      // return <Description key={user}>{user}</Description>;
                     })}
                   </WhoDrinksContainer>
                   {/* {confirmedUsersToDrink && ( */}
@@ -320,11 +324,11 @@ function GameNotifications({
             </CorrectMessaging>
           ) : (
             <IncorrectMessaging key={`${socket.id}-1`} {...motionProps}>
-              <HeaderForIncorrectMessage>INCORRECT</HeaderForIncorrectMessage>
+              <HeaderForIncorrectMessage>UNLUCKY</HeaderForIncorrectMessage>
               <IncorrectTextContainer>
-                <Description
+                <UserMessageFalse
                   dangerouslySetInnerHTML={{ __html: currentUsersMessageFalse }}
-                ></Description>
+                ></UserMessageFalse>
                 {activeModal && (
                   <Description>{`Modal will close in ${countdown} seconds`}</Description>
                 )}

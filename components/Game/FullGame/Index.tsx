@@ -1,11 +1,24 @@
 import React, { useEffect, useState, useRef } from "react";
-import styled from "styled-components";
+import styled, { keyframes, css } from "styled-components";
 import { MediaQueries } from "@/styles/Utilities";
 import { variables } from "@/styles/Variables";
-import { buttonType, h2styles, h3styles, pLarge, pSmall } from "@/styles/Type";
+import { buttonType, pBase, h3styles, pLarge, pSmall } from "@/styles/Type";
 import { convertToNum } from "../../../utils/users";
 import AllCards from "./AllCards/Index";
 import Chat from "../../Chat";
+
+// Define a keyframe for the pulsing animation
+const pulseAnimation = keyframes`
+  0% {
+    background-color: rgba(255, 255, 255, 0.238);
+  }
+  50% {
+    background-color: rgba(255, 255, 255, 0.4);
+  }
+  100% {
+    background-color: rgba(255, 255, 255, 0.238);
+  }
+`;
 
 interface PlayerAndCardContainerProps {
   isCurrentPlayer: string;
@@ -25,71 +38,73 @@ const GameContainer = styled.div`
 const GameInnerContainer = styled.div`
   position: relative;
   display: flex;
-  border-radius: 120px;
+  border-radius: 100px;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 80%;
-  width: 90%;
-  border: 25px solid ${variables.black};
+  width: 95%;
+  border: 20px solid ${variables.black};
   background-color: ${variables.middleGreen};
-  background-image: url("table_bg.jpeg");
+  background-image: url("table_bg.webp");
   background-repeat: no-repeat;
   background-size: cover;
 `;
 
 const PlayerAndCardContainer = styled.div<PlayerAndCardContainerProps>`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   gap: 50px;
-  margin-bottom: 30px;
   background-color: ${(props) =>
     props?.isCurrentPlayer === props?.username
       ? " rgba(255, 255, 255, 0.238)"
       : "transparent"};
   padding: 12px;
-  transition: all 1.5s ease-in 0.5s;
+  transition: all 0.5s ease-in;
   border-radius: 6px;
   transform: ${(props) =>
     props?.isCurrentPlayer === props?.username ? "scale(1.3)" : "scale(1)"};
-
+  ${({ isCurrentPlayer, username }) =>
+    isCurrentPlayer === username &&
+    css`
+      animation: ${pulseAnimation} 1s infinite;
+    `};
   @media ${MediaQueries.mobile} {
-    gap: 18px;
+    gap: 8px;
     padding: 8px;
     transform: ${(props) =>
       props?.isCurrentPlayer === props?.username ? "scale(1.1)" : "scale(1)"};
   }
 `;
 
+const Player = styled.div`
+  ${pSmall}
+  color: ${variables.darkGreen};
+`;
 const PlayerContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-`;
-
-const CloverIcon = styled.img`
-  width: 50px;
-  height: 50px;
-  padding: 6px;
-  border-radius: 50%;
-  border: 1px solid white;
-  @media ${MediaQueries.mobile} {
-    width: 30px;
-    height: 30px;
-    padding: 6px;
-  }
-`;
-
-const PlayerUpNext = styled.p`
-  /* ${pLarge} */
-  /* padding: 30px 0 50px; */
   /* margin-top: 8px; */
   display: flex;
   justify-content: center;
   padding: 4px 8px;
   align-items: center;
   gap: 8px;
+  background-color: ${variables.white};
+  border-radius: 16px;
+  width: fit-content;
+`;
+
+const CloverIcon = styled.img`
+  width: 20px;
+  height: 20px;
+`;
+
+const PlayerUpNext = styled.p`
+  display: flex;
+  justify-content: center;
+  padding: 4px 8px;
+  align-items: center;
+  gap: 8px;
+  ${pBase}
   background-color: ${variables.white};
   border-radius: 16px;
   min-width: fit-content;
@@ -124,9 +139,9 @@ const Button = styled.button`
   }
 `;
 
-const Player = styled.div`
-  ${pSmall}
-`;
+// const Player = styled.div`
+//   ${pSmall}
+// `;
 
 const MessageIconContainer = styled.button`
   display: flex;
@@ -367,7 +382,12 @@ function FullGame({
         setShowChat={setShowChat}
         showChat={showChat}
       /> */}
-      {allGameData && <PlayerUpNext>{isCurrentPlayer} turn</PlayerUpNext>}
+      {allGameData && (
+        <PlayerUpNext>
+          <CloverIcon src="clover.svg" alt="Clover" />
+          {isCurrentPlayer}'s turn
+        </PlayerUpNext>
+      )}
       <GameInnerContainer>
         {allGameData &&
           allGameData?.cardData.map((player: Player, playerIndex: number) => {
@@ -377,7 +397,11 @@ function FullGame({
                 username={player[playerIndex].player}
                 key={`player-${playerIndex}`}
               >
-                <PlayerContainer className="item">
+                {/* <PlayerContainer className="item">
+                  <CloverIcon src="clover.svg" alt="clover" />
+                  <Player>{player[playerIndex].player} </Player>
+                </PlayerContainer> */}
+                <PlayerContainer>
                   <CloverIcon src="clover.svg" alt="clover" />
                   <Player>{player[playerIndex].player} </Player>
                 </PlayerContainer>

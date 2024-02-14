@@ -151,11 +151,17 @@ export const buttonType = css`
   ${pBase}
   cursor: pointer;
   transition: background-color 0.3s ease-in;
-  border: 2px solid ${variables.color1};
+  border-bottom: 4px solid ${variables.middleGreen};
+  border-top: 1px solid ${variables.color1};
+  border-right: 1px solid ${variables.color1};
+  border-left: 1px solid ${variables.color1};
+
   &:hover {
     transition: background-color 0.3s ease-in;
-    border: 2px solid ${variables.color1};
-    background-color: transparent;
+
+    border-bottom: 4px solid ${variables.middleGreen};
+    background-color: ${variables.darkGreen};
+    /* background-color: transparent; */
     transition: background-color 0.3s ease-in;
   }
   @media ${MediaQueries.mobile} {
