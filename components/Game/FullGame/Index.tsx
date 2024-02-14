@@ -30,9 +30,10 @@ const GameContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  /* justify-content: center; */
   background-color: ${variables.darkGreen};
-  gap: 20px;
+  gap: 10px;
+  padding-top: 20px;
 `;
 
 const GameInnerContainer = styled.div`
@@ -42,7 +43,7 @@ const GameInnerContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 80%;
+  height: 89%;
   width: 95%;
   border: 20px solid ${variables.black};
   background-color: ${variables.middleGreen};
