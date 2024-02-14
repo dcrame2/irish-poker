@@ -1,6 +1,13 @@
 import React from "react";
 import styled from "styled-components";
-import { buttonType, h2styles, pSmall, inputType, pLarge } from "@/styles/Type";
+import {
+  buttonType,
+  h2styles,
+  pSmall,
+  inputType,
+  pLarge,
+  boxShadows,
+} from "@/styles/Type";
 import { variables } from "@/styles/Variables";
 
 const PlayersContainer = styled.div`
@@ -13,6 +20,7 @@ const PlayersContainer = styled.div`
   align-items: center;
   min-height: 100px;
   margin-top: 20px;
+  ${boxShadows}
 `;
 
 const PlayersInLobbyInnerContainer = styled.div`

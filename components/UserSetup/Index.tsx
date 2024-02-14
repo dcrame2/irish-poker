@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { buttonType, inputType } from "@/styles/Type";
 import { AnimatePresence, motion } from "framer-motion";
 import { variables } from "@/styles/Variables";
+// import Button from "../Button/Index";
 const MainContainer = styled.div`
   background-image: url("clover.svg");
   background-repeat: no-repeat;

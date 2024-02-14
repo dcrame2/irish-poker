@@ -151,6 +151,7 @@ export const buttonType = css`
   ${pBase}
   cursor: pointer;
   transition: background-color 0.3s ease-in;
+  /* box-shadow: 1px 2px 0px 0px ${variables.clover}; */
   border-bottom: 4px solid ${variables.middleGreen};
   border-top: 1px solid ${variables.color1};
   border-right: 1px solid ${variables.color1};
@@ -174,4 +175,10 @@ export const inputType = css`
   padding: 12px 10px;
   border: none;
   border: 2px solid ${variables.color1};
+`;
+
+export const boxShadows = css`
+  -webkit-box-shadow: 2px 4px 0px 2px ${variables.darkGreen};
+  -moz-box-shadow: 2px 4px 0px 2px ${variables.darkGreen};
+  box-shadow: 2px 4px 0px 2px ${variables.darkGreen};
 `;

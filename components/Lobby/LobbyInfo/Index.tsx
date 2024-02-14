@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PlayersInLobby from "./PlayersInLobby/Index";
-import { buttonType } from "@/styles/Type";
+import { buttonType, boxShadows } from "@/styles/Type";
 import styled from "styled-components";
 import { useAnimationFrame } from "framer-motion";
 import CurrentPlayer from "./CurrentPlayer/Index";
@@ -44,6 +44,7 @@ const GameButtonContainer = styled.div`
   align-items: center;
   min-height: 100px;
   margin-top: 20px;
+  ${boxShadows}
 `;
 
 const Button = styled.button`

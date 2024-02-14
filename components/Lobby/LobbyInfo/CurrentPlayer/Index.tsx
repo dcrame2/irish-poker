@@ -1,4 +1,4 @@
-import { h1styles, pLarge, pSmall, pXSmall } from "@/styles/Type";
+import { boxShadows, h1styles, pLarge, pSmall, pXSmall } from "@/styles/Type";
 import { variables } from "@/styles/Variables";
 import React from "react";
 import styled from "styled-components";
@@ -22,10 +22,6 @@ const Username = styled.p`
   ${pLarge}
 `;
 
-const RandomIrishJoke = styled.p`
-  ${pXSmall}
-`;
-
 const SquareContainer = styled.div`
   display: flex;
   gap: 20px;
@@ -36,8 +32,7 @@ const SquareContainer = styled.div`
   border-radius: 12px;
   min-height: 160px;
   justify-content: center;
-  /* TODO: ADD BOX SHADOWS  */
-  /* box-shadow: 0px 10px 15px -3px rgba(157, 29, 29, 0.1); */
+  ${boxShadows}
 `;
 
 const LobbyRoomInfo = styled.div`
@@ -50,6 +45,7 @@ const LobbyRoomInfo = styled.div`
   border-radius: 12px;
   min-height: 160px;
   justify-content: center;
+  ${boxShadows}
 `;
 
 const RoomName = styled.p`
@@ -76,10 +72,6 @@ function CurrentPlayer({
           <CloverIcon src="clover.svg" alt="Clover" />
           <Username>{username}</Username>
         </SquareContainer>
-        {/* <RandomIrishJoke>
-          Random Irish API Joke Random Irish API Joke Random Irish API Joke
-          Random Irish API Joke Random Irish API Joke{" "}
-        </RandomIrishJoke> */}
       </CurrentPlayerInnerContainer>
     </CurrentPlayerContainer>
   );
