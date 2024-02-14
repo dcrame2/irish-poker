@@ -18,7 +18,7 @@ const IndividualCardContainer = styled.div`
 const CardsContainer = styled.div`
   display: flex;
   flex-direction: row;
-  gap: 4px;
+  gap: 6px;
 `;
 
 type SingleCard = {
@@ -52,7 +52,7 @@ function AllCards({ player }: any) {
               <SingleCard
                 key={`default-${singleCard.code}`}
                 singleCard={singleCard}
-                imageLink="green_card.png"
+                imageLink="green_card1.jpeg"
               />
             )}
           </IndividualCardContainer>
