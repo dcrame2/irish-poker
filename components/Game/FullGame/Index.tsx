@@ -378,7 +378,7 @@ function FullGame({
   const backToLobbyHandler = () => {
     setGameStarted(false);
     setPlayerData([]);
-    setCurrentRound(0);
+    setCurrentRound(-1);
     setUsersLockedIn(false);
     setCurrentPlayerIndex(0);
     setUsers(users);
@@ -386,7 +386,7 @@ function FullGame({
       roomId,
       gameStarted: false,
       cardData: [],
-      currentRound: 0,
+      currentRound: -1,
       usersLockedIn: false,
       currentPlayerIndex: 0,
       users: users,
@@ -395,18 +395,6 @@ function FullGame({
 
   return (
     <GameContainer>
-      {/* <MessageIconContainer onClick={showChatHandler}>
-        <MessageIcon src="chat_icon.svg" />
-      </MessageIconContainer>
-  
-      <Chat
-        socket={socket}
-        username={username}
-        roomId={roomId}
-        users={users}
-        setShowChat={setShowChat}
-        showChat={showChat}
-      /> */}
       {allGameData && (
         <PlayerUpNext>
           <CloverIcon src="clover.svg" alt="Clover" />

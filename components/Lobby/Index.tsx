@@ -38,6 +38,25 @@ const FullGameContainer = styled.div`
   flex-direction: column;
 `;
 
+const MessageIconContainer = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: ${variables.darkGreen};
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  border: none;
+`;
+
+const MessageIcon = styled.img`
+  width: 30px;
+  height: 30px;
+`;
+
 interface GameData {
   users: [];
   roomId: string;
@@ -59,14 +78,7 @@ type SingleCard = {
 type Player = SingleCard[];
 type PlayerData = {};
 
-const GameLobby = ({
-  socket,
-  username,
-  roomId,
-  users,
-  showChat,
-  setUsers,
-}: any) => {
+const GameLobby = ({ socket, username, roomId, users, setUsers }: any) => {
   const [playerData, setPlayerData] = useState([]);
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
 
@@ -274,6 +286,12 @@ const GameLobby = ({
     countdown,
   ]);
 
+  const [showChat, setShowChat] = useState(false);
+
+  const showChatHandler = () => {
+    setShowChat(true);
+  };
+
   return (
     <MainContainer>
       <MainInnerContainer>
@@ -284,6 +302,17 @@ const GameLobby = ({
           users={users}
         /> */}
         <FullGameContainer>
+          <MessageIconContainer onClick={showChatHandler}>
+            <MessageIcon src="chat_icon.svg" />
+          </MessageIconContainer>
+          <Chat
+            socket={socket}
+            username={username}
+            roomId={roomId}
+            users={users}
+            setShowChat={setShowChat}
+            showChat={showChat}
+          />
           {!gameStarted && (
             <LobbyInfo
               playerData={playerData}
