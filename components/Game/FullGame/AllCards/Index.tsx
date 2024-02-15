@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import { MediaQueries } from "@/styles/Utilities";
 import { variables } from "@/styles/Variables";
-import { buttonType, h2styles, h3styles, pLarge, pSmall } from "@/styles/Type";
+
 import SingleCard from "./SingleCard/Index";
 
 const IndividualCardContainer = styled.div`

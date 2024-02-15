@@ -1,4 +1,4 @@
-import { boxShadows, h1styles, pLarge, pSmall, pXSmall } from "@/styles/Type";
+import { boxShadows, h1styles, pLarge, h3styles, pXSmall } from "@/styles/Type";
 import { variables } from "@/styles/Variables";
 import React from "react";
 import styled from "styled-components";
@@ -49,7 +49,7 @@ const LobbyRoomInfo = styled.div`
 `;
 
 const RoomName = styled.p`
-  ${h1styles}
+  ${h3styles}
 `;
 
 function CurrentPlayer({

@@ -59,7 +59,7 @@ function PlayersInLobby({ users }: any) {
   return (
     <PlayersContainer className="container">
       <PlayersInLobbyInnerContainer>
-        <p>Players in Lobby</p>
+        <p>Player(s) in Lobby</p>
         <PlayersInLobbyContainer>
           {users?.map(
             (user: { id: string; username: string; room: string }) => {

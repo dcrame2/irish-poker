@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import styled, { keyframes, css } from "styled-components";
 import { MediaQueries } from "@/styles/Utilities";
 import { variables } from "@/styles/Variables";
-import { buttonType, pBase, h3styles, pLarge, pSmall } from "@/styles/Type";
+import { buttonType, pBase, pSmall } from "@/styles/Type";
 import { convertToNum } from "../../../utils/users";
 import AllCards from "./AllCards/Index";
 import Chat from "../../Chat";

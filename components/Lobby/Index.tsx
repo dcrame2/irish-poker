@@ -38,13 +38,6 @@ const FullGameContainer = styled.div`
   flex-direction: column;
 `;
 
-const Header = styled.h2`
-  ${h2styles}
-  text-align: center;
-  border-bottom: 2px solid ${variables.color1};
-  text-transform: uppercase;
-`;
-
 interface GameData {
   users: [];
   roomId: string;
@@ -137,11 +130,12 @@ const GameLobby = ({
       usersToDrink,
       activeModal: true,
       confirmedUsersToDrink: true,
+      countdown: 7,
     });
 
     setActiveModal(false);
     setButtonsTrue(false);
-    setCountdown(5);
+    // setCountdown(7);
   };
 
   useEffect(() => {
@@ -154,7 +148,7 @@ const GameLobby = ({
       setCurrentPlayerIndex(data.currentPlayerIndex);
       setUsers(data.users);
     });
-    socket.on("allPlayersCards", (playersCards: []) => {
+    socket.on("allPlayersCards", (playersCards: any) => {
       console.log("Received allPlayersCards data:", playersCards);
       setPlayerData(playersCards);
     });
@@ -222,6 +216,7 @@ const GameLobby = ({
       setButtonsTrue(false);
       setActiveModal(data.activeModal);
       setConfirmedUsersToDrink(data.confirmedUsersToDrink);
+      setCountdown(data.countdown);
     });
 
     socket.on("receive_modal_active", (data: any) => {
@@ -248,7 +243,10 @@ const GameLobby = ({
       if (booleanMessage === false) {
         setActiveModal(false);
       }
-      if (usersToDrink !== undefined && confirmedUsersToDrink) {
+      if (
+        (usersToDrink !== undefined && confirmedUsersToDrink) ||
+        users.length === 1
+      ) {
         setActiveModal(false);
         setConfirmedUsersToDrink(false);
         setUsersToDrink(undefined);
@@ -288,6 +286,7 @@ const GameLobby = ({
         <FullGameContainer>
           {!gameStarted && (
             <LobbyInfo
+              playerData={playerData}
               roomId={roomId}
               gameStarted={gameStarted}
               users={users}

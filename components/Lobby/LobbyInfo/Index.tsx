@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PlayersInLobby from "./PlayersInLobby/Index";
-import { buttonType, boxShadows } from "@/styles/Type";
+import { buttonType, boxShadows, h1styles } from "@/styles/Type";
 import styled from "styled-components";
 import { useAnimationFrame } from "framer-motion";
 import CurrentPlayer from "./CurrentPlayer/Index";
@@ -55,6 +55,29 @@ const Logo = styled.img`
   width: 100%;
 `;
 
+const OtherPlayersStartingGameMessage = styled.div`
+  background-color: ${variables.color1};
+  border-radius: 12px;
+  margin: 0 12px;
+  position: relative;
+  display: flex;
+  gap: 20px;
+  padding: 12px 24px;
+  justify-content: center;
+  align-items: center;
+  /* min-height: 100px; */
+  margin-top: 20px;
+  ${boxShadows}
+`;
+
+const Message = styled.div`
+  text-align: center;
+`;
+
+const IrishPoker = styled.h1`
+  ${h1styles}
+`;
+
 function LobbyInfo({
   gameStarted,
   users,
@@ -64,6 +87,7 @@ function LobbyInfo({
   username,
   roomId,
   socket,
+  playerData,
 }: any) {
   const [showChat, setShowChat] = useState(false);
   const showChatHandler = () => {
@@ -86,22 +110,36 @@ function LobbyInfo({
             showChat={showChat}
           />
           {/* )} */}
-          <Logo src="irish_poker_logo.png" alt="Logo" />
+          <IrishPoker>Irish Poker</IrishPoker>
           <CurrentPlayer users={users} username={username} roomId={roomId} />
           <PlayersInLobby users={users} />
-          <GameButtonContainer>
-            {users.length > 0 && !usersLockedIn && !gameStarted ? (
-              <>
-                <Button onClick={lockInPlayersHandler}>Rules</Button>
-                <Button onClick={lockInPlayersHandler}>Lock in players</Button>
-              </>
-            ) : (
-              <>
-                <Button onClick={lockInPlayersHandler}>Rules</Button>
-                <Button onClick={startGameHandler}>Start Game</Button>
-              </>
-            )}
-          </GameButtonContainer>
+          {users[0]?.username === username ? (
+            <GameButtonContainer>
+              {users.length > 0 &&
+              !usersLockedIn &&
+              !gameStarted &&
+              playerData !== null ? ( //TODO: NEED TO DO SOMETHING WITH PLAYER DATA TO ENSURE I GET ALL THE DATA BEFORE SHOWING THE START GAME BTN FOR PEOPLE WHO MAY CLICK FAST
+                <>
+                  {/* <Button onClick={lockInPlayersHandler}>Rules</Button> */}
+                  <Button onClick={lockInPlayersHandler}>
+                    Lock in players
+                  </Button>
+                </>
+              ) : (
+                <>
+                  {/* <Button onClick={lockInPlayersHandler}>Rules</Button> */}
+                  <Button onClick={startGameHandler}>Start Game</Button>
+                </>
+              )}
+            </GameButtonContainer>
+          ) : (
+            <OtherPlayersStartingGameMessage>
+              <Message>
+                {users[0]?.username} will start the game when all players are
+                here
+              </Message>
+            </OtherPlayersStartingGameMessage>
+          )}
         </>
       )}
     </LobbyInfoContainer>
