@@ -55,7 +55,7 @@ const GameInnerContainer = styled.div`
 const PlayerAndCardContainer = styled.div<PlayerAndCardContainerProps>`
   display: flex;
   flex-direction: column;
-  gap: 50px;
+  gap: 16px;
   background-color: ${(props) =>
     props?.isCurrentPlayer === props?.username
       ? " rgba(255, 255, 255, 0.238)"

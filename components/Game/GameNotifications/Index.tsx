@@ -17,70 +17,32 @@ const CorrectMessaging = styled(motion.div)`
   background-color: ${variables.color2};
   padding: 16px;
   position: fixed;
-  left: 50%;
-  /* top: 35%; */
-  /* transform: translate(-50%, -50%); */
+  width: 100%;
   z-index: 11;
-  width: 60vw;
-  /* max-width: 400px;
-  min-height: 300px; */
+  bottom: 0;
   overflow-y: auto;
   border-radius: 24px 24px 0 0;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
   text-align: center;
-  @media ${MediaQueries.mobile} {
-    /* padding: 48px 0; */
-    left: unset;
-    /* top: 50%; */
-    width: 100%;
-    bottom: 0;
-    height: fit-content;
-  }
+  height: fit-content;
 `;
 const IncorrectMessaging = styled(motion.div)`
   border-top: 3px solid ${variables.color4};
   background-color: ${variables.color2};
   padding: 16px;
   position: fixed;
-  left: 50%;
-  /* top: 35%; */
-  /* transform: translate(-50%, -50%); */
+  bottom: 0;
   z-index: 11;
-  width: 60vw;
-  /* max-width: 400px;
-  max-height: 300px; */
-  overflow-y: auto;
+  width: 100%;
+  height: fit-content;
   border-radius: 24px 24px 0 0;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-  @media ${MediaQueries.mobile} {
-    /* padding: 48px 0; */
-    left: unset;
-    /* top: 50%; */
-    width: 100%;
-    bottom: 0;
-    height: fit-content;
-  }
-
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
-    background: #000;
-    opacity: 0.5;
-    z-index: -1;
-  }
 `;
 
 const HeaderForCorrectMessage = styled.p`
   color: ${variables.middleGreen};
   ${pLarge}
   text-align: center;
-  /* padding-bottom: 20px; */
-  /* border-bottom: 2px ${variables.white} solid; */
 `;
 
 const HeaderForIncorrectMessage = styled.p`
