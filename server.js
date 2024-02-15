@@ -133,6 +133,7 @@ io.on("connection", (socket) => {
               }`
             )
             .then((data) => {
+              console.log(data, "RESPONSE DATA");
               const allPlayersCardsUnorganized = data.data.cards;
               // Number of cards you want in each players hand
               let cardsPerPlayer = 4;
@@ -161,7 +162,6 @@ io.on("connection", (socket) => {
                 allPlayersCards.push(singlePlayersData);
               }
               console.log(allPlayersCards, "allPlayersCards");
-
               socket.emit("allPlayersCards", allPlayersCards);
               io.to(userData.roomId).emit("allPlayersCards", allPlayersCards);
             })

@@ -7,7 +7,7 @@
     "build": "next build",
     "none": "next start",
     "lint": "next lint",
-    "start": "node server"
+    "start": "nodemon server"
   },
   "dependencies": {
     "@types/socket.io": "^3.0.2",

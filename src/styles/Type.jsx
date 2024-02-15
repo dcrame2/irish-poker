@@ -6,10 +6,11 @@ import { variables } from "./Variables";
 const monsterrat = `Montserrat, sans-serif`;
 const openSans = "Open Sans, sans-serif";
 const jost = "Jost, sans-serif";
+const irishGrover = "Irish Grover, system-ui";
 
 export const h1styles = css`
-  font-family: ${jost};
-  text-transform: uppercase;
+  font-family: ${irishGrover};
+  /* text-transform: uppercase; */
   font-size: 8rem;
   line-height: 9.4rem;
   color: #ffff;
@@ -22,6 +23,8 @@ export const h1styles = css`
   @media ${MediaQueries.mobile} {
     font-size: 3rem;
     line-height: 3.2rem;
+    text-align: center;
+    margin-bottom: 12px;
   }
 `;
 
@@ -44,19 +47,19 @@ export const h2styles = css`
 
 export const h3styles = css`
   font-family: ${jost};
-  font-size: 5.2rem;
-  line-height: 6.3rem;
-  font-weight: 300;
+  /* text-transform: uppercase; */
+  font-size: 8rem;
+  line-height: 9.4rem;
   color: #ffff;
 
   @media ${MediaQueries.tablet} {
-    font-size: 3.7rem;
-    line-height: 3.8rem;
+    font-size: 4rem;
+    line-height: 4.8rem;
   }
 
   @media ${MediaQueries.mobile} {
-    font-size: 3.2rem;
-    line-height: 3.3rem;
+    font-size: 3rem;
+    line-height: 3.2rem;
   }
 `;
 

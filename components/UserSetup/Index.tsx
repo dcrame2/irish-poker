@@ -3,7 +3,7 @@ import { io } from "socket.io-client";
 import React, { useState, useEffect } from "react";
 import GameLobby from "../Lobby/Index";
 import styled from "styled-components";
-import { buttonType, inputType } from "@/styles/Type";
+import { buttonType, h1styles, inputType } from "@/styles/Type";
 import { AnimatePresence, motion } from "framer-motion";
 import { variables } from "@/styles/Variables";
 // import Button from "../Button/Index";
@@ -50,6 +50,10 @@ const Button = styled.button`
 
 const Logo = styled.img`
   width: 100%;
+`;
+
+const IrishPoker = styled.h1`
+  ${h1styles}
 `;
 
 export default function UserSetup() {
@@ -103,18 +107,20 @@ export default function UserSetup() {
           {...motionProps}
           style={{ display: showChats ? "none" : "" }}
         >
-          <Logo src="irish_poker_logo.png" alt="Logo" />
+          <IrishPoker>Irish Poker</IrishPoker>
           <Input
             type="text"
             placeholder="Username"
             onChange={(e) => setUserName(e.target.value)}
             disabled={showSpinner}
+            max="12"
           />
           <Input
-            type="text"
+            type="number"
             placeholder="room id"
             onChange={(e) => setroomId(e.target.value)}
             disabled={showSpinner}
+            max="5"
           />
           <Button onClick={() => handleJoin()}>
             {!showSpinner ? (

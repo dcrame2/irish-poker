@@ -36,19 +36,6 @@ const CorrectMessaging = styled(motion.div)`
     bottom: 0;
     height: fit-content;
   }
-
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
-    background: #000;
-    opacity: 0.5;
-    z-index: -1;
-  }
 `;
 const IncorrectMessaging = styled(motion.div)`
   border-top: 3px solid ${variables.color4};
@@ -102,8 +89,18 @@ const HeaderForIncorrectMessage = styled.p`
   text-align: center;
 `;
 
-const Button = styled.button`
+interface ButtonProps {
+  usersToDrink?: [];
+}
+const Button = styled.button<ButtonProps>`
   ${buttonType}
+  opacity: ${(props) => (!props?.usersToDrink ? 1 : 0.4)};
+  margin-bottom: 8px;
+`;
+
+const ConfirmButton = styled.button<ButtonProps>`
+  ${buttonType}
+  opacity: ${(props) => (props?.usersToDrink ? 1 : 0.4)};
 `;
 
 const Description = styled.p`
@@ -274,6 +271,9 @@ function GameNotifications({
                       }}
                     />
                   </TextContainer>
+                  {users.length === 1 && (
+                    <Description>{`Modal will close in ${countdown} seconds`}</Description>
+                  )}
                   {otherUsersMessageTrue !== "" && (
                     <OtherCorrectContainer>
                       <Description>{otherUsersMessageTrue}</Description>
@@ -281,7 +281,7 @@ function GameNotifications({
                   )}
                 </CorrectContainer>
               )}
-              {buttonsTrue && (
+              {buttonsTrue && users.length !== 1 && (
                 <SelectingUsersToDrinkContainer>
                   {buttonsTrue && users.length !== 1 && (
                     <>
@@ -289,6 +289,7 @@ function GameNotifications({
                       <ButtonContainer>
                         {otherPlayers?.map((player: any) => (
                           <Button
+                            usersToDrink={usersToDrink}
                             onClick={() => whoDrinksHandler(player?.username)}
                             key={player?.id}
                           >
@@ -298,31 +299,34 @@ function GameNotifications({
                       </ButtonContainer>
                     </>
                   )}
-
-                  {buttonsTrue && users.length !== 1 && usersToDrink && (
-                    <Button onClick={confirmWhoDrinksHandler}>
+                  {buttonsTrue && users.length !== 1 && (
+                    <ConfirmButton
+                      usersToDrink={usersToDrink}
+                      onClick={confirmWhoDrinksHandler}
+                    >
                       Confirm Players to Drinks
-                    </Button>
+                    </ConfirmButton>
                   )}
                 </SelectingUsersToDrinkContainer>
               )}
-              {usersToDrink && activeModal && users.length !== 1 && (
-                <>
-                  <WhoDrinksContainer>
-                    {usersToDrink.map((user: string, index: number) => {
-                      return (
-                        <PlayerContainer key={user} className="item">
-                          <CloverIcon src="clover.svg" alt="clover" />
-                          <Player>{user} </Player>
-                        </PlayerContainer>
-                      );
-                    })}
-                  </WhoDrinksContainer>
-                  {/* {confirmedUsersToDrink && ( */}
-                  <Description>{`Modal will close in ${countdown} seconds`}</Description>
-                  {/* )} */}
-                </>
-              )}
+              {usersToDrink &&
+                activeModal &&
+                users.length !== 1 &&
+                confirmedUsersToDrink && (
+                  <>
+                    <WhoDrinksContainer>
+                      {usersToDrink.map((user: string, index: number) => {
+                        return (
+                          <PlayerContainer key={user} className="item">
+                            <CloverIcon src="clover.svg" alt="clover" />
+                            <Player>{user} </Player>
+                          </PlayerContainer>
+                        );
+                      })}
+                    </WhoDrinksContainer>
+                    <Description>{`Modal will close in ${countdown} seconds`}</Description>
+                  </>
+                )}
             </CorrectMessaging>
           ) : (
             <IncorrectMessaging key={`${socket.id}-1`} {...motionProps}>
