@@ -89,27 +89,10 @@ function LobbyInfo({
   socket,
   playerData,
 }: any) {
-  const [showChat, setShowChat] = useState(false);
-  const showChatHandler = () => {
-    setShowChat(true);
-  };
   return (
     <LobbyInfoContainer>
       {!gameStarted && (
         <>
-          <MessageIconContainer onClick={showChatHandler}>
-            <MessageIcon src="chat_icon.svg" />
-          </MessageIconContainer>
-          {/* {showChat && ( */}
-          <Chat
-            socket={socket}
-            username={username}
-            roomId={roomId}
-            users={users}
-            setShowChat={setShowChat}
-            showChat={showChat}
-          />
-          {/* )} */}
           <IrishPoker>Irish Poker</IrishPoker>
           <CurrentPlayer users={users} username={username} roomId={roomId} />
           <PlayersInLobby users={users} />

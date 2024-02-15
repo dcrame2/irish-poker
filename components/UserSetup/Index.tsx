@@ -142,6 +142,7 @@ export default function UserSetup() {
             roomId={roomId}
             username={userName}
             setUsers={setUsers}
+            setShowChats={setShowChats}
           />
         </motion.div>
       </AnimatePresence>
