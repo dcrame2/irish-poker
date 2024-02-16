@@ -34,9 +34,9 @@ type SingleCard = {
 };
 
 function AllCards({ player }: any) {
-  const ref = useRef(null);
+  // const ref = useRef(null);
   return (
-    <CardsContainer ref={ref}>
+    <CardsContainer>
       {player?.map((singleCard: SingleCard, index: number) => {
         return (
           <IndividualCardContainer key={`player-${index}`}>

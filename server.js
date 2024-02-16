@@ -31,8 +31,6 @@ io.on("connection", (socket) => {
   // Joining a room
   socket.on("join_room", (data) => {
     const user = userJoin(socket.id, data.userName, data.roomId);
-
-    // console.log(`User joined ${data.roomId}: ${socket.id}`);
     socket.join(user.room);
 
     io.to(user.room).emit("roomUsers", {
@@ -71,16 +69,10 @@ io.on("connection", (socket) => {
   });
 
   socket.on("send_current_player_message", (data) => {
-    // console.log(data, "send_current_player_message");
-
     socket.emit("receive_current_player_message", data);
-    // socket.to(data.roomId).emit("receive_current_players_message", data);
   });
 
   socket.on("send_other_players_message", (data) => {
-    // console.log(data, "send_other_players_message");
-
-    // socket.emit("receive_other_players_message", data);
     socket.broadcast
       .to(data.roomId)
       .except(data.socketId)
@@ -88,8 +80,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("send_users_to_drink", (data) => {
-    // console.log(data, "send_users_to_drink");
-
     socket.emit("receive_users_to_drink", data);
     socket.to(data.roomId).emit("receive_users_to_drink", data);
   });
@@ -101,8 +91,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("send_modal_active", (data) => {
-    // console.log(data, "send_modal_active");
-
     socket.emit("receive_modal_active", data);
     socket.to(data.roomId).emit("receive_modal_active", data);
   });
@@ -117,6 +105,12 @@ io.on("connection", (socket) => {
     console.log(data, "receive_reset_game");
     socket.emit("receive_reset_game", data);
     socket.to(data.roomId).emit("receive_reset_game", data);
+  });
+
+  socket.on("send_show_game", (data) => {
+    console.log(data, "send_show_game");
+    socket.emit("receive_show_game", data);
+    socket.to(data.roomId).emit("receive_show_game", data);
   });
 
   socket.on("lockin_players", (userData) => {
@@ -182,12 +176,6 @@ io.on("connection", (socket) => {
     console.log("A user disconnected:", socket.id);
   });
 });
-
-// const PORT = process.env.PORT || 3001;
-
-// httpServer.listen(PORT, () => {
-//   console.log(`Socket.io server is running on port ${PORT}`);
-// });
 
 const PORT = process.env.PORT || 3001;
 httpServer.listen(PORT, () => {
