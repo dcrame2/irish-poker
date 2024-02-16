@@ -18,6 +18,7 @@ const MainContainer = styled.div`
   display: flex;
   flex-direction: row;
   gap: 60px;
+  /* background-color: ${variables.darkGreen}; */
   height: 100dvh;
   /* widows: 100vw; */
   position: relative;
@@ -50,6 +51,7 @@ const MessageIconContainer = styled.button`
   top: 15px;
   right: 15px;
   border: none;
+  z-index: 19;
 `;
 
 const MessageIcon = styled.img`
@@ -292,15 +294,24 @@ const GameLobby = ({ socket, username, roomId, users, setUsers }: any) => {
     setShowChat(true);
   };
 
+  const motionProps = {
+    initial: {
+      opacity: 0,
+    },
+    animate: {
+      opacity: 1,
+    },
+    exit: {
+      opacity: 0,
+    },
+    transition: {
+      duration: 0.8,
+    },
+  };
+
   return (
     <MainContainer>
       <MainInnerContainer>
-        {/* <Chat
-          socket={socket}
-          username={username}
-          roomId={roomId}
-          users={users}
-        /> */}
         <FullGameContainer>
           <MessageIconContainer onClick={showChatHandler}>
             <MessageIcon src="chat_icon.svg" />
@@ -313,38 +324,40 @@ const GameLobby = ({ socket, username, roomId, users, setUsers }: any) => {
             setShowChat={setShowChat}
             showChat={showChat}
           />
-          {!gameStarted && (
-            <LobbyInfo
-              playerData={playerData}
-              roomId={roomId}
-              gameStarted={gameStarted}
-              users={users}
-              usersLockedIn={usersLockedIn}
-              startGameHandler={startGameHandler}
-              lockInPlayersHandler={lockInPlayersHandler}
-              username={username}
-              socket={socket}
-            />
-          )}
-          {gameStarted && (
-            <FullGame
-              username={username}
-              users={users}
-              allGameData={allGameData}
-              currentPlayerIndex={currentPlayerIndex}
-              currentRound={currentRound}
-              isCurrentPlayer={isCurrentPlayer}
-              socket={socket}
-              roomId={roomId}
-              countdown={countdown}
-              setGameStarted={setGameStarted}
-              setCurrentRound={setCurrentRound}
-              setPlayerData={setPlayerData}
-              setUsersLockedIn={setUsersLockedIn}
-              setCurrentPlayerIndex={setCurrentPlayerIndex}
-              setUsers={setUsers}
-            />
-          )}
+          <AnimatePresence mode="wait">
+            {!gameStarted && (
+              <LobbyInfo
+                playerData={playerData}
+                roomId={roomId}
+                gameStarted={gameStarted}
+                users={users}
+                usersLockedIn={usersLockedIn}
+                startGameHandler={startGameHandler}
+                lockInPlayersHandler={lockInPlayersHandler}
+                username={username}
+                socket={socket}
+              />
+            )}
+            {gameStarted && (
+              <FullGame
+                username={username}
+                users={users}
+                allGameData={allGameData}
+                currentPlayerIndex={currentPlayerIndex}
+                currentRound={currentRound}
+                isCurrentPlayer={isCurrentPlayer}
+                socket={socket}
+                roomId={roomId}
+                countdown={countdown}
+                setGameStarted={setGameStarted}
+                setCurrentRound={setCurrentRound}
+                setPlayerData={setPlayerData}
+                setUsersLockedIn={setUsersLockedIn}
+                setCurrentPlayerIndex={setCurrentPlayerIndex}
+                setUsers={setUsers}
+              />
+            )}
+          </AnimatePresence>
           <GameNotifications
             booleanMessage={booleanMessage}
             activeModal={activeModal}

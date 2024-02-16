@@ -6,8 +6,9 @@ import { useAnimationFrame } from "framer-motion";
 import CurrentPlayer from "./CurrentPlayer/Index";
 import { variables } from "@/styles/Variables";
 import Chat from "../../Chat";
+import { motion } from "framer-motion";
 
-const LobbyInfoContainer = styled.div`
+const LobbyInfoContainer = styled(motion.div)`
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -89,8 +90,22 @@ function LobbyInfo({
   socket,
   playerData,
 }: any) {
+  const motionProps = {
+    initial: {
+      opacity: 0,
+    },
+    animate: {
+      opacity: 1,
+    },
+    exit: {
+      opacity: 0,
+    },
+    transition: {
+      duration: 0.8,
+    },
+  };
   return (
-    <LobbyInfoContainer>
+    <LobbyInfoContainer {...motionProps}>
       {!gameStarted && (
         <>
           <IrishPoker>Irish Poker</IrishPoker>

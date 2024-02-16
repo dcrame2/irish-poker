@@ -6,6 +6,7 @@ import { buttonType, pBase, pSmall } from "@/styles/Type";
 import { convertToNum } from "../../../utils/users";
 import AllCards from "./AllCards/Index";
 import Chat from "../../Chat";
+import { motion } from "framer-motion";
 
 // Define a keyframe for the pulsing animation
 const pulseAnimation = keyframes`
@@ -25,13 +26,13 @@ interface PlayerAndCardContainerProps {
   username: string;
 }
 
-const GameContainer = styled.div`
+const GameContainer = styled(motion.div)`
   height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   /* justify-content: center; */
-  background-color: ${variables.darkGreen};
+  /* background-color: ${variables.darkGreen}; */
   gap: 10px;
   padding-top: 20px;
 `;
@@ -70,6 +71,7 @@ const PlayerAndCardContainer = styled.div<PlayerAndCardContainerProps>`
     css`
       animation: ${pulseAnimation} 1s infinite;
     `};
+
   @media ${MediaQueries.mobile} {
     gap: 8px;
     padding: 8px;
@@ -393,8 +395,26 @@ function FullGame({
     });
   };
 
+  const motionProps = {
+    initial: {
+      opacity: 0,
+      y: "-100%",
+    },
+    animate: {
+      opacity: 1,
+      y: 0,
+    },
+    exit: {
+      y: "-100%",
+      opacity: 0,
+    },
+    transition: {
+      duration: 0.8,
+    },
+  };
+
   return (
-    <GameContainer>
+    <GameContainer {...motionProps}>
       {allGameData && (
         <PlayerUpNext>
           <CloverIcon src="clover.svg" alt="Clover" />

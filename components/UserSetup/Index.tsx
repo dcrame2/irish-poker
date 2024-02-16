@@ -9,6 +9,7 @@ import { variables } from "@/styles/Variables";
 // import Button from "../Button/Index";
 const MainContainer = styled.div`
   background-image: url("clover.svg");
+
   background-repeat: no-repeat;
   position: relative;
   z-index: 2;
@@ -25,6 +26,7 @@ const MainContainer = styled.div`
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.9);
+    /* background-color: ${variables.darkGreen}; */
   }
 `;
 
@@ -130,6 +132,7 @@ export default function UserSetup() {
             )}
           </Button>
         </InnerContainer>
+
         <motion.div
           style={{ display: !showChats ? "none" : "" }}
           {...motionProps}
