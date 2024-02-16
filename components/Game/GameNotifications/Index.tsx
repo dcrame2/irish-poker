@@ -52,16 +52,21 @@ const HeaderForIncorrectMessage = styled.p`
 `;
 
 interface ButtonProps {
-  usersToDrink?: [];
+  usersToDrink?: any;
+  username?: any;
 }
+
 const Button = styled.button<ButtonProps>`
   ${buttonType}
-  opacity: ${(props) => (!props?.usersToDrink ? 1 : 0.4)};
+  opacity: ${(props) =>
+    !props?.usersToDrink?.includes(props?.username) ? 1 : 0.4};
+  transition: opacity 0.5s ease-in;
   margin-bottom: 8px;
 `;
 
 const ConfirmButton = styled.button<ButtonProps>`
   ${buttonType}
+  transition: opacity 0.5s ease-in;
   opacity: ${(props) => (props?.usersToDrink ? 1 : 0.4)};
 `;
 
@@ -252,6 +257,7 @@ function GameNotifications({
                         {otherPlayers?.map((player: any) => (
                           <Button
                             usersToDrink={usersToDrink}
+                            username={player?.username}
                             onClick={() => whoDrinksHandler(player?.username)}
                             key={player?.id}
                           >

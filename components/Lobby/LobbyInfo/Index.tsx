@@ -15,25 +15,6 @@ const LobbyInfoContainer = styled(motion.div)`
   justify-content: center;
 `;
 
-const MessageIconContainer = styled.button`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: ${variables.darkGreen};
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  border: none;
-`;
-
-const MessageIcon = styled.img`
-  width: 30px;
-  height: 30px;
-`;
-
 const GameButtonContainer = styled.div`
   background-color: ${variables.color1};
   border-radius: 12px;
@@ -50,10 +31,6 @@ const GameButtonContainer = styled.div`
 
 const Button = styled.button`
   ${buttonType}
-`;
-
-const Logo = styled.img`
-  width: 100%;
 `;
 
 const OtherPlayersStartingGameMessage = styled.div`
@@ -118,14 +95,12 @@ function LobbyInfo({
               !gameStarted &&
               playerData !== null ? ( //TODO: NEED TO DO SOMETHING WITH PLAYER DATA TO ENSURE I GET ALL THE DATA BEFORE SHOWING THE START GAME BTN FOR PEOPLE WHO MAY CLICK FAST
                 <>
-                  {/* <Button onClick={lockInPlayersHandler}>Rules</Button> */}
                   <Button onClick={lockInPlayersHandler}>
                     Lock in players
                   </Button>
                 </>
               ) : (
                 <>
-                  {/* <Button onClick={lockInPlayersHandler}>Rules</Button> */}
                   <Button onClick={startGameHandler}>Start Game</Button>
                 </>
               )}
