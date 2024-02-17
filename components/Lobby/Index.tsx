@@ -105,8 +105,11 @@ const GameLobby = ({ socket, username, roomId, users, setUsers }: any) => {
   const [countdown, setCountdown] = useState(7);
 
   const [activeModal, setActiveModal] = useState<boolean>();
-  // console.log(activeModal, "ACTIVE MODAL");
-  // console.log(countdown, "countdown");
+  const [whoDrinksTriggered, setWhoDrinksTriggered] = useState(false);
+
+  console.log(currentPlayerIndex, "currentPlayerIndex");
+  console.log(currentRound, "currentRound");
+  console.log(users, "USSSSERSSS");
 
   const lockInPlayersHandler = () => {
     socket.emit("lockin_players", { users, roomId });
@@ -130,15 +133,21 @@ const GameLobby = ({ socket, username, roomId, users, setUsers }: any) => {
     setCurrentRound(0);
   };
 
-  let usersToDrinkArr: any = [];
-
   const whoDrinksHandler = (user: any) => {
-    usersToDrinkArr.push(user);
-    setUsersToDrink((prevUsersToDrink) => [...(prevUsersToDrink ?? []), user]);
+    if (usersToDrink?.includes(user)) {
+      // If the user is already in the array, remove them
+      setUsersToDrink(usersToDrink?.filter((u: any) => u !== user));
+    } else {
+      // If the user is not in the array, add them
+      setUsersToDrink((prevUsersToDrink) => [
+        ...(prevUsersToDrink ?? []),
+        user,
+      ]);
+    }
+    setWhoDrinksTriggered(true);
   };
 
   const confirmWhoDrinksHandler = () => {
-    // console.log(usersToDrink);
     socket.emit("send_users_to_drink", {
       roomId,
       usersToDrink,
@@ -149,18 +158,21 @@ const GameLobby = ({ socket, username, roomId, users, setUsers }: any) => {
 
     setActiveModal(false);
     setButtonsTrue(false);
-    // setCountdown(7);
+    setWhoDrinksTriggered(false);
   };
 
   useEffect(() => {
     socket.on("receive_reset_game", (data: any) => {
       console.log(data, "receive_reset_game");
+      setAllGameData({ users: data.users, roomId, cardData: data.cardData });
       setGameStarted(data.gameStarted);
       setPlayerData(data.cardData);
-      setCurrentRound(data.currentRound);
+      // setCurrentRound(data.currentRound);
       setUsersLockedIn(data.usersLockedIn);
       setCurrentPlayerIndex(data.currentPlayerIndex);
-      setUsers(data.users);
+      // setUsers(data.users);
+
+      // setAllGameData(data.allGameData);
     });
     socket.on("allPlayersCards", (playersCards: any) => {
       console.log("Received allPlayersCards data:", playersCards);
@@ -355,6 +367,7 @@ const GameLobby = ({ socket, username, roomId, users, setUsers }: any) => {
                 setUsersLockedIn={setUsersLockedIn}
                 setCurrentPlayerIndex={setCurrentPlayerIndex}
                 setUsers={setUsers}
+                setAllGameData={setAllGameData}
               />
             )}
           </AnimatePresence>
@@ -373,6 +386,7 @@ const GameLobby = ({ socket, username, roomId, users, setUsers }: any) => {
             username={username}
             confirmedUsersToDrink={confirmedUsersToDrink}
             countdown={countdown}
+            whoDrinksTriggered={whoDrinksTriggered}
           />
         </FullGameContainer>
       </MainInnerContainer>

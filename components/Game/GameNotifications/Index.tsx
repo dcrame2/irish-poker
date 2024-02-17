@@ -194,6 +194,7 @@ function GameNotifications({
   confirmedUsersToDrink,
   username,
   countdown,
+  whoDrinksTriggered,
 }: any) {
   const motionProps = {
     initial: {
@@ -260,6 +261,7 @@ function GameNotifications({
                             username={player?.username}
                             onClick={() => whoDrinksHandler(player?.username)}
                             key={player?.id}
+                            // disabled={whoDrinksTriggered}
                           >
                             {player?.username}
                           </Button>
@@ -271,6 +273,7 @@ function GameNotifications({
                     <ConfirmButton
                       usersToDrink={usersToDrink}
                       onClick={confirmWhoDrinksHandler}
+                      disabled={!whoDrinksTriggered}
                     >
                       Confirm Players to Drinks
                     </ConfirmButton>
