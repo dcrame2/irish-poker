@@ -52,9 +52,9 @@ const GameInnerContainer = styled.div`
   border-radius: 70px;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start; /* Change to flex-start */
+  justify-content: flex-start;
   height: 88%;
-  width: 96%;
+  width: 98%;
   border: 10px solid ${variables.black};
   background-color: ${variables.middleGreen};
   background-image: url("table_bg.webp");
@@ -63,31 +63,13 @@ const GameInnerContainer = styled.div`
   padding: 12px;
 `;
 
-const PlayerGridContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(
-    auto-fill,
-    minmax(200px, 1fr)
-  ); /* Change 200px to your desired width */
-  gap: 10px;
-`;
-
 const CurrentPlayerContainer = styled.div`
   width: 100%;
   grid-area: main_user;
   display: flex;
   align-items: center;
   justify-content: center;
-  transform: scale(1.7);
-`;
-
-const OtherPlayerContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(
-    auto-fill,
-    minmax(200px, 1fr)
-  ); /* Change 200px to your desired width */
-  gap: 10px;
+  transform: scale(1.5);
 `;
 
 const PlayerAndCardContainer = styled.div<PlayerAndCardContainerProps>`
@@ -108,15 +90,9 @@ const PlayerAndCardContainer = styled.div<PlayerAndCardContainerProps>`
     css`
       animation: ${pulseAnimation} 1s infinite;
     `};
-  /* transform: ${(props) =>
-    props?.isCurrentPlayer === props?.username ? "scale(1.3)" : "scale(1)"}; */
   @media ${MediaQueries.mobile} {
     gap: 8px;
-    padding: 8px;
-    /* transform: ${(props) =>
-      props?.isCurrentPlayer === props?.username
-        ? "scale(1.1)"
-        : "scale(1)"}; */
+    padding: 4px;
   }
 `;
 
@@ -125,7 +101,6 @@ const Player = styled.div`
   color: ${variables.darkGreen};
 `;
 const PlayerContainer = styled.div`
-  /* margin-top: 8px; */
   display: flex;
   justify-content: center;
   padding: 4px 8px;
