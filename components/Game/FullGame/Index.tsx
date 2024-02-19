@@ -434,6 +434,7 @@ function FullGame({
           <>
             {allGameData?.cardData.map(
               (player: Player, playerIndex: number) => {
+                console.log(users[playerIndex]?.username, "playerIndex"); //TODO: need to adjust the loop for the players
                 const isCurrentUser: boolean =
                   player[playerIndex]?.player === username;
                 return (
@@ -446,7 +447,7 @@ function FullGame({
                         >
                           <PlayerContainer>
                             <CloverIcon src="clover.svg" alt="clover" />
-                            <Player>{player[playerIndex]?.player} </Player>
+                            <Player>{player[playerIndex]?.player}</Player>
                           </PlayerContainer>
                           <AllCards player={player} />
                         </PlayerAndCardContainer>
@@ -458,7 +459,7 @@ function FullGame({
                       >
                         <PlayerContainer>
                           <CloverIcon src="clover.svg" alt="clover" />
-                          <Player>{player[playerIndex]?.player} </Player>
+                          <Player>{player[playerIndex]?.player}</Player>
                         </PlayerContainer>
                         <AllCards player={player} />
                       </PlayerAndCardContainer>
