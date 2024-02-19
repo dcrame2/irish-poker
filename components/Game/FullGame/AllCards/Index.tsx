@@ -18,7 +18,7 @@ const IndividualCardContainer = styled.div`
 const CardsContainer = styled.div`
   display: flex;
   flex-direction: row;
-  gap: 6px;
+  gap: 4px;
 `;
 
 type SingleCard = {

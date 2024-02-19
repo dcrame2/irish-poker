@@ -240,7 +240,7 @@ function GameNotifications({
                     />
                   </TextContainer>
                   {users.length === 1 && (
-                    <Description>{`Modal will close in ${countdown} seconds`}</Description>
+                    <Description>{`Screen will close in ${countdown} seconds`}</Description>
                   )}
                   {otherUsersMessageTrue !== "" && (
                     <OtherCorrectContainer>
@@ -295,7 +295,7 @@ function GameNotifications({
                         );
                       })}
                     </WhoDrinksContainer>
-                    <Description>{`Modal will close in ${countdown} seconds`}</Description>
+                    <Description>{`Screen will close in ${countdown} seconds`}</Description>
                   </>
                 )}
             </CorrectMessaging>
@@ -307,7 +307,7 @@ function GameNotifications({
                   dangerouslySetInnerHTML={{ __html: currentUsersMessageFalse }}
                 ></UserMessageFalse>
                 {activeModal && (
-                  <Description>{`Modal will close in ${countdown} seconds`}</Description>
+                  <Description>{`Screen will close in ${countdown} seconds`}</Description>
                 )}
               </IncorrectTextContainer>
             </IncorrectMessaging>
