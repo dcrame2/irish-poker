@@ -432,38 +432,41 @@ function FullGame({
       <GameInnerContainer>
         {allGameData && (
           <>
-            {allGameData.cardData.map((player: Player, playerIndex: number) => {
-              const isCurrentUser = player[playerIndex].player === username;
-              return (
-                <React.Fragment key={`player-${playerIndex}`}>
-                  {isCurrentUser ? (
-                    <CurrentPlayerContainer>
+            {allGameData?.cardData.map(
+              (player: Player, playerIndex: number) => {
+                const isCurrentUser: boolean =
+                  player[playerIndex]?.player === username;
+                return (
+                  <React.Fragment key={`player-${playerIndex}`}>
+                    {isCurrentUser ? (
+                      <CurrentPlayerContainer>
+                        <PlayerAndCardContainer
+                          isCurrentPlayer={isCurrentPlayer}
+                          username={player[playerIndex]?.player}
+                        >
+                          <PlayerContainer>
+                            <CloverIcon src="clover.svg" alt="clover" />
+                            <Player>{player[playerIndex]?.player} </Player>
+                          </PlayerContainer>
+                          <AllCards player={player} />
+                        </PlayerAndCardContainer>
+                      </CurrentPlayerContainer>
+                    ) : (
                       <PlayerAndCardContainer
                         isCurrentPlayer={isCurrentPlayer}
-                        username={player[playerIndex].player}
+                        username={player[playerIndex]?.player}
                       >
                         <PlayerContainer>
                           <CloverIcon src="clover.svg" alt="clover" />
-                          <Player>{player[playerIndex].player} </Player>
+                          <Player>{player[playerIndex]?.player} </Player>
                         </PlayerContainer>
                         <AllCards player={player} />
                       </PlayerAndCardContainer>
-                    </CurrentPlayerContainer>
-                  ) : (
-                    <PlayerAndCardContainer
-                      isCurrentPlayer={isCurrentPlayer}
-                      username={player[playerIndex].player}
-                    >
-                      <PlayerContainer>
-                        <CloverIcon src="clover.svg" alt="clover" />
-                        <Player>{player[playerIndex].player} </Player>
-                      </PlayerContainer>
-                      <AllCards player={player} />
-                    </PlayerAndCardContainer>
-                  )}
-                </React.Fragment>
-              );
-            })}
+                    )}
+                  </React.Fragment>
+                );
+              }
+            )}
           </>
         )}
         {currentRound === 4 && (
