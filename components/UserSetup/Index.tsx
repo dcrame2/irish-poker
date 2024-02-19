@@ -122,7 +122,7 @@ export default function UserSetup() {
             placeholder="room id"
             onChange={(e) => setroomId(e.target.value)}
             disabled={showSpinner}
-            max="5"
+            // max="5"
           />
           <Button onClick={() => handleJoin()}>
             {!showSpinner ? (
