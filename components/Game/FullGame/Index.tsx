@@ -39,23 +39,61 @@ const GameContainer = styled(motion.div)`
 
 const GameInnerContainer = styled.div`
   position: relative;
-  display: flex;
-  border-radius: 100px;
+  display: grid;
+  grid-auto-columns: 1fr;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-areas:
+    ". ."
+    ". ."
+    "main_user main_user"
+    ". ."
+    ". .";
+  border-radius: 70px;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start; /* Change to flex-start */
   height: 88%;
   width: 96%;
-  border: 20px solid ${variables.black};
+  border: 10px solid ${variables.black};
   background-color: ${variables.middleGreen};
   background-image: url("table_bg.webp");
   background-repeat: no-repeat;
   background-size: cover;
+  padding: 12px;
+`;
+
+const PlayerGridContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(200px, 1fr)
+  ); /* Change 200px to your desired width */
+  gap: 10px;
+`;
+
+const CurrentPlayerContainer = styled.div`
+  width: 100%;
+  grid-area: main_user;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: scale(1.7);
+`;
+
+const OtherPlayerContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(200px, 1fr)
+  ); /* Change 200px to your desired width */
+  gap: 10px;
 `;
 
 const PlayerAndCardContainer = styled.div<PlayerAndCardContainerProps>`
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 16px;
   background-color: ${(props) =>
     props?.isCurrentPlayer === props?.username
@@ -64,19 +102,21 @@ const PlayerAndCardContainer = styled.div<PlayerAndCardContainerProps>`
   padding: 12px;
   transition: all 0.5s ease-in;
   border-radius: 6px;
-  transform: ${(props) =>
-    props?.isCurrentPlayer === props?.username ? "scale(1.3)" : "scale(1)"};
+
   ${({ isCurrentPlayer, username }) =>
     isCurrentPlayer === username &&
     css`
       animation: ${pulseAnimation} 1s infinite;
     `};
-
+  /* transform: ${(props) =>
+    props?.isCurrentPlayer === props?.username ? "scale(1.3)" : "scale(1)"}; */
   @media ${MediaQueries.mobile} {
     gap: 8px;
     padding: 8px;
-    transform: ${(props) =>
-      props?.isCurrentPlayer === props?.username ? "scale(1.1)" : "scale(1)"};
+    /* transform: ${(props) =>
+      props?.isCurrentPlayer === props?.username
+        ? "scale(1.1)"
+        : "scale(1)"}; */
   }
 `;
 
@@ -415,23 +455,42 @@ function FullGame({
         </PlayerUpNext>
       )}
       <GameInnerContainer>
-        {allGameData &&
-          allGameData?.cardData.map((player: Player, playerIndex: number) => {
-            return (
-              <PlayerAndCardContainer
-                isCurrentPlayer={isCurrentPlayer}
-                username={player[playerIndex].player}
-                key={`player-${playerIndex}`}
-              >
-                <PlayerContainer>
-                  <CloverIcon src="clover.svg" alt="clover" />
-                  <Player>{player[playerIndex].player} </Player>
-                </PlayerContainer>
-                <AllCards player={player} />
-              </PlayerAndCardContainer>
-            );
-          })}
-
+        {allGameData && (
+          <>
+            {allGameData.cardData.map((player: Player, playerIndex: number) => {
+              const isCurrentUser = player[playerIndex].player === username;
+              return (
+                <React.Fragment key={`player-${playerIndex}`}>
+                  {isCurrentUser ? (
+                    <CurrentPlayerContainer>
+                      <PlayerAndCardContainer
+                        isCurrentPlayer={isCurrentPlayer}
+                        username={player[playerIndex].player}
+                      >
+                        <PlayerContainer>
+                          <CloverIcon src="clover.svg" alt="clover" />
+                          <Player>{player[playerIndex].player} </Player>
+                        </PlayerContainer>
+                        <AllCards player={player} />
+                      </PlayerAndCardContainer>
+                    </CurrentPlayerContainer>
+                  ) : (
+                    <PlayerAndCardContainer
+                      isCurrentPlayer={isCurrentPlayer}
+                      username={player[playerIndex].player}
+                    >
+                      <PlayerContainer>
+                        <CloverIcon src="clover.svg" alt="clover" />
+                        <Player>{player[playerIndex].player} </Player>
+                      </PlayerContainer>
+                      <AllCards player={player} />
+                    </PlayerAndCardContainer>
+                  )}
+                </React.Fragment>
+              );
+            })}
+          </>
+        )}
         {currentRound === 4 && (
           <>
             <p>GAME OVER</p>

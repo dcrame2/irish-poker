@@ -6,7 +6,7 @@ import { MediaQueries } from "@/styles/Utilities";
 const ImageOfCard = styled(motion.img)`
   width: 50px;
   @media ${MediaQueries.mobile} {
-    width: 45px;
+    width: 35px;
   }
 `;
 
