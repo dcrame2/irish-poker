@@ -435,19 +435,20 @@ function FullGame({
             {allGameData?.cardData.map(
               (player: Player, playerIndex: number) => {
                 console.log(users[playerIndex]?.username, "playerIndex"); //TODO: need to adjust the loop for the players
-                const isCurrentUser: boolean =
-                  player[playerIndex]?.player === username;
+                const index = Math.min(playerIndex, users.length);
+                const user = users[index];
+                const isCurrentUser: boolean = user?.username === username;
                 return (
                   <React.Fragment key={`player-${playerIndex}`}>
                     {isCurrentUser ? (
                       <CurrentPlayerContainer>
                         <PlayerAndCardContainer
                           isCurrentPlayer={isCurrentPlayer}
-                          username={player[playerIndex]?.player}
+                          username={user?.username}
                         >
                           <PlayerContainer>
                             <CloverIcon src="clover.svg" alt="clover" />
-                            <Player>{player[playerIndex]?.player}</Player>
+                            <Player>{user?.username}</Player>
                           </PlayerContainer>
                           <AllCards player={player} />
                         </PlayerAndCardContainer>
@@ -455,11 +456,11 @@ function FullGame({
                     ) : (
                       <PlayerAndCardContainer
                         isCurrentPlayer={isCurrentPlayer}
-                        username={player[playerIndex]?.player}
+                        username={user?.username}
                       >
                         <PlayerContainer>
                           <CloverIcon src="clover.svg" alt="clover" />
-                          <Player>{player[playerIndex]?.player}</Player>
+                          <Player>{user?.username}</Player>
                         </PlayerContainer>
                         <AllCards player={player} />
                       </PlayerAndCardContainer>
