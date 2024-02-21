@@ -21,6 +21,18 @@ const pulseAnimation = keyframes`
   }
 `;
 
+const pulseAnimationBorder = keyframes`
+  0% {
+    border: 10px solid rgba(255, 255, 255, 0.238);
+  }
+  50% {
+    border: 10px solid rgba(255, 255, 255, 1);
+  }
+  100% {
+    border: 10px solid rgba(255, 255, 255, 0.238);
+  }
+`;
+
 interface PlayerAndCardContainerProps {
   isCurrentPlayer: string;
   username: string;
@@ -37,7 +49,7 @@ const GameContainer = styled(motion.div)`
   padding-top: 20px;
 `;
 
-const GameInnerContainer = styled.div`
+const GameInnerContainer = styled.div<PlayerAndCardContainerProps>`
   position: relative;
   display: grid;
   grid-auto-columns: 1fr;
@@ -61,6 +73,11 @@ const GameInnerContainer = styled.div`
   background-repeat: no-repeat;
   background-size: cover;
   padding: 12px;
+  ${({ isCurrentPlayer, username }) =>
+    isCurrentPlayer === username &&
+    css`
+      animation: ${pulseAnimationBorder} 1s infinite;
+    `};
 `;
 
 const CurrentPlayerContainer = styled.div`
@@ -69,7 +86,7 @@ const CurrentPlayerContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  transform: scale(1.5);
+  transform: scale(1.3);
 `;
 
 const PlayerAndCardContainer = styled.div<PlayerAndCardContainerProps>`
@@ -413,7 +430,7 @@ function FullGame({
           {isCurrentPlayer}'s turn
         </PlayerUpNext>
       )}
-      <GameInnerContainer>
+      <GameInnerContainer isCurrentPlayer={isCurrentPlayer} username={username}>
         {allGameData && (
           <>
             {allGameData?.cardData.map(
