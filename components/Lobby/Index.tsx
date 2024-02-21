@@ -39,6 +39,26 @@ const FullGameContainer = styled.div`
   flex-direction: column;
 `;
 
+const HamburgerContainer = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: ${variables.darkGreen};
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  border: none;
+  z-index: 19;
+`;
+
+const HamburgerIcon = styled.img`
+  width: 30px;
+  height: 30px;
+`;
+
 const MessageIconContainer = styled.button`
   display: flex;
   justify-content: center;
@@ -349,6 +369,9 @@ const GameLobby = ({ socket, username, roomId, users, setUsers }: any) => {
     <MainContainer>
       <MainInnerContainer>
         <FullGameContainer>
+          <HamburgerContainer>
+            <HamburgerIcon src="hamburger-menu.svg" />
+          </HamburgerContainer>
           <MessageIconContainer onClick={showChatHandler}>
             <MessageIcon src="chat_icon.svg" />
           </MessageIconContainer>

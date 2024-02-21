@@ -93,7 +93,7 @@ function LobbyInfo({
               {users.length > 0 &&
               !usersLockedIn &&
               !gameStarted &&
-              playerData !== null ? ( //TODO: NEED TO DO SOMETHING WITH PLAYER DATA TO ENSURE I GET ALL THE DATA BEFORE SHOWING THE START GAME BTN FOR PEOPLE WHO MAY CLICK FAST
+              playerData === undefined ? ( //TODO: NEED TO DO SOMETHING WITH PLAYER DATA TO ENSURE I GET ALL THE DATA BEFORE SHOWING THE START GAME BTN FOR PEOPLE WHO MAY CLICK FAST
                 <>
                   <Button onClick={lockInPlayersHandler}>
                     Lock in players
