@@ -2,11 +2,11 @@ import React, { useEffect, useState, useRef } from "react";
 import styled, { keyframes, css } from "styled-components";
 import { MediaQueries } from "@/styles/Utilities";
 import { variables } from "@/styles/Variables";
-import { buttonType, pBase, pSmall } from "@/styles/Type";
+import { buttonType, pBase, pLarge, pSmall } from "@/styles/Type";
 import { convertToNum } from "../../../utils/users";
 import AllCards from "./AllCards/Index";
 import Chat from "../../Chat";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 // Define a keyframe for the pulsing animation
 const pulseAnimation = keyframes`
@@ -157,27 +157,28 @@ const Button = styled.button`
   }
 `;
 
-// const Player = styled.div`
-//   ${pSmall}
-// `;
-
-const MessageIconContainer = styled.button`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: ${variables.darkGreen};
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  border: none;
+const Gameover = styled(motion.div)`
+  border-top: 3px solid ${variables.middleGreen};
+  background-color: ${variables.color2};
+  padding: 16px;
+  position: fixed;
+  width: 100%;
+  z-index: 11;
+  bottom: 0;
+  overflow-y: auto;
+  border-radius: 24px 24px 0 0;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  height: fit-content;
 `;
 
-const MessageIcon = styled.img`
-  width: 30px;
-  height: 30px;
+const Message = styled.p`
+  text-align: center;
+`;
+
+const GameoverText = styled.p`
+  ${pLarge}
+  margin-bottom: 10px;
 `;
 
 interface GameData {
@@ -213,6 +214,9 @@ function FullGame({
   socket,
   countdown,
   roomId,
+  activeModal,
+  backToLobbyHandler,
+  statusCode,
 }: any) {
   const gameLogicHandler = (option: string) => {
     const currentPlayerCard: SingleCard | undefined =
@@ -383,26 +387,6 @@ function FullGame({
     });
   };
 
-  const backToLobbyHandler = () => {
-    socket.emit("send_reset_game", {
-      roomId,
-      gameStarted: false,
-      cardData: [],
-      currentRound: 0,
-      usersLockedIn: false,
-      currentPlayerIndex: 0,
-      users: users,
-      // allGameData: [],
-    });
-    // setGameStarted(false);
-    // setPlayerData([]);
-    // setCurrentRound(0);
-    // setUsersLockedIn(false);
-    // setCurrentPlayerIndex(0);
-    // setUsers(users);
-    // setAllGameData([]);
-  };
-
   const motionProps = {
     initial: {
       opacity: 0,
@@ -471,13 +455,19 @@ function FullGame({
             )}
           </>
         )}
-        {currentRound === 4 && (
-          <>
-            <p>GAME OVER</p>
-            <Button onClick={backToLobbyHandler}>Back to Lobby</Button>
-          </>
-        )}
       </GameInnerContainer>
+      <AnimatePresence mode="wait">
+        {currentRound === 4 && activeModal === false && (
+          <Gameover {...motionProps}>
+            <GameoverText>GAME OVER</GameoverText>
+            {users[0]?.username === username ? (
+              <Button onClick={backToLobbyHandler}>Back to Lobby</Button>
+            ) : (
+              <Message>{users[0]?.username} can restart the game</Message>
+            )}
+          </Gameover>
+        )}
+      </AnimatePresence>
       {allGameData && (
         <MainButtonsContainer>
           {users[currentPlayerIndex]?.username === username &&
