@@ -9,7 +9,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import Close from "../../svg/close/Index";
 
 const ChatContainer = styled(motion.div)`
-  border-right: 2px solid ${variables.color1};
   position: absolute;
   height: 100dvh;
   display: flex;
@@ -227,68 +226,62 @@ function Chat({ roomId, username, socket, users, setShowChat, showChat }: any) {
   };
 
   return (
-    <>
-      <AnimatePresence mode="wait">
-        {showChat && (
-          <ChatContainer {...motionPropsTop}>
-            <Header>Chat Room</Header>
-            <CloseContainer onClick={closeChatHandler}>
-              <Close />
-            </CloseContainer>
-            {chat.length === 0 && <NoMessage>No Messages</NoMessage>}
-            <ChatsFormContainer>
-              <Chats>
-                {chat.map(({ roomId, user, msg, time }, key) => (
-                  <AnimatePresence mode="wait">
-                    <IndividualChat
-                      key={`${key}-${msg}`}
-                      className={
-                        user == username
-                          ? "chatProfileRight"
-                          : "chatProfileLeft"
-                      }
-                      {...(user == username
-                        ? motionPropsLeft
-                        : motionPropsRight)}
-                    >
-                      <MessageAndNameContainer>
-                        <PlayerContainer
-                          style={{
-                            textAlign: user == username ? "right" : "left",
-                          }}
-                        >
-                          <CloverIcon src="clover.svg" alt="clover" />
-                          <Player>{user}</Player>
-                        </PlayerContainer>
+    <AnimatePresence mode="wait">
+      {showChat && (
+        <ChatContainer {...motionPropsTop}>
+          <Header>Chat Room</Header>
+          <CloseContainer onClick={closeChatHandler}>
+            <Close />
+          </CloseContainer>
+          {chat.length === 0 && <NoMessage>No Messages</NoMessage>}
+          <ChatsFormContainer>
+            <Chats>
+              {chat.map(({ roomId, user, msg, time }, key) => (
+                <AnimatePresence mode="wait">
+                  <IndividualChat
+                    key={`${key}-${msg}`}
+                    className={
+                      user == username ? "chatProfileRight" : "chatProfileLeft"
+                    }
+                    {...(user == username ? motionPropsLeft : motionPropsRight)}
+                  >
+                    <MessageAndNameContainer>
+                      <PlayerContainer
+                        style={{
+                          textAlign: user == username ? "right" : "left",
+                        }}
+                      >
+                        <CloverIcon src="clover.svg" alt="clover" />
+                        <Player>{user}</Player>
+                      </PlayerContainer>
 
-                        <MessageText
-                          style={{
-                            textAlign: user == username ? "right" : "left",
-                          }}
-                        >
-                          {msg}
-                        </MessageText>
-                        <Time>Time: {time}</Time>
-                      </MessageAndNameContainer>
-                    </IndividualChat>
-                  </AnimatePresence>
-                ))}
-              </Chats>
+                      <MessageText
+                        style={{
+                          textAlign: user == username ? "right" : "left",
+                        }}
+                      >
+                        {msg}
+                      </MessageText>
+                      <Time>Time: {time}</Time>
+                    </MessageAndNameContainer>
+                  </IndividualChat>
+                </AnimatePresence>
+              ))}
+            </Chats>
 
-              <Form onSubmit={(e) => sendData(e)}>
-                <Input
-                  type="text"
-                  value={currentMsg}
-                  placeholder="Type your message.."
-                  onChange={(e) => setCurrentMsg(e.target.value)}
-                />
-                <Button>Send</Button>
-              </Form>
-            </ChatsFormContainer>
-          </ChatContainer>
-        )}
-      </AnimatePresence>
-    </>
+            <Form onSubmit={(e) => sendData(e)}>
+              <Input
+                type="text"
+                value={currentMsg}
+                placeholder="Type your message.."
+                onChange={(e) => setCurrentMsg(e.target.value)}
+              />
+              <Button>Send</Button>
+            </Form>
+          </ChatsFormContainer>
+        </ChatContainer>
+      )}
+    </AnimatePresence>
   );
 }
 

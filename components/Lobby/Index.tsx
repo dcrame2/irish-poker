@@ -9,6 +9,7 @@ import { MediaQueries } from "@/styles/Utilities";
 import FullGame from "../Game/FullGame/Index";
 import LobbyInfo from "./LobbyInfo/Index";
 import GameNotifications from "../Game/GameNotifications/Index";
+import Menu from "../Menu/Index";
 
 const Player = styled.div`
   ${pSmall}
@@ -333,9 +334,14 @@ const GameLobby = ({ socket, username, roomId, users, setUsers }: any) => {
   ]);
 
   const [showChat, setShowChat] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
 
   const showChatHandler = () => {
     setShowChat(true);
+  };
+
+  const openMenuHandler = () => {
+    setShowMenu(true);
   };
 
   const backToLobbyHandler = () => {
@@ -369,7 +375,7 @@ const GameLobby = ({ socket, username, roomId, users, setUsers }: any) => {
     <MainContainer>
       <MainInnerContainer>
         <FullGameContainer>
-          <HamburgerContainer>
+          <HamburgerContainer onClick={openMenuHandler}>
             <HamburgerIcon src="hamburger-menu.svg" />
           </HamburgerContainer>
           <MessageIconContainer onClick={showChatHandler}>
@@ -383,6 +389,7 @@ const GameLobby = ({ socket, username, roomId, users, setUsers }: any) => {
             setShowChat={setShowChat}
             showChat={showChat}
           />
+          <Menu showMenu={showMenu} setShowMenu={setShowMenu} />
           <AnimatePresence mode="wait">
             {!gameStarted && (
               <LobbyInfo
