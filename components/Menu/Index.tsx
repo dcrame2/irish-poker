@@ -15,7 +15,6 @@ const MenuContainer = styled(motion.div)`
   height: 100dvh;
   display: flex;
   flex-direction: column;
-  /* justify-content: space-between; */
   z-index: 20;
   top: 0;
   right: 0;
@@ -77,14 +76,13 @@ const LabelName = styled.p`
   ${pSmall}
 `;
 
-const FeedbackContainer = styled.div<RulesContainerProps>`
+const FeedbackContainer = styled.div`
   background-color: ${variables.darkGreen};
   margin: 16px 0 0px;
   padding: 12px 24px;
   border-radius: 12px;
   /* min-height: 50px; */
 
-  max-height: ${(props) => (props.show ? "1000px" : "50px")};
   overflow: hidden;
   transition: max-height 0.5s ease-in;
 `;
@@ -178,12 +176,8 @@ function Menu({ showMenu, setShowMenu }: any) {
               </AllRulesContainer>
             )}
           </RulesContainer>
-          <FeedbackContainer show={showFeedback} onClick={showFeedbackHandler}>
-            <FeedbackInnerContainer>
-              <LabelName>Feedback</LabelName>
-            </FeedbackInnerContainer>
-
-            {showFeedback && <Feedback />}
+          <FeedbackContainer>
+            <Feedback />
           </FeedbackContainer>
         </MenuContainer>
       )}

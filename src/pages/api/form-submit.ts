@@ -1,18 +1,10 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import nodemailer from "nodemailer";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 type Data = {
   message: string;
 };
-
-// export default function handler(
-//   req: NextApiRequest,
-//   res: NextApiResponse<Data>
-// ) {
-//   res.status(200).json({ name: "John Doe" });
-// }
-
-import nodemailer from "nodemailer";
 
 export default function handler(
   req: NextApiRequest,
@@ -24,7 +16,7 @@ export default function handler(
       let transporter = nodemailer.createTransport({
         host: "smtp.gmail.com",
         port: 465,
-        secure: false,
+        secure: true,
         auth: {
           user: `${process.env.GOOGLE_EMAIL}`,
           pass: `${process.env.GOOGLE_APP_PASSWORD}`,
@@ -52,7 +44,7 @@ export default function handler(
       let emailHtml = createHTMLTableFromObject(formDataObj);
 
       let message = {
-        from: `Dylan your ish poppin' ${process.env.GOOGLE_EMAIL}`,
+        from: `Irish Poker Feedback`,
         to: `${process.env.GOOGLE_EMAIL}`,
         subject: `${req.body.email} has submitted a form`,
         html: `${emailHtml}`,
