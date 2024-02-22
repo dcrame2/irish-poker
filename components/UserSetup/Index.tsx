@@ -6,17 +6,16 @@ import styled from "styled-components";
 import { buttonType, h1styles, inputType } from "@/styles/Type";
 import { AnimatePresence, motion } from "framer-motion";
 import { variables } from "@/styles/Variables";
-// import Button from "../Button/Index";
+import Menu from "../Menu/Index";
+
 const MainContainer = styled.div`
   background-image: url("clover.svg");
-
   background-repeat: no-repeat;
   position: relative;
   z-index: 2;
   background-position: right;
   height: 100dvh;
   width: 100vw;
-  /* border: 2px solid ${variables.color1}; */
   &::before {
     z-index: 1;
     content: "";
@@ -26,7 +25,6 @@ const MainContainer = styled.div`
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.9);
-    /* background-color: ${variables.darkGreen}; */
   }
 `;
 
@@ -40,6 +38,7 @@ const InnerContainer = styled(motion.div)`
   gap: 12px;
   z-index: 10;
   position: relative;
+  padding: 0 48px;
 `;
 
 const Input = styled.input`
@@ -50,12 +49,28 @@ const Button = styled.button`
   ${buttonType}
 `;
 
-const Logo = styled.img`
-  width: 100%;
-`;
-
 const IrishPoker = styled.h1`
   ${h1styles}
+`;
+
+const HamburgerContainer = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: ${variables.darkGreen};
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  border: none;
+  z-index: 19;
+`;
+
+const HamburgerIcon = styled.img`
+  width: 30px;
+  height: 30px;
 `;
 
 export default function UserSetup() {
@@ -100,9 +115,18 @@ export default function UserSetup() {
       duration: 0.8,
     },
   };
+  const [showMenu, setShowMenu] = useState(false);
+
+  const openMenuHandler = () => {
+    setShowMenu(true);
+  };
 
   return (
     <MainContainer>
+      <HamburgerContainer onClick={openMenuHandler}>
+        <HamburgerIcon src="hamburger-menu.svg" />
+      </HamburgerContainer>
+      <Menu showMenu={showMenu} setShowMenu={setShowMenu} />
       <AnimatePresence mode="wait">
         <InnerContainer
           key="key1"
@@ -139,6 +163,7 @@ export default function UserSetup() {
           key="key2"
         >
           <GameLobby
+            openMenuHandler={openMenuHandler}
             showChats={showChats}
             users={users}
             socket={socket}

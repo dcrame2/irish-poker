@@ -26,7 +26,7 @@ export default function handler(
 
       function createHTMLTableFromObject(obj: any) {
         let tableHTML =
-          '<table style="border-collapse: collapse; width: 100%; background-color: white; border: 1px solid black;">';
+          '<table style="border-collapse: collapse; width: 50%; background-color: white; border: 1px solid black;">';
 
         for (const key in obj) {
           if (obj.hasOwnProperty(key)) {
@@ -44,9 +44,9 @@ export default function handler(
       let emailHtml = createHTMLTableFromObject(formDataObj);
 
       let message = {
-        from: `Irish Poker Feedback`,
+        from: `${process.env.GOOGLE_EMAIL}`,
         to: `${process.env.GOOGLE_EMAIL}`,
-        subject: `${req.body.email} has submitted a form`,
+        subject: `Irish Poker Feedback`,
         html: `${emailHtml}`,
       };
       transporter.sendMail(message, (error: any, info: any): any => {
