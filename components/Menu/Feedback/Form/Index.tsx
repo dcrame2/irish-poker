@@ -59,6 +59,7 @@ const FormSubmissionContainer = styled.div`
   border: 2px solid ${variables.color1};
   padding: 24px;
   width: 50%;
+  margin-top: 8px;
   @media ${MediaQueries.mobile} {
     width: 100%;
   }
@@ -81,81 +82,81 @@ function Form() {
     axios
       .post("/api/form-submit", data)
       .then((response: any) => setFormSubmitStatus(response.status));
+
     console.log(data);
   };
 
   return (
     <>
-      {formSubmitStatus ? (
+      <ContactForm onSubmit={handleSubmit(onSubmit)}>
+        <Input
+          // initial={{ opacity: 0, y: 100 }}
+          // whileInView={{ opacity: 1, y: 0 }}
+          // viewport={{ once: true, amount: 0.85 }}
+          // transition={{
+          //   duration: 0.8,
+          //   type: "spring",
+          //   stiffness: 50,
+          // }}
+          placeholder="Name*"
+          {...register("name", { required: true })}
+        />
+        {errors.email && <span>A name is required</span>}
+        <Input
+          // initial={{ opacity: 0, y: 100 }}
+          // whileInView={{ opacity: 1, y: 0 }}
+          // viewport={{ once: true, amount: 0.85 }}
+          // transition={{
+          //   duration: 1,
+          //   type: "spring",
+          //   stiffness: 50,
+          // }}
+          placeholder="Email Address*"
+          {...register("email", {
+            required: true,
+            pattern: /^[\w\.-]+@[\w\.-]+\.\w+$/,
+          })}
+        />
+        {errors.email && <span>An email address is required</span>}
+        <TextArea
+          // initial={{ opacity: 0, y: 100 }}
+          // whileInView={{ opacity: 1, y: 0 }}
+          // viewport={{ once: true, amount: 0.85 }}
+          // transition={{
+          //   duration: 1.2,
+          //   type: "spring",
+          //   stiffness: 50,
+          // }}
+          placeholder="Message*"
+          {...register("message", {
+            required: true,
+          })}
+        ></TextArea>
+        {errors.message && <span>A message is required</span>}
+        <SubmitButton
+          disabled={false}
+          type="submit"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, amount: 0.85 }}
+          transition={{
+            duration: 1.4,
+            type: "spring",
+            stiffness: 50,
+            //   Feed,
+          }}
+        >
+          Submit
+        </SubmitButton>
+      </ContactForm>
+      {formSubmitStatus && (
         <FormSubmissionContainer>
           <FormSubmissionMessage>
             {formSubmitStatus === 200
-              ? "Thank you! I have received your contact form submission and will respond as soon as I can."
+              ? "Thank you for your feedback it is much appreciated!"
               : "An error has occured during the form submission, please try again."}
           </FormSubmissionMessage>
         </FormSubmissionContainer>
-      ) : (
-        <ContactForm onSubmit={handleSubmit(onSubmit)}>
-          <Input
-            //   initial={{ opacity: 0, y: 100 }}
-            //   whileInView={{ opacity: 1, y: 0 }}
-            //   viewport={{ once: true, amount: 0.85 }}
-            //   transition={{
-            //     duration: 0.8,
-            //     type: "spring",
-            //     stiffness: 50,
-            //   }}
-            placeholder="Name*"
-            {...register("name", { required: true })}
-          />
-          {errors.email && <span>A name is required</span>}
-          <Input
-            //   initial={{ opacity: 0, y: 100 }}
-            //   whileInView={{ opacity: 1, y: 0 }}
-            //   viewport={{ once: true, amount: 0.85 }}
-            //   transition={{
-            //     duration: 1,
-            //     type: "spring",
-            //     stiffness: 50,
-            //   }}
-            placeholder="Email Address*"
-            {...register("email", {
-              required: true,
-              pattern: /^[\w\.-]+@[\w\.-]+\.\w+$/,
-            })}
-          />
-          {errors.email && <span>An email address is required</span>}
-          <TextArea
-            //   initial={{ opacity: 0, y: 100 }}
-            //   whileInView={{ opacity: 1, y: 0 }}
-            //   viewport={{ once: true, amount: 0.85 }}
-            //   transition={{
-            //     duration: 1.2,
-            //     type: "spring",
-            //     stiffness: 50,
-            //   }}
-            placeholder="Message*"
-            {...register("message", {
-              required: true,
-            })}
-          ></TextArea>
-          {errors.message && <span>A message is required</span>}
-          <SubmitButton
-            disabled={false}
-            type="submit"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true, amount: 0.85 }}
-            transition={{
-              duration: 1.4,
-              type: "spring",
-              stiffness: 50,
-              //   Feed,
-            }}
-          >
-            Submit
-          </SubmitButton>
-        </ContactForm>
       )}
     </>
   );
