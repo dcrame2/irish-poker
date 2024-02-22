@@ -121,6 +121,7 @@ const WhoDrinksContainer = styled.div`
   border-radius: 12px;
   align-items: center;
   justify-content: center;
+  flex-wrap: wrap;
 `;
 
 const OtherCorrectContainer = styled.div`
