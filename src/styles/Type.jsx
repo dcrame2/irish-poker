@@ -143,7 +143,7 @@ export const pXSmall = css`
 export const buttonType = css`
   font-family: ${jost};
   font-size: 1rem;
-  border-radius: 12px;
+  /* border-radius: 12px; */
   padding: 10px 12px;
   font-weight: 300;
   color: white;
@@ -170,14 +170,17 @@ export const buttonType = css`
   }
   @media ${MediaQueries.mobile} {
     padding: 5px 6px;
+    /* width: 100%; */
   }
 `;
 
 export const inputType = css`
-  font-size: 1rem;
-  padding: 12px 10px;
-  border: none;
-  border: 2px solid ${variables.color1};
+  padding: 15px;
+  background-color: unset;
+
+  border: 1px solid ${variables.white};
+  width: 100%;
+  ${pSmall}
 `;
 
 export const boxShadows = css`

@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { variables } from "@/styles/Variables";
-import { pXSmall, pBase } from "@/styles/Type";
+import { pXSmall, pBase, buttonType } from "@/styles/Type";
 import { MediaQueries } from "@/styles/Utilities";
 import axios from "axios";
 
@@ -23,7 +23,7 @@ const InputStyles = css`
   padding: 15px;
   background-color: unset;
 
-  border: 3px solid ${variables.color1};
+  border: 1px solid ${variables.white};
   width: 100%;
   ${pXSmall}
 `;
@@ -43,13 +43,16 @@ const TextArea = styled(motion.textarea)`
 `;
 
 const SubmitButton = styled(motion.button)`
-  padding: 10px 20px;
+  /* padding: 10px 20px;
   border: unset;
   background-color: ${variables.color1};
   cursor: pointer;
   transition: all ease-out 0.3s;
   margin-top: 8px;
-  ${pXSmall}
+  ${pXSmall} */
+  ${buttonType}
+  width: 100%;
+
   &:hover {
     background-color: ${variables.color2};
   }
@@ -89,28 +92,9 @@ function Form() {
   return (
     <>
       <ContactForm onSubmit={handleSubmit(onSubmit)}>
+        {/* <Input placeholder="Name*" {...register("name", { required: true })} />
+        {errors.email && <span>A name is required</span>} */}
         <Input
-          // initial={{ opacity: 0, y: 100 }}
-          // whileInView={{ opacity: 1, y: 0 }}
-          // viewport={{ once: true, amount: 0.85 }}
-          // transition={{
-          //   duration: 0.8,
-          //   type: "spring",
-          //   stiffness: 50,
-          // }}
-          placeholder="Name*"
-          {...register("name", { required: true })}
-        />
-        {errors.email && <span>A name is required</span>}
-        <Input
-          // initial={{ opacity: 0, y: 100 }}
-          // whileInView={{ opacity: 1, y: 0 }}
-          // viewport={{ once: true, amount: 0.85 }}
-          // transition={{
-          //   duration: 1,
-          //   type: "spring",
-          //   stiffness: 50,
-          // }}
           placeholder="Email Address*"
           {...register("email", {
             required: true,
@@ -119,14 +103,6 @@ function Form() {
         />
         {errors.email && <span>An email address is required</span>}
         <TextArea
-          // initial={{ opacity: 0, y: 100 }}
-          // whileInView={{ opacity: 1, y: 0 }}
-          // viewport={{ once: true, amount: 0.85 }}
-          // transition={{
-          //   duration: 1.2,
-          //   type: "spring",
-          //   stiffness: 50,
-          // }}
           placeholder="Message*"
           {...register("message", {
             required: true,
@@ -143,7 +119,6 @@ function Form() {
             duration: 1.4,
             type: "spring",
             stiffness: 50,
-            //   Feed,
           }}
         >
           Submit

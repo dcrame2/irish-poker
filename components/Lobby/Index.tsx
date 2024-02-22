@@ -49,8 +49,8 @@ const HamburgerContainer = styled.button`
   height: 50px;
   border-radius: 50%;
   position: absolute;
-  top: 15px;
-  left: 15px;
+  top: 12px;
+  left: 12px;
   border: none;
   z-index: 19;
 `;
@@ -69,8 +69,8 @@ const MessageIconContainer = styled.button`
   height: 50px;
   border-radius: 50%;
   position: absolute;
-  top: 15px;
-  right: 15px;
+  top: 12px;
+  right: 12px;
   border: none;
   z-index: 19;
 `;
@@ -101,7 +101,16 @@ type SingleCard = {
 type Player = SingleCard[];
 type PlayerData = {};
 
-const GameLobby = ({ socket, username, roomId, users, setUsers }: any) => {
+const GameLobby = ({
+  socket,
+  username,
+  roomId,
+  users,
+  setUsers,
+  openMenuHandler,
+  showMenu,
+  setShowMenu,
+}: any) => {
   const [playerData, setPlayerData] = useState();
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
 
@@ -334,15 +343,14 @@ const GameLobby = ({ socket, username, roomId, users, setUsers }: any) => {
   ]);
 
   const [showChat, setShowChat] = useState(false);
-  const [showMenu, setShowMenu] = useState(false);
 
   const showChatHandler = () => {
     setShowChat(true);
   };
 
-  const openMenuHandler = () => {
-    setShowMenu(true);
-  };
+  // const openMenuHandler = () => {
+  //   setShowMenu(true);
+  // };
 
   const backToLobbyHandler = () => {
     socket.emit("send_reset_game", {

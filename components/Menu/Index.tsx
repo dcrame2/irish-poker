@@ -24,6 +24,10 @@ const MenuContainer = styled(motion.div)`
   padding: 12px;
 `;
 
+const MenuInnerContainer = styled.div`
+  height: fit-content;
+`;
+
 const CloseContainer = styled.div`
   width: 20px;
   position: absolute;
@@ -43,9 +47,7 @@ const RulesContainer = styled.div<RulesContainerProps>`
   margin: 16px 0 0px;
   padding: 12px 24px;
   border-radius: 12px;
-  /* min-height: 50px; */
-
-  max-height: ${(props) => (props.show ? "500px" : "50px")};
+  max-height: ${(props) => (props.show ? "800px" : "50px")};
   overflow: hidden;
   transition: max-height 0.5s ease-in;
 `;
@@ -73,7 +75,7 @@ const AllRulesContainer = styled.div<RulesContainerProps>`
 `;
 
 const LabelName = styled.p`
-  ${pSmall}
+  ${pBase}
 `;
 
 const FeedbackContainer = styled.div`
@@ -144,41 +146,44 @@ function Menu({ showMenu, setShowMenu }: any) {
     <AnimatePresence mode="wait">
       {showMenu && (
         <MenuContainer {...motionPropsLeft}>
-          <Header>Menu</Header>
-          <CloseContainer onClick={closeChatHandler}>
-            <Close />
-          </CloseContainer>
-          <RulesContainer show={showRules} onClick={showRulesHandler}>
-            <RulesInnerContainer>
-              <LabelName>Rules</LabelName>
-            </RulesInnerContainer>
-            {showRules && (
-              <AllRulesContainer show={showRules}>
-                <p>
-                  Players proceed to guess on the characteristics of each card
-                  in front of them with drinks either given or taken depending
-                  on whether they're right or not. So starting to the left of
-                  the dealer each player must guess about their unexposed cards,
-                  one at a time, according to: Color of card (red/black) Card is
-                  higher or lower than first card Card is in-between or outside
-                  of first and second cards Suit of card When a player is either
-                  right or wrong they will either "give" or "take" drinks.
-                  According to the rounds drinks are valued: 2 gives/takes 4
-                  gives/takes 6 gives/takes 8 gives/takes So the first player to
-                  the left of the dealer guesses the color of the card; if
-                  he/she gets it right, they "give" 2 drinks. They can be given
-                  in any amount to any other player at the table (either all to
-                  one player or spread around). Then the next player guesses
-                  color, gives/ takes etc. Once the first round has gone past
-                  every player they start the second round where the drinks are
-                  escalated as shown above.
-                </p>
-              </AllRulesContainer>
-            )}
-          </RulesContainer>
-          <FeedbackContainer>
-            <Feedback />
-          </FeedbackContainer>
+          <MenuInnerContainer>
+            <Header>Menu</Header>
+            <CloseContainer onClick={closeChatHandler}>
+              <Close />
+            </CloseContainer>
+            <RulesContainer show={showRules} onClick={showRulesHandler}>
+              <RulesInnerContainer>
+                <LabelName>Rules</LabelName>
+              </RulesInnerContainer>
+              {showRules && (
+                <AllRulesContainer show={showRules}>
+                  <p>
+                    Players proceed to guess on the characteristics of each card
+                    in front of them with drinks either given or taken depending
+                    on whether they're right or not. So starting to the left of
+                    the dealer each player must guess about their unexposed
+                    cards, one at a time, according to: Color of card
+                    (red/black) Card is higher or lower than first card Card is
+                    in-between or outside of first and second cards Suit of card
+                    When a player is either right or wrong they will either
+                    "give" or "take" drinks. According to the rounds drinks are
+                    valued: 2 gives/takes 4 gives/takes 6 gives/takes 8
+                    gives/takes So the first player to the left of the dealer
+                    guesses the color of the card; if he/she gets it right, they
+                    "give" 2 drinks. They can be given in any amount to any
+                    other player at the table (either all to one player or
+                    spread around). Then the next player guesses color, gives/
+                    takes etc. Once the first round has gone past every player
+                    they start the second round where the drinks are escalated
+                    as shown above.
+                  </p>
+                </AllRulesContainer>
+              )}
+            </RulesContainer>
+            <FeedbackContainer>
+              <Feedback />
+            </FeedbackContainer>
+          </MenuInnerContainer>
         </MenuContainer>
       )}
     </AnimatePresence>
