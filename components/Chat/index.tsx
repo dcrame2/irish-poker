@@ -20,10 +20,11 @@ const ChatContainer = styled(motion.div)`
   left: 0;
   bottom: 0;
   background-color: ${variables.color2};
+  padding: 12px;
 `;
 
 const ChatsFormContainer = styled.div`
-  padding: 12px;
+  /* padding: 12px; */
 `;
 
 const Chats = styled.div`
@@ -66,17 +67,6 @@ const IndividualChat = styled(motion.div)`
     gap: 5px;
     margin-bottom: 5px;
   }
-`;
-
-const ChatIcon = styled.span`
-  background-color: ${variables.black};
-  height: 3rem;
-  width: 3rem;
-  border: 2px solid ${variables.white};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
 `;
 
 const MessageText = styled.h3`

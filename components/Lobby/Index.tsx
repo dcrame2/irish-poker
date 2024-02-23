@@ -176,13 +176,14 @@ const GameLobby = ({
   console.log(playerData, "playerData");
 
   // console.log(currentPlayerIndex, "currentPlayerIndex");
-  // console.log(currentRound, "currentRound");
+  console.log(currentRound, "currentRound");
   // console.log(users, "USSSSERSSS");
 
   const lockInPlayersHandler = () => {
     socket.emit("lockin_players", { users, roomId });
     setUsersLockedIn(true);
     setIsCurrentPlayer(users[0]?.username);
+    setCurrentRound(0);
   };
 
   const startGameHandler = () => {
@@ -230,22 +231,8 @@ const GameLobby = ({
   };
 
   useEffect(() => {
-    socket.on("receive_reset_game", (data: any) => {
-      console.log(data, "receive_reset_game");
-      setAllGameData({
-        users: data.users,
-        roomId: data.roomId,
-        cardData: data.cardData,
-      });
-      setGameStarted(data.gameStarted);
-      // setPlayerData(data.cardData);
-      setCurrentRound(data.currentRound);
-      setUsersLockedIn(data.usersLockedIn);
-      setCurrentPlayerIndex(data.currentPlayerIndex);
-      setCountdown(data.countdown);
-      // setUsers(data.users);
-      // setAllGameData(data.allGameData);
-    });
+    // Clean up the socket listener
+
     socket.on("allPlayersCards", (playersCards: any) => {
       console.log("Received allPlayersCards data:", playersCards);
       setPlayerData(playersCards);
@@ -274,7 +261,7 @@ const GameLobby = ({
     });
 
     if (
-      allGameData?.cardData.every(
+      allGameData?.cardData?.every(
         (player: Player) => player[currentRound]?.selectedOption
       )
     ) {
@@ -333,6 +320,24 @@ const GameLobby = ({
       setCountdown(data.countdown);
     });
 
+    socket.on("receive_reset_game", (data: any) => {
+      setGameStarted(data.gameStarted);
+      console.log(data, "receive_reset_game");
+      setPlayerData(data.cardData);
+      setAllGameData({
+        users: data.users,
+        roomId: data.roomId,
+        cardData: data.cardData,
+      });
+      setUsers(data.users);
+      setCurrentRound(data.currentRound);
+      setUsersLockedIn(data.usersLockedIn);
+      setCurrentPlayerIndex(data);
+      // setCountdown(data.countdown);
+      // setUsers(data.users);
+      // setAllGameData(data.allGameData);
+    });
+
     // Decrement the countdown every second while the modal is active
     const countdownTimer = setInterval(() => {
       if (activeModal && countdown > 0 && gameStarted) {
@@ -355,7 +360,9 @@ const GameLobby = ({
       }
       setCountdown(7);
     }
+
     return () => {
+      // socket.off("receive_reset_game");
       clearInterval(countdownTimer);
       socket.off("receive_countdown");
     };
@@ -374,6 +381,7 @@ const GameLobby = ({
     usersToDrink,
     buttonsTrue,
     countdown,
+    gameStarted,
   ]);
 
   const [showChat, setShowChat] = useState(false);
@@ -386,7 +394,7 @@ const GameLobby = ({
     socket.emit("send_reset_game", {
       roomId: roomId,
       gameStarted: false,
-      cardData: [],
+      cardData: undefined,
       currentRound: 0,
       usersLockedIn: false,
       currentPlayerIndex: 0,
@@ -396,22 +404,23 @@ const GameLobby = ({
 
   const motionProps = {
     initial: {
-      x: "0%",
+      y: "0%",
     },
     animate: {
-      x: "100%",
+      y: "100%",
       transitionEnd: {
-        x: "-100%",
+        y: "-100%",
       },
     },
     exit: {
-      x: "0%",
+      y: "0%",
       transitionEnd: {
-        x: "0%",
+        y: "0%",
+        delay: 0.3,
       },
     },
     transition: {
-      duration: 1.2, // Reduce duration for quicker animation
+      duration: 0.8,
     },
   };
 
