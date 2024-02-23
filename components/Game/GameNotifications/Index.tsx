@@ -9,6 +9,7 @@ import {
   pLarge,
   pSmall,
   pBase,
+  pLarge2,
 } from "@/styles/Type";
 import { MediaQueries } from "@/styles/Utilities";
 
@@ -75,27 +76,44 @@ const Description = styled.p`
 `;
 
 const TextContainer = styled.div`
-  text-align: center;
-  margin: 25px 0 8px;
-  background-color: ${variables.darkGreen};
-  border-radius: 12px;
-  padding: 24px 12px;
-  /* ${boxShadows} */
-  /* margin: 0 12px; */
+  .current-user-message-container {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    min-height: 120px;
+    .left-box,
+    .right-box {
+      width: 50%;
+      text-align: center;
+      margin: 25px 0 8px;
+      background-color: ${variables.darkGreen};
+      border-radius: 12px;
+      padding: 24px 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      gap: 8px;
+      ${pSmall}
+      .player-guessed {
+      }
+      .option {
+        text-transform: uppercase;
+        ${pLarge2}
+      }
+      .value {
+        text-transform: uppercase;
+        ${pLarge2}
+      }
+      .suit {
+        text-transform: uppercase;
+        ${pLarge2}
+      }
+    }
+  }
+
   span {
-    text-transform: uppercase;
-    ${pBase}/* &.player {
-      color: purple;
-    }
-    &.option {
-      color: blue;
-    }
-    &.value {
-      color: yellow;
-    }
-    &.suit {
-      color: orange;
-    } */
+    ${pBase}
   }
 `;
 
@@ -131,7 +149,7 @@ const OtherCorrectContainer = styled.div`
   padding: 24px 12px;
   display: flex;
   align-items: center;
-  /* ${boxShadows} */
+
   justify-content: center;
 `;
 
@@ -172,12 +190,31 @@ const SelectingUsersToDrinkContainer = styled.div`
 `;
 
 const UserMessageFalse = styled.div`
-  padding: 12px 24px;
-  ${pBase}
-  background-color: ${variables.color4};
-  border-radius: 12px;
-  margin: 16px 0 48px;
-  ${boxShadowsRed}
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 16px;
+  .incorrect-inner-message-container {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    .left-box,
+    .right-box {
+      width: 50%;
+      padding: 12px 24px;
+      ${pBase}
+      background-color: ${variables.color4};
+      border-radius: 12px;
+      ${boxShadowsRed}
+    }
+  }
+  .message-container {
+    padding: 12px 24px;
+    ${pBase}
+    background-color: ${variables.color4};
+    border-radius: 12px;
+    ${boxShadowsRed}
+  }
 `;
 
 function GameNotifications({
@@ -233,13 +270,11 @@ function GameNotifications({
               )}
               {!confirmedUsersToDrink && (
                 <CorrectContainer>
-                  <TextContainer>
-                    <Description
-                      dangerouslySetInnerHTML={{
-                        __html: currentUsersMessageTrue,
-                      }}
-                    />
-                  </TextContainer>
+                  <TextContainer
+                    dangerouslySetInnerHTML={{
+                      __html: currentUsersMessageTrue,
+                    }}
+                  ></TextContainer>
                   {users.length === 1 && (
                     <Description>{`Screen will close in ${countdown} seconds`}</Description>
                   )}

@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { AnimatePresence, motion } from "framer-motion";
 import Chat from "../Chat";
 import { variables } from "@/styles/Variables";
-import { buttonType, h2styles, pLarge, pSmall } from "@/styles/Type";
+import { buttonType, h2styles, pLarge, pSmall, h1styles } from "@/styles/Type";
 import { MediaQueries } from "@/styles/Utilities";
 import FullGame from "../Game/FullGame/Index";
 import LobbyInfo from "./LobbyInfo/Index";
@@ -13,6 +13,12 @@ import Menu from "../Menu/Index";
 
 const Player = styled.div`
   ${pSmall}
+`;
+
+const IrishPoker = styled.h1`
+  ${h1styles}
+  position: relative;
+  z-index: 1001;
 `;
 
 const MainContainer = styled.div`
@@ -80,6 +86,34 @@ const MessageIcon = styled.img`
   height: 30px;
 `;
 
+const CloverPageTransitionContainer = styled(motion.div)`
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-image: url("clover.svg");
+  background-repeat: no-repeat;
+  background-position: right;
+  background-color: ${variables.black};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  &::before {
+    z-index: 1;
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+  }
+`;
 interface GameData {
   users: [];
   roomId: string;
@@ -348,10 +382,6 @@ const GameLobby = ({
     setShowChat(true);
   };
 
-  // const openMenuHandler = () => {
-  //   setShowMenu(true);
-  // };
-
   const backToLobbyHandler = () => {
     socket.emit("send_reset_game", {
       roomId: roomId,
@@ -366,16 +396,22 @@ const GameLobby = ({
 
   const motionProps = {
     initial: {
-      opacity: 0,
+      x: "0%",
     },
     animate: {
-      opacity: 1,
+      x: "100%",
+      transitionEnd: {
+        x: "-100%",
+      },
     },
     exit: {
-      opacity: 0,
+      x: "0%",
+      transitionEnd: {
+        x: "0%",
+      },
     },
     transition: {
-      duration: 0.8,
+      duration: 1.2, // Reduce duration for quicker animation
     },
   };
 
@@ -412,6 +448,12 @@ const GameLobby = ({
                 socket={socket}
                 allGameData={allGameData}
               />
+            )}
+            {gameStarted && (
+              <CloverPageTransitionContainer {...motionProps}>
+                <IrishPoker>Irish Poker</IrishPoker>
+                <p>Game has started</p>
+              </CloverPageTransitionContainer>
             )}
             {gameStarted && (
               <FullGame

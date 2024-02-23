@@ -98,6 +98,23 @@ export const pLarge = css`
   }
 `;
 
+export const pLarge2 = css`
+  font-family: ${jost};
+  font-size: 2rem;
+  line-height: 2.5rem;
+  font-weight: 300;
+  /* color: #ffff; */
+
+  @media ${MediaQueries.tablet} {
+    font-size: 1.4rem;
+    line-height: 1.8rem;
+  }
+  @media ${MediaQueries.mobile} {
+    font-size: 1.8rem;
+    line-height: 1.3rem;
+  }
+`;
+
 export const pBase = css`
   font-family: ${jost};
   font-size: 1.5rem;
@@ -154,7 +171,7 @@ export const buttonType = css`
   ${pBase}
   cursor: pointer;
   transition: background-color 0.3s ease-in;
-  /* box-shadow: 1px 2px 0px 0px ${variables.clover}; */
+
   border-bottom: 4px solid ${variables.middleGreen};
   border-top: 1px solid ${variables.color1};
   border-right: 1px solid ${variables.color1};
@@ -162,15 +179,12 @@ export const buttonType = css`
 
   &:hover {
     transition: background-color 0.3s ease-in;
-
     border-bottom: 4px solid ${variables.middleGreen};
     background-color: ${variables.darkGreen};
-    /* background-color: transparent; */
     transition: background-color 0.3s ease-in;
   }
   @media ${MediaQueries.mobile} {
     padding: 5px 6px;
-    /* width: 100%; */
   }
 `;
 
