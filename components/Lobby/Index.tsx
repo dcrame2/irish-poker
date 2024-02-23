@@ -329,10 +329,11 @@ const GameLobby = ({
         roomId: data.roomId,
         cardData: data.cardData,
       });
-      setUsers(data.users);
+      // setUsers(data.users);
       setCurrentRound(data.currentRound);
       setUsersLockedIn(data.usersLockedIn);
       setCurrentPlayerIndex(data);
+      setIsCurrentPlayer(data.isCurrentPlayer);
       // setCountdown(data.countdown);
       // setUsers(data.users);
       // setAllGameData(data.allGameData);
@@ -399,6 +400,7 @@ const GameLobby = ({
       usersLockedIn: false,
       currentPlayerIndex: 0,
       users: users,
+      isCurrentPlayer: undefined,
     });
   };
 
