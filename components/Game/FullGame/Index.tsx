@@ -457,9 +457,8 @@ function FullGame({
       <GameInnerContainer isCurrentPlayer={isCurrentPlayer} username={username}>
         {allGameData && (
           <>
-            {allGameData?.cardData.map(
+            {allGameData?.cardData?.map(
               (player: Player, playerIndex: number) => {
-                console.log(users[playerIndex]?.username, "playerIndex"); //TODO: need to adjust the loop for the players
                 const index = Math.min(playerIndex, users.length);
                 const user = users[index];
                 const isCurrentUser: boolean = user?.username === username;
