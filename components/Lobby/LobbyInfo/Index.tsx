@@ -2,10 +2,8 @@ import React, { useState } from "react";
 import PlayersInLobby from "./PlayersInLobby/Index";
 import { buttonType, boxShadows, h1styles } from "@/styles/Type";
 import styled from "styled-components";
-import { useAnimationFrame } from "framer-motion";
 import CurrentPlayer from "./CurrentPlayer/Index";
 import { variables } from "@/styles/Variables";
-import Chat from "../../Chat";
 import { motion } from "framer-motion";
 
 const LobbyInfoContainer = styled(motion.div)`
@@ -90,20 +88,22 @@ function LobbyInfo({
           <PlayersInLobby users={users} />
           {users[0]?.username === username ? (
             <GameButtonContainer>
-              {users.length > 0 &&
-              !usersLockedIn &&
-              !gameStarted &&
-              playerData === undefined ? ( //TODO: NEED TO DO SOMETHING WITH PLAYER DATA TO ENSURE I GET ALL THE DATA BEFORE SHOWING THE START GAME BTN FOR PEOPLE WHO MAY CLICK FAST
-                <>
-                  <Button onClick={lockInPlayersHandler}>
-                    Lock in players
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Button onClick={startGameHandler}>Start Game</Button>
-                </>
-              )}
+              {
+                // users.length > 0 &&
+                // !usersLockedIn &&
+                // !gameStarted &&
+                playerData === undefined ? (
+                  <>
+                    <Button onClick={lockInPlayersHandler}>
+                      Lock in players
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button onClick={startGameHandler}>Start Game</Button>
+                  </>
+                )
+              }
             </GameButtonContainer>
           ) : (
             <OtherPlayersStartingGameMessage>

@@ -1,11 +1,10 @@
-import React, { useEffect, useState, useRef } from "react";
+import React from "react";
 import styled, { keyframes, css } from "styled-components";
 import { MediaQueries } from "@/styles/Utilities";
 import { variables } from "@/styles/Variables";
 import { buttonType, pBase, pLarge, pSmall } from "@/styles/Type";
 import { convertToNum } from "../../../utils/users";
 import AllCards from "./AllCards/Index";
-import Chat from "../../Chat";
 import { AnimatePresence, motion } from "framer-motion";
 
 // Define a keyframe for the pulsing animation
@@ -44,8 +43,6 @@ const GameContainer = styled(motion.div)`
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* justify-content: center; */
-  /* background-color: ${variables.darkGreen}; */
   gap: 10px;
   padding-top: 20px;
 `;
@@ -76,7 +73,7 @@ const GameInnerContainer = styled.div<PlayerAndCardContainerProps>`
   padding: 12px;
   ${({ isCurrentPlayer, username, activeModal }) =>
     isCurrentPlayer === username &&
-    activeModal === false &&
+    activeModal !== true &&
     css`
       animation: ${pulseAnimationBorder} 1s infinite;
     `};
@@ -97,7 +94,7 @@ const PlayerAndCardContainer = styled.div<PlayerAndCardContainerProps>`
   align-items: center;
   gap: 16px;
   background-color: ${(props) =>
-    props?.isCurrentPlayer === props?.username && props?.activeModal === false
+    props?.isCurrentPlayer === props?.username && props?.activeModal !== true
       ? " rgba(255, 255, 255, 0.238)"
       : "transparent"};
   padding: 12px;
@@ -125,15 +122,15 @@ const PlayerContainer = styled.div`
   justify-content: center;
   padding: 4px 8px;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   background-color: ${variables.white};
   border-radius: 16px;
   width: fit-content;
 `;
 
 const CloverIcon = styled.img`
-  width: 20px;
-  height: 20px;
+  width: 12px;
+  height: 12px;
 `;
 
 const PlayerUpNext = styled.p`
@@ -362,13 +359,12 @@ function FullGame({
       currentUsersMessageFalse: `
           <div class="incorrect-inner-message-container">
           <div class="left-box">
-          <span class="player">
-          ${card?.player}</span> guessed <span class="option">${option}</span>!
-          </div>
-          <div class="right-box">
-           The card was a:  <span class="value">${card?.value.toLowerCase()}</span> of <span class="suit">${card?.suit.toLowerCase()}</span> 
-           </div>
-          </div> 
+          <div class="player-guessed">
+              <span class="player">
+              ${
+                card?.player
+              }</span> guessed</div> <span class="option">${option}</span>
+              </div>  <div class="right-box">The card was a: <div class="number-of"> <span class="value">${card?.value.toLowerCase()}</span>   of </div><span class="suit">${card?.suit.toLowerCase()}</span></div></div>
           
           <div class="message-container">${isCurrentPlayer} was incorrect and is drinking!</div>`,
       otherUsersMessageTrue: "",
@@ -383,13 +379,12 @@ function FullGame({
       currentUsersMessageFalse: `
       <div class="incorrect-inner-message-container">
       <div class="left-box">
-      <span class="player">
-      ${card?.player}</span> guessed <span class="option">${option}</span>!
-      </div>
-      <div class="right-box">
-       The card was a:  <span class="value">${card?.value.toLowerCase()}</span> of <span class="suit">${card?.suit.toLowerCase()}</span> 
-       </div>
-      </div> 
+      <div class="player-guessed">
+          <span class="player">
+          ${
+            card?.player
+          }</span> guessed</div> <span class="option">${option}</span>
+          </div>  <div class="right-box">The card was a: <div class="number-of"> <span class="value">${card?.value.toLowerCase()}</span>   of </div><span class="suit">${card?.suit.toLowerCase()}</span></div></div>
       
       <div class="message-container">${isCurrentPlayer} was incorrect and is drinking!</div>`,
       currentUsersMessageTrue: `

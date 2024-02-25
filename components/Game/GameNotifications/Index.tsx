@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import styled from "styled-components";
 import { variables } from "@/styles/Variables";
@@ -10,6 +9,8 @@ import {
   pSmall,
   pBase,
   pLarge2,
+  h1styles,
+  pXSmall,
 } from "@/styles/Type";
 import { MediaQueries } from "@/styles/Utilities";
 
@@ -41,14 +42,14 @@ const IncorrectMessaging = styled(motion.div)`
 `;
 
 const HeaderForCorrectMessage = styled.p`
-  color: ${variables.middleGreen};
-  ${pLarge}
+  color: ${variables.middleGreen} !important;
+  ${h1styles}
   text-align: center;
 `;
 
 const HeaderForIncorrectMessage = styled.p`
-  ${pLarge}
-  color: ${variables.color4};
+  ${h1styles}
+  color: ${variables.color4} !important;
   text-align: center;
 `;
 
@@ -75,6 +76,10 @@ const Description = styled.p`
   ${pSmall}
 `;
 
+const ScreenCountdown = styled.p`
+  ${pXSmall}
+`;
+
 const TextContainer = styled.div`
   .current-user-message-container {
     display: flex;
@@ -85,7 +90,7 @@ const TextContainer = styled.div`
     .right-box {
       width: 50%;
       text-align: center;
-      margin: 25px 0 8px;
+      margin-bottom: 8px;
       background-color: ${variables.darkGreen};
       border-radius: 12px;
       padding: 24px 12px;
@@ -198,14 +203,35 @@ const UserMessageFalse = styled.div`
     display: flex;
     flex-direction: row;
     gap: 12px;
+
+    .left-box {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
     .left-box,
     .right-box {
       width: 50%;
-      padding: 12px 24px;
+      padding: 24px 12px;
       ${pBase}
       background-color: ${variables.color4};
       border-radius: 12px;
       ${boxShadowsRed}
+      .player-guessed {
+      }
+      .option {
+        text-transform: uppercase;
+        ${pLarge2}
+      }
+      .value {
+        text-transform: uppercase;
+        ${pLarge2}
+      }
+      .suit {
+        text-transform: uppercase;
+        ${pLarge2}
+      }
     }
   }
   .message-container {
@@ -276,7 +302,7 @@ function GameNotifications({
                     }}
                   ></TextContainer>
                   {users.length === 1 && (
-                    <Description>{`Screen will close in ${countdown} seconds`}</Description>
+                    <ScreenCountdown>{`Screen will close in ${countdown} seconds`}</ScreenCountdown>
                   )}
                   {otherUsersMessageTrue !== "" && (
                     <OtherCorrectContainer>
@@ -331,7 +357,7 @@ function GameNotifications({
                         );
                       })}
                     </WhoDrinksContainer>
-                    <Description>{`Screen will close in ${countdown} seconds`}</Description>
+                    <ScreenCountdown>{`Screen will close in ${countdown} seconds`}</ScreenCountdown>
                   </>
                 )}
             </CorrectMessaging>
@@ -343,7 +369,7 @@ function GameNotifications({
                   dangerouslySetInnerHTML={{ __html: currentUsersMessageFalse }}
                 ></UserMessageFalse>
                 {activeModal && (
-                  <Description>{`Screen will close in ${countdown} seconds`}</Description>
+                  <ScreenCountdown>{`Screen will close in ${countdown} seconds`}</ScreenCountdown>
                 )}
               </IncorrectTextContainer>
             </IncorrectMessaging>
