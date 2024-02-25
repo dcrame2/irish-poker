@@ -36,6 +36,7 @@ const pulseAnimationBorder = keyframes`
 interface PlayerAndCardContainerProps {
   isCurrentPlayer: string;
   username: string;
+  activeModal: boolean;
 }
 
 const GameContainer = styled(motion.div)`
@@ -73,8 +74,9 @@ const GameInnerContainer = styled.div<PlayerAndCardContainerProps>`
   background-repeat: no-repeat;
   background-size: cover;
   padding: 12px;
-  ${({ isCurrentPlayer, username }) =>
+  ${({ isCurrentPlayer, username, activeModal }) =>
     isCurrentPlayer === username &&
+    activeModal === false &&
     css`
       animation: ${pulseAnimationBorder} 1s infinite;
     `};
@@ -95,20 +97,21 @@ const PlayerAndCardContainer = styled.div<PlayerAndCardContainerProps>`
   align-items: center;
   gap: 16px;
   background-color: ${(props) =>
-    props?.isCurrentPlayer === props?.username
+    props?.isCurrentPlayer === props?.username && props?.activeModal === false
       ? " rgba(255, 255, 255, 0.238)"
       : "transparent"};
   padding: 12px;
   transition: all 0.5s ease-in;
   border-radius: 6px;
 
-  ${({ isCurrentPlayer, username }) =>
+  ${({ isCurrentPlayer, username, activeModal }) =>
     isCurrentPlayer === username &&
+    activeModal === false &&
     css`
       animation: ${pulseAnimation} 1s infinite;
     `};
   @media ${MediaQueries.mobile} {
-    gap: 8px;
+    gap: 4px;
     padding: 4px;
   }
 `;
@@ -337,8 +340,6 @@ function FullGame({
         break;
     }
 
-    //TODO: need to add back some logic about the # equaling eachother
-
     let selectionMessage = isCorrect ? true : false;
 
     socket.emit("send_modal_active", {
@@ -399,7 +400,7 @@ function FullGame({
           ${
             card?.player
           }</span> guessed</div> <span class="option">${option}</span>
-          </div>  <div class="right-box">The card was a: <div class="number-of"> <span class="value">${card?.value.toLowerCase()}</span>   of </div><span class="suit">${card?.suit.toLowerCase()}</span> w</div> </div>`,
+          </div>  <div class="right-box">The card was a: <div class="number-of"> <span class="value">${card?.value.toLowerCase()}</span>   of </div><span class="suit">${card?.suit.toLowerCase()}</span></div> </div>`,
       buttonsTrue: false,
     });
 
@@ -454,7 +455,11 @@ function FullGame({
           {isCurrentPlayer}'s turn
         </PlayerUpNext>
       )}
-      <GameInnerContainer isCurrentPlayer={isCurrentPlayer} username={username}>
+      <GameInnerContainer
+        activeModal={activeModal}
+        isCurrentPlayer={isCurrentPlayer}
+        username={username}
+      >
         {allGameData && (
           <>
             {allGameData?.cardData?.map(
@@ -469,6 +474,7 @@ function FullGame({
                         <PlayerAndCardContainer
                           isCurrentPlayer={isCurrentPlayer}
                           username={user?.username}
+                          activeModal={activeModal}
                         >
                           <PlayerContainer>
                             <CloverIcon src="clover.svg" alt="clover" />
@@ -481,6 +487,7 @@ function FullGame({
                       <PlayerAndCardContainer
                         isCurrentPlayer={isCurrentPlayer}
                         username={user?.username}
+                        activeModal={activeModal}
                       >
                         <PlayerContainer>
                           <CloverIcon src="clover.svg" alt="clover" />

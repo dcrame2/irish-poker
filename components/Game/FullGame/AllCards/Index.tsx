@@ -1,9 +1,5 @@
-import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
-
 import { MediaQueries } from "@/styles/Utilities";
-import { variables } from "@/styles/Variables";
-
 import SingleCard from "./SingleCard/Index";
 
 const IndividualCardContainer = styled.div`
@@ -34,7 +30,6 @@ type SingleCard = {
 };
 
 function AllCards({ player }: any) {
-  // const ref = useRef(null);
   return (
     <CardsContainer>
       {player?.map((singleCard: SingleCard, index: number) => {
@@ -47,8 +42,6 @@ function AllCards({ player }: any) {
                 imageLink={singleCard.image}
               />
             ) : (
-              // <p>{singleCard.code}</p>
-              // <p>{singleCard.code}</p>
               <SingleCard
                 key={`default-${singleCard.code}`}
                 singleCard={singleCard}

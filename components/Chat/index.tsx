@@ -131,8 +131,18 @@ interface IMsgDataTypes {
   time: String;
 }
 
-function Chat({ roomId, username, socket, users, setShowChat, showChat }: any) {
-  const [chat, setChat] = useState<IMsgDataTypes[]>([]);
+function Chat({
+  roomId,
+  username,
+  socket,
+  users,
+  setShowChat,
+  showChat,
+  chat,
+  setChat,
+  setMessageTracker,
+}: any) {
+  // const [chat, setChat] = useState<IMsgDataTypes[]>([]);
   const [currentMsg, setCurrentMsg] = useState("");
   const sendData = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -154,12 +164,13 @@ function Chat({ roomId, username, socket, users, setShowChat, showChat }: any) {
 
   useEffect(() => {
     socket.on("receive_msg", (data: IMsgDataTypes) => {
-      setChat((pre) => [...pre, data]);
+      setChat((pre: IMsgDataTypes[]) => [...pre, data]);
     });
   }, [socket]);
 
   const closeChatHandler = () => {
     setShowChat(false);
+    setMessageTracker(0);
   };
 
   const motionPropsTop = {
@@ -226,37 +237,56 @@ function Chat({ roomId, username, socket, users, setShowChat, showChat }: any) {
           {chat.length === 0 && <NoMessage>No Messages</NoMessage>}
           <ChatsFormContainer>
             <Chats>
-              {chat.map(({ roomId, user, msg, time }, key) => (
-                <AnimatePresence mode="wait">
-                  <IndividualChat
-                    key={`${key}-${msg}`}
-                    className={
-                      user == username ? "chatProfileRight" : "chatProfileLeft"
-                    }
-                    {...(user == username ? motionPropsLeft : motionPropsRight)}
-                  >
-                    <MessageAndNameContainer>
-                      <PlayerContainer
-                        style={{
-                          textAlign: user == username ? "right" : "left",
-                        }}
-                      >
-                        <CloverIcon src="clover.svg" alt="clover" />
-                        <Player>{user}</Player>
-                      </PlayerContainer>
+              {chat.map(
+                (
+                  {
+                    roomId,
+                    user,
+                    msg,
+                    time,
+                  }: {
+                    roomId: string;
+                    user: string;
+                    msg: string;
+                    time: string;
+                  },
+                  key: string
+                ) => (
+                  <AnimatePresence mode="wait">
+                    <IndividualChat
+                      key={`${key}-${msg}`}
+                      className={
+                        user == username
+                          ? "chatProfileRight"
+                          : "chatProfileLeft"
+                      }
+                      {...(user == username
+                        ? motionPropsLeft
+                        : motionPropsRight)}
+                    >
+                      <MessageAndNameContainer>
+                        <PlayerContainer
+                          style={{
+                            textAlign: user == username ? "right" : "left",
+                          }}
+                        >
+                          <CloverIcon src="clover.svg" alt="clover" />
+                          <Player>{user}</Player>
+                        </PlayerContainer>
 
-                      <MessageText
-                        style={{
-                          textAlign: user == username ? "right" : "left",
-                        }}
-                      >
-                        {msg}
-                      </MessageText>
-                      <Time>Time: {time}</Time>
-                    </MessageAndNameContainer>
-                  </IndividualChat>
-                </AnimatePresence>
-              ))}
+                        <MessageText
+                          style={{
+                            textAlign: user == username ? "right" : "left",
+                          }}
+                        >
+                          {msg}
+                        </MessageText>
+                        <Time>Time: {time}</Time>
+                      </MessageAndNameContainer>
+                    </IndividualChat>
+                  </AnimatePresence>
+                )
+              )}
             </Chats>
 
             <Form onSubmit={(e) => sendData(e)}>

@@ -25,9 +25,7 @@ const MainContainer = styled.div`
   display: flex;
   flex-direction: row;
   gap: 60px;
-  /* background-color: ${variables.darkGreen}; */
   height: 100dvh;
-  /* widows: 100vw; */
   position: relative;
   z-index: 9;
 `;
@@ -35,7 +33,6 @@ const MainContainer = styled.div`
 const MainInnerContainer = styled.div`
   width: 100%;
   display: grid;
-  /* grid-template-columns: 360px 880fr; */
   @media ${MediaQueries.mobile} {
     grid-template-columns: unset;
   }
@@ -79,6 +76,26 @@ const MessageIconContainer = styled.button`
   right: 12px;
   border: none;
   z-index: 19;
+  /* &::after {
+    content: "";
+    width: 15px;
+    height: 15px;
+    background-color: red;
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    right: 0;
+  } */
+`;
+
+const RedDot = styled.div`
+  width: 15px;
+  height: 15px;
+  background-color: red;
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  right: 0;
 `;
 
 const MessageIcon = styled.img`
@@ -135,6 +152,13 @@ type SingleCard = {
 type Player = SingleCard[];
 type PlayerData = {};
 
+interface IMsgDataTypes {
+  roomId: String | number;
+  user: String;
+  msg: String;
+  time: String;
+}
+
 const GameLobby = ({
   socket,
   username,
@@ -173,10 +197,17 @@ const GameLobby = ({
 
   const [statusCode, setStatusCode] = useState(null);
 
+  const [chat, setChat] = useState([]);
+
+  const [hasNewMessage, setHasNewMessage] = useState(false);
+  const [messageTracker, setMessageTracker] = useState(0);
+
+  console.log(messageTracker, "message tracker");
   console.log(playerData, "playerData");
+  // console.log(isCurrentPlayer, "isCurrentPLayer");
 
   // console.log(currentPlayerIndex, "currentPlayerIndex");
-  console.log(currentRound, "currentRound");
+  // console.log(currentRound, "currentRound");
   // console.log(users, "USSSSERSSS");
 
   const lockInPlayersHandler = () => {
@@ -231,7 +262,13 @@ const GameLobby = ({
   };
 
   useEffect(() => {
-    // Clean up the socket listener
+    if (chat.length > 0) {
+      setHasNewMessage(true);
+    }
+
+    setMessageTracker(chat.length);
+
+    // TODO: im close with this one.. i think i need to do something about the re-rendering or i need to involve another state varables
 
     socket.on("allPlayersCards", (playersCards: any) => {
       console.log("Received allPlayersCards data:", playersCards);
@@ -329,14 +366,18 @@ const GameLobby = ({
         roomId: data.roomId,
         cardData: data.cardData,
       });
-      // setUsers(data.users);
       setCurrentRound(data.currentRound);
       setUsersLockedIn(data.usersLockedIn);
-      setCurrentPlayerIndex(data);
-      setIsCurrentPlayer(data.isCurrentPlayer);
-      // setCountdown(data.countdown);
-      // setUsers(data.users);
-      // setAllGameData(data.allGameData);
+      setCurrentPlayerIndex(data.currentPlayerIndex);
+
+      // roomId: roomId,
+      // gameStarted: false,
+      // cardData: undefined,
+      // currentRound: 0,
+      // usersLockedIn: false,
+      // currentPlayerIndex: 0,
+      // users: users,
+      // isCurrentPlayerIndex: 0,
     });
 
     // Decrement the countdown every second while the modal is active
@@ -383,12 +424,16 @@ const GameLobby = ({
     buttonsTrue,
     countdown,
     gameStarted,
+    chat,
+    hasNewMessage,
+    messageTracker,
   ]);
 
   const [showChat, setShowChat] = useState(false);
 
   const showChatHandler = () => {
     setShowChat(true);
+    setHasNewMessage(false);
   };
 
   const backToLobbyHandler = () => {
@@ -400,7 +445,7 @@ const GameLobby = ({
       usersLockedIn: false,
       currentPlayerIndex: 0,
       users: users,
-      isCurrentPlayer: undefined,
+      isCurrentPlayerIndex: 0,
     });
   };
 
@@ -435,6 +480,7 @@ const GameLobby = ({
           </HamburgerContainer>
           <MessageIconContainer onClick={showChatHandler}>
             <MessageIcon src="chat_icon.svg" />
+            {hasNewMessage && <RedDot>{messageTracker}</RedDot>}
           </MessageIconContainer>
           <Chat
             socket={socket}
@@ -443,6 +489,9 @@ const GameLobby = ({
             users={users}
             setShowChat={setShowChat}
             showChat={showChat}
+            setChat={setChat}
+            chat={chat}
+            setMessageTracker={setMessageTracker}
           />
           <Menu showMenu={showMenu} setShowMenu={setShowMenu} />
           <AnimatePresence mode="wait">
