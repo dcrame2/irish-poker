@@ -29,7 +29,7 @@ const MainContainer = styled.div`
 `;
 
 const InnerContainer = styled(motion.div)`
-  height: 100vh;
+  height: 100dvh;
   width: 100vw;
   display: flex;
   justify-content: center;

@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { AnimatePresence, motion } from "framer-motion";
 import Chat from "../Chat";
 import { variables } from "@/styles/Variables";
-import { pSmall, h1styles } from "@/styles/Type";
+import { pSmall, h1styles, pXSmall } from "@/styles/Type";
 import { MediaQueries } from "@/styles/Utilities";
 import FullGame from "../Game/FullGame/Index";
 import LobbyInfo from "./LobbyInfo/Index";
@@ -76,26 +76,21 @@ const MessageIconContainer = styled.button`
   right: 12px;
   border: none;
   z-index: 19;
-  /* &::after {
-    content: "";
-    width: 15px;
-    height: 15px;
-    background-color: red;
-    border-radius: 50%;
-    position: absolute;
-    top: 0;
-    right: 0;
-  } */
 `;
 
 const RedDot = styled.div`
-  width: 15px;
-  height: 15px;
+  width: fit-content;
+  min-width: 18px;
+  height: fit-content;
   background-color: red;
   border-radius: 50%;
   position: absolute;
-  top: 0;
-  right: 0;
+  top: -4px;
+  right: -4px;
+`;
+
+const RedDotNumber = styled.p`
+  ${pXSmall}
 `;
 
 const MessageIcon = styled.img`
@@ -480,7 +475,11 @@ const GameLobby = ({
           </HamburgerContainer>
           <MessageIconContainer onClick={showChatHandler}>
             <MessageIcon src="chat_icon.svg" />
-            {hasNewMessage && <RedDot>{messageTracker}</RedDot>}
+            {hasNewMessage && (
+              <RedDot>
+                <RedDotNumber>{messageTracker}</RedDotNumber>
+              </RedDot>
+            )}
           </MessageIconContainer>
           <Chat
             socket={socket}
