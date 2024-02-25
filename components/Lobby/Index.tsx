@@ -41,6 +41,10 @@ const MainInnerContainer = styled.div`
 const FullGameContainer = styled.div`
   display: flex;
   flex-direction: column;
+  /* align-items: center;
+  @media ${MediaQueries.mobile} {
+    align-items: unset;
+  } */
 `;
 
 const HamburgerContainer = styled.button`

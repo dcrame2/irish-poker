@@ -5,12 +5,17 @@ import styled from "styled-components";
 import CurrentPlayer from "./CurrentPlayer/Index";
 import { variables } from "@/styles/Variables";
 import { motion } from "framer-motion";
+import { MediaQueries } from "@/styles/Utilities";
 
 const LobbyInfoContainer = styled(motion.div)`
   display: flex;
   flex-direction: column;
   height: 100%;
   justify-content: center;
+  width: 50%;
+  @media ${MediaQueries.mobile} {
+    width: 100%;
+  }
 `;
 
 const GameButtonContainer = styled.div`

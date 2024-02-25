@@ -9,6 +9,7 @@ import {
   boxShadows,
 } from "@/styles/Type";
 import { variables } from "@/styles/Variables";
+import { AnimatePresence, motion } from "framer-motion";
 
 const PlayersContainer = styled.div`
   background-color: ${variables.color1};
@@ -38,7 +39,7 @@ const Player = styled.div`
   ${pSmall}
   color: ${variables.darkGreen};
 `;
-const PlayerContainer = styled.div`
+const PlayerContainer = styled(motion.div)`
   margin-top: 8px;
   display: flex;
   justify-content: center;
@@ -55,6 +56,21 @@ const CloverIcon = styled.img`
   height: 20px;
 `;
 
+const motionPropsFade = {
+  initial: {
+    opacity: 0,
+  },
+  animate: {
+    opacity: 1,
+  },
+  exit: {
+    opacity: 0,
+  },
+  transition: {
+    duration: 0.4,
+  },
+};
+
 function PlayersInLobby({ users }: any) {
   return (
     <PlayersContainer className="container">
@@ -64,10 +80,16 @@ function PlayersInLobby({ users }: any) {
           {users?.map(
             (user: { id: string; username: string; room: string }) => {
               return (
-                <PlayerContainer key={user?.id} className="item">
-                  <CloverIcon src="clover.svg" alt="clover" />
-                  <Player>{user?.username} </Player>
-                </PlayerContainer>
+                <AnimatePresence mode="wait">
+                  <PlayerContainer
+                    {...motionPropsFade}
+                    key={user?.id}
+                    className="item"
+                  >
+                    <CloverIcon src="clover.svg" alt="clover" />
+                    <Player>{user?.username} </Player>
+                  </PlayerContainer>
+                </AnimatePresence>
               );
             }
           )}
