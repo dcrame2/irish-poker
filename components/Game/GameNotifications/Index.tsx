@@ -10,6 +10,7 @@ import {
   pBase,
   pLarge2,
   h1styles,
+  pXSmall,
 } from "@/styles/Type";
 import { MediaQueries } from "@/styles/Utilities";
 
@@ -73,6 +74,10 @@ const ConfirmButton = styled.button<ButtonProps>`
 
 const Description = styled.p`
   ${pSmall}
+`;
+
+const ScreenCountdown = styled.p`
+  ${pXSmall}
 `;
 
 const TextContainer = styled.div`
@@ -297,7 +302,7 @@ function GameNotifications({
                     }}
                   ></TextContainer>
                   {users.length === 1 && (
-                    <Description>{`Screen will close in ${countdown} seconds`}</Description>
+                    <ScreenCountdown>{`Screen will close in ${countdown} seconds`}</ScreenCountdown>
                   )}
                   {otherUsersMessageTrue !== "" && (
                     <OtherCorrectContainer>
@@ -352,7 +357,7 @@ function GameNotifications({
                         );
                       })}
                     </WhoDrinksContainer>
-                    <Description>{`Screen will close in ${countdown} seconds`}</Description>
+                    <ScreenCountdown>{`Screen will close in ${countdown} seconds`}</ScreenCountdown>
                   </>
                 )}
             </CorrectMessaging>
@@ -364,7 +369,7 @@ function GameNotifications({
                   dangerouslySetInnerHTML={{ __html: currentUsersMessageFalse }}
                 ></UserMessageFalse>
                 {activeModal && (
-                  <Description>{`Screen will close in ${countdown} seconds`}</Description>
+                  <ScreenCountdown>{`Screen will close in ${countdown} seconds`}</ScreenCountdown>
                 )}
               </IncorrectTextContainer>
             </IncorrectMessaging>
