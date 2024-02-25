@@ -176,14 +176,14 @@ function Chat({
   const motionPropsTop = {
     initial: {
       opacity: 0,
-      y: "-100%",
+      x: "100%",
     },
     animate: {
-      y: 0,
+      x: 0,
       opacity: 1,
     },
     exit: {
-      y: "-100%",
+      x: "100%",
       opacity: 0,
     },
     transition: {

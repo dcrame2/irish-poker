@@ -1,10 +1,10 @@
 "use client";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { AnimatePresence, motion } from "framer-motion";
 import Chat from "../Chat";
 import { variables } from "@/styles/Variables";
-import { buttonType, h2styles, pLarge, pSmall, h1styles } from "@/styles/Type";
+import { pSmall, h1styles } from "@/styles/Type";
 import { MediaQueries } from "@/styles/Utilities";
 import FullGame from "../Game/FullGame/Index";
 import LobbyInfo from "./LobbyInfo/Index";

@@ -3,7 +3,7 @@ import { io } from "socket.io-client";
 import React, { useState, useEffect } from "react";
 import GameLobby from "../Lobby/Index";
 import styled from "styled-components";
-import { buttonType, h1styles, inputType } from "@/styles/Type";
+import { buttonType, h1styles, inputType, pXSmall } from "@/styles/Type";
 import { AnimatePresence, motion } from "framer-motion";
 import { variables } from "@/styles/Variables";
 import Menu from "../Menu/Index";
@@ -51,6 +51,15 @@ const Button = styled.button`
 
 const IrishPoker = styled.h1`
   ${h1styles}
+`;
+
+const MadeByContainer = styled.div`
+  position: absolute;
+  bottom: 12px;
+`;
+
+const MadeByText = styled.p`
+  ${pXSmall}
 `;
 
 const HamburgerContainer = styled.button`
@@ -142,8 +151,8 @@ export default function UserSetup() {
             max="12"
           />
           <Input
-            type="number"
-            placeholder="room id"
+            type="text"
+            placeholder="Room Name"
             onChange={(e) => setroomId(e.target.value)}
             disabled={showSpinner}
             // max="5"
@@ -155,6 +164,9 @@ export default function UserSetup() {
               <div className={styles.loading_spinner}></div>
             )}
           </Button>
+          <MadeByContainer>
+            <MadeByText>Created by Dylan Cramer</MadeByText>
+          </MadeByContainer>
         </InnerContainer>
 
         <motion.div

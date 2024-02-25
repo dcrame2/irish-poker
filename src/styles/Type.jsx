@@ -22,9 +22,9 @@ export const h1styles = css`
 
   @media ${MediaQueries.mobile} {
     font-size: 3rem;
-    line-height: 3.2rem;
+    line-height: 2.6rem;
     text-align: center;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
   }
 `;
 
