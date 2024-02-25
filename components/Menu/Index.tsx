@@ -74,6 +74,10 @@ const AllRulesContainer = styled.div<RulesContainerProps>`
   /* display: ${(props) => (props.show ? "block" : "none")}; */
 `;
 
+const RulesText = styled.p`
+  ${pSmall}
+`;
+
 const LabelName = styled.p`
   ${pBase}
 `;
@@ -157,7 +161,7 @@ function Menu({ showMenu, setShowMenu }: any) {
               </RulesInnerContainer>
               {showRules && (
                 <AllRulesContainer show={showRules}>
-                  <p>
+                  <RulesText>
                     Players proceed to guess on the characteristics of each card
                     in front of them with drinks either given or taken depending
                     on whether they're right or not. So starting to the left of
@@ -176,7 +180,7 @@ function Menu({ showMenu, setShowMenu }: any) {
                     takes etc. Once the first round has gone past every player
                     they start the second round where the drinks are escalated
                     as shown above.
-                  </p>
+                  </RulesText>
                 </AllRulesContainer>
               )}
             </RulesContainer>

@@ -65,7 +65,7 @@ const GameInnerContainer = styled.div<PlayerAndCardContainerProps>`
   justify-content: flex-start;
   height: 88%;
   width: 98%;
-  border: 10px solid ${variables.black};
+  border: 10px solid ${variables.darkGreen};
   background-color: ${variables.middleGreen};
   background-image: url("table_bg.webp");
   background-repeat: no-repeat;
