@@ -29,6 +29,8 @@ const ChatsFormContainer = styled.div`
 
 const Chats = styled.div`
   align-self: flex-end;
+  max-height: 650px; /* Set a max height to enable scrolling */
+  overflow-y: auto; /* Enable vertical scrolling */
 `;
 
 const Header = styled.h2`
@@ -80,10 +82,10 @@ const NoMessage = styled.p`
   text-align: center;
 `;
 
-const CloseContainer = styled.div`
+const CloseContainer = styled(motion.div)`
   width: 20px;
   position: absolute;
-  top: 15px;
+  top: 22px;
   right: 15px;
   height: 20px;
   z-index: 21;
@@ -144,6 +146,9 @@ function Chat({
 }: any) {
   // const [chat, setChat] = useState<IMsgDataTypes[]>([]);
   const [currentMsg, setCurrentMsg] = useState("");
+
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+
   const sendData = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (currentMsg !== "") {
@@ -165,8 +170,14 @@ function Chat({
   useEffect(() => {
     socket.on("receive_msg", (data: IMsgDataTypes) => {
       setChat((pre: IMsgDataTypes[]) => [...pre, data]);
+
+      // Scroll the chat container to the bottom
+      const chatContainer = chatContainerRef.current;
+      if (chatContainer) {
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }
     });
-  }, [socket]);
+  }, [socket, setChat]);
 
   const closeChatHandler = () => {
     setShowChat(false);
@@ -231,12 +242,15 @@ function Chat({
       {showChat && (
         <ChatContainer {...motionPropsTop}>
           <Header>Chat Room</Header>
-          <CloseContainer onClick={closeChatHandler}>
+          <CloseContainer
+            whileHover={{ scale: 1.1 }}
+            onClick={closeChatHandler}
+          >
             <Close />
           </CloseContainer>
           {chat.length === 0 && <NoMessage>No Messages</NoMessage>}
           <ChatsFormContainer>
-            <Chats>
+            <Chats ref={chatContainerRef}>
               {chat.map(
                 (
                   {
