@@ -8,7 +8,6 @@ import { MediaQueries } from "@/styles/Utilities";
 import axios from "axios";
 
 const ContactForm = styled.form`
-  /* width: 50%; */
   position: relative;
   flex-direction: column;
   display: flex;
@@ -22,10 +21,17 @@ const ContactForm = styled.form`
 const InputStyles = css`
   padding: 15px;
   background-color: unset;
-
   border: 1px solid ${variables.white};
   width: 100%;
   ${pXSmall}
+  &::placeholder {
+    color: ${variables.white};
+    opacity: 0.7;
+  }
+
+  &::-ms-input-placeholder {
+    color: ${variables.white};
+  }
 `;
 
 const Input = styled(motion.input)`
@@ -43,16 +49,8 @@ const TextArea = styled(motion.textarea)`
 `;
 
 const SubmitButton = styled(motion.button)`
-  /* padding: 10px 20px;
-  border: unset;
-  background-color: ${variables.color1};
-  cursor: pointer;
-  transition: all ease-out 0.3s;
-  margin-top: 8px;
-  ${pXSmall} */
   ${buttonType}
   width: 100%;
-
   &:hover {
     background-color: ${variables.color2};
   }
@@ -85,15 +83,11 @@ function Form() {
     axios
       .post("/api/form-submit", data)
       .then((response: any) => setFormSubmitStatus(response.status));
-
-    console.log(data);
   };
 
   return (
     <>
       <ContactForm onSubmit={handleSubmit(onSubmit)}>
-        {/* <Input placeholder="Name*" {...register("name", { required: true })} />
-        {errors.email && <span>A name is required</span>} */}
         <Input
           placeholder="Email Address*"
           {...register("email", {

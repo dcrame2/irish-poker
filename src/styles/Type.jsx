@@ -11,8 +11,8 @@ const irishGrover = "Irish Grover, system-ui";
 export const h1styles = css`
   font-family: ${irishGrover};
   /* text-transform: uppercase; */
-  font-size: 8rem;
-  line-height: 9.4rem;
+  font-size: 4rem;
+  line-height: 4rem;
   color: #ffff;
   text-align: center;
   @media ${MediaQueries.tablet} {
@@ -48,8 +48,8 @@ export const h2styles = css`
 export const h3styles = css`
   font-family: ${jost};
   /* text-transform: uppercase; */
-  font-size: 8rem;
-  line-height: 9.4rem;
+  font-size: 5rem;
+  line-height: 4rem;
   color: #ffff;
 
   @media ${MediaQueries.tablet} {
@@ -101,7 +101,7 @@ export const pLarge = css`
 export const pLarge2 = css`
   font-family: ${jost};
   font-size: 2rem;
-  line-height: 2.5rem;
+  line-height: 2rem;
   font-weight: 300;
   /* color: #ffff; */
 
@@ -171,7 +171,6 @@ export const buttonType = css`
   ${pBase}
   cursor: pointer;
   transition: background-color 0.3s ease-in;
-
   border-bottom: 4px solid ${variables.middleGreen};
   border-top: 1px solid ${variables.color1};
   border-right: 1px solid ${variables.color1};
@@ -191,7 +190,7 @@ export const buttonType = css`
 export const inputType = css`
   padding: 15px;
   background-color: unset;
-
+  color: ${variables.white};
   border: 1px solid ${variables.white};
   width: 100%;
   ${pSmall}

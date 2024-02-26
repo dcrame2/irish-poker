@@ -7,6 +7,7 @@ import { buttonType, h1styles, inputType, pXSmall } from "@/styles/Type";
 import { AnimatePresence, motion } from "framer-motion";
 import { variables } from "@/styles/Variables";
 import Menu from "../Menu/Index";
+import { MediaQueries } from "@/styles/Utilities";
 
 const MainContainer = styled.div`
   background-image: url("clover.svg");
@@ -15,7 +16,8 @@ const MainContainer = styled.div`
   z-index: 2;
   background-position: right;
   height: 100dvh;
-  width: 100vw;
+  width: 50vw;
+  margin: auto;
   &::before {
     z-index: 1;
     content: "";
@@ -26,11 +28,23 @@ const MainContainer = styled.div`
     height: 100%;
     background-color: rgba(0, 0, 0, 0.9);
   }
+
+  @media ${MediaQueries.tablet} {
+    width: 100vw;
+  }
+
+  @media ${MediaQueries.mobile} {
+    width: 100vw;
+    margin: unset;
+    &:before {
+      width: 100%;
+    }
+  }
 `;
 
 const InnerContainer = styled(motion.div)`
   height: 100dvh;
-  width: 100vw;
+  width: 50vw;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -39,6 +53,13 @@ const InnerContainer = styled(motion.div)`
   z-index: 10;
   position: relative;
   padding: 0 48px;
+
+  @media ${MediaQueries.tablet} {
+    width: 100vw;
+  }
+  @media ${MediaQueries.mobile} {
+    width: 100vw;
+  }
 `;
 
 const Input = styled.input`
@@ -62,7 +83,7 @@ const MadeByText = styled.p`
   ${pXSmall}
 `;
 
-const HamburgerContainer = styled.button`
+const HamburgerContainer = styled(motion.button)`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -132,7 +153,7 @@ export default function UserSetup() {
 
   return (
     <MainContainer>
-      <HamburgerContainer onClick={openMenuHandler}>
+      <HamburgerContainer whileHover={{ scale: 1.1 }} onClick={openMenuHandler}>
         <HamburgerIcon src="hamburger-menu.svg" />
       </HamburgerContainer>
       <Menu showMenu={showMenu} setShowMenu={setShowMenu} />

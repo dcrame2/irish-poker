@@ -1,11 +1,11 @@
 import React from "react";
 import Form from "./Form/Index";
 import styled from "styled-components";
-import { pBase, pSmall } from "@/styles/Type";
+import { pBase, pSmall, pLarge2 } from "@/styles/Type";
 
 const Header = styled.p`
   margin-bottom: 8px;
-  ${pBase}
+  ${pLarge2}
 `;
 
 const FeedbackParagraph = styled.p`
