@@ -14,7 +14,7 @@ export const h1styles = css`
   font-size: 8rem;
   line-height: 9.4rem;
   color: #ffff;
-
+  text-align: center;
   @media ${MediaQueries.tablet} {
     font-size: 4rem;
     line-height: 4.8rem;

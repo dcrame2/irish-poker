@@ -12,7 +12,11 @@ const LobbyInfoContainer = styled(motion.div)`
   flex-direction: column;
   height: 100%;
   justify-content: center;
-  width: 50%;
+  /* width: 50%; */
+  width: 100%;
+  @media ${MediaQueries.tablet} {
+    width: 100%;
+  }
   @media ${MediaQueries.mobile} {
     width: 100%;
   }
