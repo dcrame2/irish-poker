@@ -17,7 +17,8 @@ app.use(cors());
 const httpServer = http.createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: "https://irish-poker.com/",
+    // origin: "https://irishpokeronline.netlify.app",
+    origin: "http://irish-poker.com",
     // origin: "http://localhost:3000",
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type", "Authorization"],
