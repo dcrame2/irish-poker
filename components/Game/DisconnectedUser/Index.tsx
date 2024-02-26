@@ -10,7 +10,7 @@ const DiconnectedUserContainer = styled(motion.div)`
   padding: 16px;
   position: fixed;
   width: 50%;
-  z-index: 11;
+  z-index: 12;
   bottom: 0;
   overflow-y: auto;
   border-radius: 24px 24px 0 0;
