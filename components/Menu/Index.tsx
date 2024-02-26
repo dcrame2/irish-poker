@@ -29,10 +29,10 @@ const MenuInnerContainer = styled.div`
   height: fit-content;
 `;
 
-const CloseContainer = styled.div`
+const CloseContainer = styled(motion.div)`
   width: 20px;
   position: absolute;
-  top: 15px;
+  top: 22px;
   right: 15px;
   height: 20px;
   z-index: 21;
@@ -48,15 +48,15 @@ const RulesContainer = styled.div<RulesContainerProps>`
   margin: 16px 0 0px;
   padding: 12px 24px;
   border-radius: 12px;
-  max-height: ${(props) => (props.show ? "800px" : "75px")};
+  max-height: ${(props) => (props.show ? "800px" : "60px")};
   overflow: hidden;
-  transition: max-height 0.5s ease-in;
+  transition: max-height 0.5s ease-in-out;
   @media ${MediaQueries.mobile} {
     max-height: ${(props) => (props.show ? "800px" : "50px")};
   }
 `;
 
-const RulesInnerContainer = styled.button`
+const RulesInnerContainer = styled.button<RulesContainerProps>`
   ${pBase}
   position: relative;
   display: flex;
@@ -65,17 +65,23 @@ const RulesInnerContainer = styled.button`
   border: none;
   background-color: ${variables.color1};
   width: 100%;
+  transition: transform ease-in 0.3s;
+
   &::after {
     content: "";
     width: 20px;
     height: 20px;
     background-size: contain;
     background-image: url("dropdown_arrow.png");
+    transform: ${(props) => (props.show ? "rotate(180deg)" : "rotate(0deg)")};
+    transition: transform ease-in 0.3s;
   }
 `;
 
 const AllRulesContainer = styled.div<RulesContainerProps>`
-  /* display: ${(props) => (props.show ? "block" : "none")}; */
+  opacity: ${(props) => (props.show ? "1" : "0")};
+  transition: opacity ease-in 0.3s;
+  /* border-top: 2px solid ${variables.white}; */
 `;
 
 const RulesText = styled.div`
@@ -100,8 +106,6 @@ const FeedbackContainer = styled.div`
   margin: 16px 0 0px;
   padding: 24px 24px;
   border-radius: 12px;
-  /* min-height: 50px; */
-
   overflow: hidden;
   transition: max-height 0.5s ease-in;
 `;
@@ -165,55 +169,57 @@ function Menu({ showMenu, setShowMenu }: any) {
         <MenuContainer {...motionPropsLeft}>
           <MenuInnerContainer>
             <Header>Menu</Header>
-            <CloseContainer onClick={closeChatHandler}>
+            <CloseContainer
+              whileHover={{ scale: 1.1 }}
+              onClick={closeChatHandler}
+            >
               <Close />
             </CloseContainer>
             <RulesContainer show={showRules} onClick={showRulesHandler}>
-              <RulesInnerContainer>
+              <RulesInnerContainer show={showRules}>
                 <LabelName>Rules</LabelName>
               </RulesInnerContainer>
-              {showRules && (
-                <AllRulesContainer show={showRules}>
-                  <RulesText>
-                    <p>
-                      Players proceed to guess on the characteristics of each
-                      card in front of them with drinks either given or taken
-                      depending on whether they're right or not. So starting to
-                      the left of the dealer each player must guess about their
-                      unexposed cards, one at a time, according to:
-                    </p>
-                    <ol>
-                      <li>Color of card (red/black)</li>
-                      <li>Card is higher or lower than first card</li>
-                      <li>
-                        Card is in-between or outside of first and second cards
-                      </li>
-                      <li>Suit of card (Diamond, Heart, Spade, Club)</li>
-                    </ol>
-                    <p>
-                      When a player is either right or wrong they will either
-                      "give" or "take" drinks. According to the rounds drinks
-                      are valued:
-                    </p>{" "}
-                    <ul>
-                      <li>2 gives/takes</li>
-                      <li> 4 gives/takes</li>
-                      <li> 6 gives/takes</li>
-                      <li> 8 gives/takes</li>
-                    </ul>{" "}
-                    <p>
-                      So the first player to the left of the dealer guesses the
-                      color of the card; if he/she gets it right, they "give" 2
-                      drinks. They can be given in any amount to any other
-                      player at the table (either all to one player or spread
-                      around). Then the next player guesses color, gives/ takes
-                      etc. Once the first round has gone past every player they
-                      start the second round where the drinks are escalated as
-                      shown above.
-                    </p>
-                  </RulesText>
-                </AllRulesContainer>
-              )}
+              {/* {showRules && ( */}
+              <AllRulesContainer show={showRules}>
+                <RulesText>
+                  <p>
+                    Players proceed to guess on the characteristics of each card
+                    in front of them with drinks either given or taken depending
+                    on whether they're right or not. So starting to the left of
+                    the dealer each player must guess about their unexposed
+                    cards, one at a time, according to:
+                  </p>
+                  <ol>
+                    <li>Color of card (red/black)</li>
+                    <li>Card is higher or lower than first card</li>
+                    <li>
+                      Card is in-between or outside of first and second cards
+                    </li>
+                    <li>Suit of card (Diamond, Heart, Spade, Club)</li>
+                  </ol>
+                  <p>
+                    When a player is either right or wrong they will either
+                    "give" or "take" drinks. According to the rounds drinks are
+                    valued:
+                  </p>{" "}
+                  <ul>
+                    <li>2 gives/takes</li>
+                    <li> 4 gives/takes</li>
+                    <li> 6 gives/takes</li>
+                    <li> 8 gives/takes</li>
+                  </ul>{" "}
+                  <p>
+                    So the first player to the left of the dealer guesses the
+                    color of the card; if he/she gets it right, they "give" 2
+                    drinks. They can be given in any amount to any other player
+                    at the table (either all to one player or spread around).
+                    Then the next player guesses color, gives/ takes etc. Once
+                    the first round has gone past every player they start the
+                    second round where the drinks are escalated as shown above.
+                  </p>
+                </RulesText>
+              </AllRulesContainer>
+              {/* )} */}
             </RulesContainer>
             <FeedbackContainer>
               <Feedback />

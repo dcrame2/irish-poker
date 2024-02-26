@@ -114,8 +114,10 @@ io.on("connection", (socket) => {
     socket.to(data.roomId).emit("receive_show_game", data);
   });
 
+  let copyOfUserData;
   socket.on("lockin_players", (userData) => {
     console.log(userData, "userData");
+    copyOfUserData = userData;
     const url = `https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1`;
     axios
       .get(url)
@@ -175,6 +177,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
+    io.emit("user_disconnected", socket.id);
     socket.disconnect();
     console.log("A user disconnected:", socket.id);
   });

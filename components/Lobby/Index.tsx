@@ -10,6 +10,7 @@ import FullGame from "../Game/FullGame/Index";
 import LobbyInfo from "./LobbyInfo/Index";
 import GameNotifications from "../Game/GameNotifications/Index";
 import Menu from "../Menu/Index";
+import DisconnectedUser from "../Game/DisconnectedUser/Index";
 
 const Player = styled.div`
   ${pSmall}
@@ -41,10 +42,6 @@ const MainInnerContainer = styled.div`
 const FullGameContainer = styled.div`
   display: flex;
   flex-direction: column;
-  /* align-items: center;
-  @media ${MediaQueries.mobile} {
-    align-items: unset;
-  } */
 `;
 
 const HamburgerContainer = styled(motion.button)`
@@ -200,6 +197,8 @@ const GameLobby = ({
 
   const [hasNewMessage, setHasNewMessage] = useState(false);
   const [messageTracker, setMessageTracker] = useState(0);
+
+  const [disconnectedUser, setDisconnectedUser] = useState();
 
   console.log(messageTracker, "message tracker");
   console.log(playerData, "playerData");
@@ -368,15 +367,29 @@ const GameLobby = ({
       setCurrentRound(data.currentRound);
       setUsersLockedIn(data.usersLockedIn);
       setCurrentPlayerIndex(data.currentPlayerIndex);
+    });
 
-      // roomId: roomId,
-      // gameStarted: false,
-      // cardData: undefined,
-      // currentRound: 0,
-      // usersLockedIn: false,
-      // currentPlayerIndex: 0,
-      // users: users,
-      // isCurrentPlayerIndex: 0,
+    socket.on("user_disconnected", (userId: string) => {
+      console.log("User disconnected:", userId);
+
+      // users.map((user: any, index: number) => {
+      //   if (user.id === userId) {
+      //     console.log("hi");
+      //   }
+      // });
+
+      const user = users.find((user: any) => user.id === userId);
+      if (user) {
+        setDisconnectedUser(user.username);
+        setTimeout(() => {
+          setDisconnectedUser(undefined);
+        }, 3000);
+        console.log("Hello, " + user.username);
+      } else {
+        console.log("User not found");
+      }
+
+      // Display a message to inform users about the disconnection (you can use a state to manage this)
     });
 
     // Decrement the countdown every second while the modal is active
@@ -403,7 +416,6 @@ const GameLobby = ({
     }
 
     return () => {
-      // socket.off("receive_reset_game");
       clearInterval(countdownTimer);
       socket.off("receive_countdown");
     };
@@ -426,6 +438,7 @@ const GameLobby = ({
     chat,
     hasNewMessage,
     messageTracker,
+    disconnectedUser,
   ]);
 
   const [showChat, setShowChat] = useState(false);
@@ -547,6 +560,9 @@ const GameLobby = ({
               />
             )}
           </AnimatePresence>
+
+          <DisconnectedUser disconnectedUser={disconnectedUser} />
+
           <GameNotifications
             booleanMessage={booleanMessage}
             activeModal={activeModal}
