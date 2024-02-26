@@ -47,7 +47,7 @@ const FullGameContainer = styled.div`
   } */
 `;
 
-const HamburgerContainer = styled.button`
+const HamburgerContainer = styled(motion.button)`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -67,7 +67,7 @@ const HamburgerIcon = styled.img`
   height: 30px;
 `;
 
-const MessageIconContainer = styled.button`
+const MessageIconContainer = styled(motion.button)`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -474,10 +474,16 @@ const GameLobby = ({
     <MainContainer>
       <MainInnerContainer>
         <FullGameContainer>
-          <HamburgerContainer onClick={openMenuHandler}>
+          <HamburgerContainer
+            whileHover={{ scale: 1.1 }}
+            onClick={openMenuHandler}
+          >
             <HamburgerIcon src="hamburger-menu.svg" />
           </HamburgerContainer>
-          <MessageIconContainer onClick={showChatHandler}>
+          <MessageIconContainer
+            whileHover={{ scale: 1.1 }}
+            onClick={showChatHandler}
+          >
             <MessageIcon src="chat_icon.svg" />
             {hasNewMessage && (
               <RedDot>

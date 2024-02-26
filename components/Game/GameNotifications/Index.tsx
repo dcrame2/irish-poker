@@ -19,7 +19,7 @@ const CorrectMessaging = styled(motion.div)`
   background-color: ${variables.color2};
   padding: 16px;
   position: fixed;
-  width: 100%;
+  width: 50%;
   z-index: 11;
   bottom: 0;
   overflow-y: auto;
@@ -27,6 +27,12 @@ const CorrectMessaging = styled(motion.div)`
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
   text-align: center;
   height: fit-content;
+  @media ${MediaQueries.tablet} {
+    width: 100%;
+  }
+  @media ${MediaQueries.mobile} {
+    width: 100%;
+  }
 `;
 const IncorrectMessaging = styled(motion.div)`
   border-top: 3px solid ${variables.color4};
@@ -35,10 +41,17 @@ const IncorrectMessaging = styled(motion.div)`
   position: fixed;
   bottom: 0;
   z-index: 11;
-  width: 100%;
+  width: 50%;
   height: fit-content;
   border-radius: 24px 24px 0 0;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+
+  @media ${MediaQueries.tablet} {
+    width: 100%;
+  }
+  @media ${MediaQueries.mobile} {
+    width: 100%;
+  }
 `;
 
 const HeaderForCorrectMessage = styled.p`

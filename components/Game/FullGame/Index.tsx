@@ -38,6 +38,10 @@ interface PlayerAndCardContainerProps {
   activeModal: boolean;
 }
 
+interface PlayerUpNextProps {
+  activeModal: boolean;
+}
+
 const GameContainer = styled(motion.div)`
   height: 100%;
   display: flex;
@@ -92,12 +96,12 @@ const PlayerAndCardContainer = styled.div<PlayerAndCardContainerProps>`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
+  gap: 8px;
   background-color: ${(props) =>
     props?.isCurrentPlayer === props?.username && props?.activeModal !== true
       ? " rgba(255, 255, 255, 0.238)"
       : "transparent"};
-  padding: 12px;
+  padding: 8px;
   transition: all 0.5s ease-in;
   border-radius: 6px;
 
@@ -133,7 +137,11 @@ const CloverIcon = styled.img`
   height: 12px;
 `;
 
-const PlayerUpNext = styled.p`
+const PlayerUpNext = styled(motion.p)<PlayerAndCardContainerProps>`
+  /* display: ${(props) =>
+    props?.isCurrentPlayer === props?.username && props?.activeModal !== true
+      ? "flex"
+      : ""}; */
   display: flex;
   justify-content: center;
   padding: 4px 8px;
@@ -160,7 +168,8 @@ const MainButtonsContainer = styled.div`
 const BtnContainer = styled.div`
   display: flex;
   flex-direction: row;
-  gap: 24px;
+  /* gap: 24px; */
+  width: 100%;
   @media ${MediaQueries.mobile} {
     width: 100%;
     gap: unset;
@@ -169,6 +178,7 @@ const BtnContainer = styled.div`
 
 const Button = styled.button`
   ${buttonType}
+  width: 100%;
   @media ${MediaQueries.mobile} {
     width: 100%;
   }
@@ -179,7 +189,7 @@ const Gameover = styled(motion.div)`
   background-color: ${variables.color2};
   padding: 16px;
   position: fixed;
-  width: 100%;
+  width: 50%;
   z-index: 11;
   bottom: 0;
   overflow-y: auto;
@@ -187,6 +197,13 @@ const Gameover = styled(motion.div)`
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
   text-align: center;
   height: fit-content;
+  @media ${MediaQueries.tablet} {
+    width: 100%;
+  }
+
+  @media ${MediaQueries.mobile} {
+    width: 100%;
+  }
 `;
 
 const Message = styled.p`
@@ -442,14 +459,41 @@ function FullGame({
     },
   };
 
+  const motionPropsUpNext = {
+    initial: {
+      opacity: 0,
+      y: "-100%",
+    },
+    animate: {
+      opacity: 1,
+      y: 0,
+    },
+    exit: {
+      y: "-100%",
+      opacity: 0,
+    },
+    transition: {
+      duration: 0.5,
+    },
+  };
+
   return (
     <GameContainer>
       {allGameData && (
-        <PlayerUpNext>
-          <CloverIcon src="clover.svg" alt="Clover" />
-          {isCurrentPlayer}'s turn
-        </PlayerUpNext>
+        <AnimatePresence mode="wait">
+          <PlayerUpNext
+            isCurrentPlayer={isCurrentPlayer}
+            username={username}
+            activeModal={activeModal}
+            key={isCurrentPlayer}
+            {...motionPropsUpNext}
+          >
+            <CloverIcon src="clover.svg" alt="Clover" />
+            {isCurrentPlayer}'s turn
+          </PlayerUpNext>
+        </AnimatePresence>
       )}
+
       <GameInnerContainer
         activeModal={activeModal}
         isCurrentPlayer={isCurrentPlayer}
