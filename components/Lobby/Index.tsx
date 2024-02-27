@@ -372,24 +372,15 @@ const GameLobby = ({
     socket.on("user_disconnected", (userId: string) => {
       console.log("User disconnected:", userId);
 
-      // users.map((user: any, index: number) => {
-      //   if (user.id === userId) {
-      //     console.log("hi");
-      //   }
-      // });
-
       const user = users.find((user: any) => user.id === userId);
       if (user) {
         setDisconnectedUser(user.username);
         setTimeout(() => {
           setDisconnectedUser(undefined);
         }, 3000);
-        console.log("Hello, " + user.username);
       } else {
         console.log("User not found");
       }
-
-      // Display a message to inform users about the disconnection (you can use a state to manage this)
     });
 
     // Decrement the countdown every second while the modal is active
