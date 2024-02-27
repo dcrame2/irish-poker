@@ -3,6 +3,7 @@ const cors = require("cors");
 const http = require("http");
 const { Server } = require("socket.io");
 const axios = require("axios");
+const publicFrontend = require("./utils/pathUrl");
 
 const {
   userJoin,
@@ -18,7 +19,7 @@ const httpServer = http.createServer(app);
 const io = new Server(httpServer, {
   cors: {
     // origin: "https://irishpokeronline.netlify.app",
-    origin: "https://irish-poker.com",
+    origin: publicFrontend,
     // origin: "http://localhost:3000",
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type", "Authorization"],

@@ -9,6 +9,10 @@ import { variables } from "@/styles/Variables";
 import Menu from "../Menu/Index";
 import { MediaQueries } from "@/styles/Utilities";
 
+import { socketServerUrl } from "../../utils/pathUrl";
+
+// const socketServerUrl = require("../../utils/pathUrl");
+
 const MainContainer = styled.div`
   background-image: url("clover.svg");
   background-repeat: no-repeat;
@@ -113,7 +117,8 @@ const ConnectionMessage = styled.p`
 
 export default function UserSetup() {
   let socket: any;
-  socket = io("https://irish-poker.onrender.com");
+  // socket = io("https://irish-poker.onrender.com");
+  socket = io(socketServerUrl());
   // socket = io("http://localhost:3001");
 
   const [showChats, setShowChats] = useState(false);
