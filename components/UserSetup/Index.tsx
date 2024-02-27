@@ -52,13 +52,15 @@ const InnerContainer = styled(motion.div)`
   gap: 12px;
   z-index: 10;
   position: relative;
-  padding: 0 48px;
+  padding: 0 96px;
 
   @media ${MediaQueries.tablet} {
     width: 100vw;
+    padding: 0 96px;
   }
   @media ${MediaQueries.mobile} {
     width: 100vw;
+    padding: 0 24px;
   }
 `;
 
@@ -101,6 +103,12 @@ const HamburgerContainer = styled(motion.button)`
 const HamburgerIcon = styled.img`
   width: 30px;
   height: 30px;
+`;
+
+const ConnectionMessage = styled.p`
+  ${pXSmall}
+  font-style: italic;
+  text-align: center;
 `;
 
 export default function UserSetup() {
@@ -165,6 +173,9 @@ export default function UserSetup() {
           style={{ display: showChats ? "none" : "" }}
         >
           <IrishPoker>Irish Poker</IrishPoker>
+          <ConnectionMessage>
+            Join the same Room Name to connect multiplayer
+          </ConnectionMessage>
           <Input
             type="text"
             placeholder="Username"
@@ -177,6 +188,7 @@ export default function UserSetup() {
             onChange={(e) => setroomId(e.target.value)}
             disabled={showSpinner}
           />
+
           <Button onClick={() => handleJoin()}>
             {!showSpinner ? (
               "Join"
