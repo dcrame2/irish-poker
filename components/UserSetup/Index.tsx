@@ -103,13 +103,11 @@ const HamburgerIcon = styled.img`
   height: 30px;
 `;
 
-let socket: any;
-socket = io("https://irish-poker.onrender.com");
-// socket = io("http://localhost:3001");
-
-//TODO: Now that I have moved this out i can work on animations :))))))
-
 export default function UserSetup() {
+  let socket: any;
+  socket = io("https://irish-poker.onrender.com");
+  // socket = io("http://localhost:3001");
+
   const [showChats, setShowChats] = useState(false);
   const [userName, setUserName] = useState("");
   const [showSpinner, setShowSpinner] = useState(false);
@@ -160,54 +158,54 @@ export default function UserSetup() {
       </HamburgerContainer>
       <Menu showMenu={showMenu} setShowMenu={setShowMenu} />
       <AnimatePresence>
-        {!showChats ? (
-          <InnerContainer
-            key="key1"
-            {...motionProps}
-            // style={{ display: showChats ? "none" : "" }}
-          >
-            <IrishPoker>Irish Poker</IrishPoker>
-            <Input
-              type="text"
-              placeholder="Username"
-              onChange={(e) => setUserName(e.target.value)}
-              disabled={showSpinner}
-            />
-            <Input
-              type="text"
-              placeholder="Room Name"
-              onChange={(e) => setroomId(e.target.value)}
-              disabled={showSpinner}
-            />
-            <Button onClick={() => handleJoin()}>
-              {!showSpinner ? (
-                "Join"
-              ) : (
-                <div className={styles.loading_spinner}></div>
-              )}
-            </Button>
-            <MadeByContainer>
-              <MadeByText>Created by Dylan Cramer</MadeByText>
-            </MadeByContainer>
-          </InnerContainer>
-        ) : (
-          <motion.div
-            // style={{ display: !showChats ? "none" : "" }}
-            {...motionProps}
-            key="key2"
-          >
-            <GameLobby
-              openMenuHandler={openMenuHandler}
-              showChats={showChats}
-              users={users}
-              socket={socket}
-              roomId={roomId}
-              username={userName}
-              setUsers={setUsers}
-              setShowChats={setShowChats}
-            />
-          </motion.div>
-        )}
+        {/* {!showChats ? ( */}
+        <InnerContainer
+          key="key1"
+          {...motionProps}
+          style={{ display: showChats ? "none" : "" }}
+        >
+          <IrishPoker>Irish Poker</IrishPoker>
+          <Input
+            type="text"
+            placeholder="Username"
+            onChange={(e) => setUserName(e.target.value)}
+            disabled={showSpinner}
+          />
+          <Input
+            type="text"
+            placeholder="Room Name"
+            onChange={(e) => setroomId(e.target.value)}
+            disabled={showSpinner}
+          />
+          <Button onClick={() => handleJoin()}>
+            {!showSpinner ? (
+              "Join"
+            ) : (
+              <div className={styles.loading_spinner}></div>
+            )}
+          </Button>
+          <MadeByContainer>
+            <MadeByText>Created by Dylan Cramer</MadeByText>
+          </MadeByContainer>
+        </InnerContainer>
+        {/* ) : ( */}
+        <motion.div
+          style={{ display: !showChats ? "none" : "" }}
+          {...motionProps}
+          key="key2"
+        >
+          <GameLobby
+            openMenuHandler={openMenuHandler}
+            showChats={showChats}
+            users={users}
+            socket={socket}
+            roomId={roomId}
+            username={userName}
+            setUsers={setUsers}
+            setShowChats={setShowChats}
+          />
+        </motion.div>
+        {/* )} */}
       </AnimatePresence>
     </MainContainer>
   );
