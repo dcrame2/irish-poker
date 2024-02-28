@@ -460,16 +460,38 @@ const GameLobby = ({
     setShowSpinner(false);
   };
 
+  // const motionProps = {
+  //   initial: {
+  //     y: "0%",
+  //   },
+  //   animate: {
+  //     y: "100%",
+  //     transition: {
+  //       duration: 0.8,
+  //       delay: 1.5,
+  //     },
+  //     transitionEnd: {
+  //       y: "-100%",
+  //     },
+  //   },
+  //   exit: {
+  //     y: "0%",
+  //     transitionEnd: {
+  //       y: "0%",
+  //       delay: 0.3,
+  //     },
+  //   },
+  //   transition: {
+  //     duration: 0.8,
+  //   },
+  // };
+
   const motionProps = {
     initial: {
       y: "0%",
     },
     animate: {
       y: "100%",
-      transition: {
-        duration: 0.8,
-        delay: 1.5,
-      },
       transitionEnd: {
         y: "-100%",
       },
