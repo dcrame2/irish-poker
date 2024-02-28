@@ -458,6 +458,7 @@ const GameLobby = ({
       users: users,
       isCurrentPlayerIndex: 0,
     });
+    setShowSpinner(false);
   };
 
   const motionProps = {

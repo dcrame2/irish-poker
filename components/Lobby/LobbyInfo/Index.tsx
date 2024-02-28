@@ -23,6 +23,13 @@ const LobbyInfoContainer = styled(motion.div)`
   }
 `;
 
+const HeaderContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+`;
+
 const GameButtonContainer = styled.div`
   background-color: ${variables.color1};
   border-radius: 12px;
@@ -100,8 +107,10 @@ function LobbyInfo({
     <LobbyInfoContainer {...motionProps}>
       {!gameStarted && (
         <>
-          <DrinkingGame>Drinking Game 🍻</DrinkingGame>
-          <IrishPoker>Irish Poker</IrishPoker>
+          <HeaderContainer>
+            <DrinkingGame>Drinking Game 🍻</DrinkingGame>
+            <IrishPoker>Irish Poker</IrishPoker>
+          </HeaderContainer>
           <CurrentPlayer users={users} username={username} roomId={roomId} />
           <PlayersInLobby users={users} />
           {users[0]?.username === username ? (
