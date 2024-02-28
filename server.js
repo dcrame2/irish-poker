@@ -39,6 +39,30 @@ io.on("connection", (socket) => {
   //   });
   // });
 
+  // socket.on("join_room", (data) => {
+  //   const { userName, roomId } = data;
+
+  //   // Check if username already exists in the room
+  //   const existingUser = getRoomUsers(roomId).find(
+  //     (user) => user.username === userName
+  //   );
+  //   if (existingUser) {
+  //     // Inform the client that the username is already in use
+  //     socket.emit("username_exists", {
+  //       message: "<p>Username is already in use in this room.</p>",
+  //     });
+  //     return;
+  //   }
+
+  //   const user = userJoin(socket.id, userName, roomId);
+  //   socket.join(user.room);
+
+  //   io.to(user.room).emit("roomUsers", {
+  //     room: user.room,
+  //     users: getRoomUsers(user.room),
+  //   });
+  // });
+
   socket.on("join_room", (data) => {
     const { userName, roomId } = data;
 
@@ -53,6 +77,16 @@ io.on("connection", (socket) => {
       });
       return;
     }
+
+    // Check if room already has 9 users
+    // const roomUsers = getRoomUsers(roomId);
+    // if (roomUsers.length >= 10) {
+    //   // Inform the client that the room is full
+    //   socket.emit("room_full", {
+    //     message: "<p>The room is already full. Cannot join.</p>",
+    //   });
+    //   return;
+    // }
 
     const user = userJoin(socket.id, userName, roomId);
     socket.join(user.room);

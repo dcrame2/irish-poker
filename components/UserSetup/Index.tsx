@@ -134,6 +134,7 @@ export default function UserSetup() {
   const [users, setUsers] = useState([]);
 
   const [usenamerExistsMessage, setUsernameExistsMessage] = useState();
+  const [roomFullMessage, setRoomFullMessage] = useState();
   console.log(users, "USERSSSSS");
 
   const handleJoin = () => {
@@ -154,8 +155,11 @@ export default function UserSetup() {
     socket.on("username_exists", ({ message }: any) => {
       setUsernameExistsMessage(message);
       setShowChats(false);
-      // Display an alert to inform the user
-      // You can also set some state to indicate that the username is invalid or display an error message in the UI
+    });
+
+    socket.on("room_full", ({ message }: any) => {
+      setRoomFullMessage(message);
+      setShowChats(false);
     });
   }, [socket]);
 
@@ -225,7 +229,13 @@ export default function UserSetup() {
               <div className={styles.loading_spinner}></div>
             )}
           </Button>
-
+          {/* {roomFullMessage && (
+            <TextContainer
+              dangerouslySetInnerHTML={{
+                __html: roomFullMessage,
+              }}
+            ></TextContainer>
+          )} */}
           <MadeByContainer>
             <MadeByText>Created by Dylan Cramer</MadeByText>
           </MadeByContainer>
