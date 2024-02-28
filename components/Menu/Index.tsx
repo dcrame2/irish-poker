@@ -217,6 +217,8 @@ function Menu({ showMenu, setShowMenu }: any) {
                     the first round has gone past every player they start the
                     second round where the drinks are escalated as shown above.
                   </p>
+                  <br />
+                  <p>Ace is high!</p>
                 </RulesText>
               </AllRulesContainer>
               {/* )} */}

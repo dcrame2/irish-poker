@@ -78,9 +78,12 @@ function PlayersInLobby({ users }: any) {
         <p>Player(s) in Lobby</p>
         <PlayersInLobbyContainer>
           {users?.map(
-            (user: { id: string; username: string; room: string }) => {
+            (
+              user: { id: string; username: string; room: string },
+              index: number
+            ) => {
               return (
-                <AnimatePresence mode="wait">
+                <AnimatePresence key={index} mode="wait">
                   <PlayerContainer
                     {...motionPropsFade}
                     key={user?.id}
