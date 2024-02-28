@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import PlayersInLobby from "./PlayersInLobby/Index";
-import { buttonType, boxShadows, h1styles } from "@/styles/Type";
+import { buttonType, boxShadows, h1styles, pBase } from "@/styles/Type";
 import styled from "styled-components";
 import CurrentPlayer from "./CurrentPlayer/Index";
 import { variables } from "@/styles/Variables";
 import { motion } from "framer-motion";
 import { MediaQueries } from "@/styles/Utilities";
+import styles from "../../../src/styles/page.module.css";
 
 const LobbyInfoContainer = styled(motion.div)`
   display: flex;
@@ -38,6 +39,8 @@ const GameButtonContainer = styled.div`
 
 const Button = styled.button`
   ${buttonType}
+  display: flex;
+  align-items: center;
 `;
 
 const OtherPlayersStartingGameMessage = styled.div`
@@ -63,6 +66,10 @@ const IrishPoker = styled.h1`
   ${h1styles}
 `;
 
+const DrinkingGame = styled.p`
+  ${pBase}
+  text-align: center;
+`;
 function LobbyInfo({
   gameStarted,
   users,
@@ -73,6 +80,7 @@ function LobbyInfo({
   roomId,
   socket,
   playerData,
+  showSpinner,
 }: any) {
   const motionProps = {
     initial: {
@@ -92,6 +100,7 @@ function LobbyInfo({
     <LobbyInfoContainer {...motionProps}>
       {!gameStarted && (
         <>
+          <DrinkingGame>Drinking Game 🍻</DrinkingGame>
           <IrishPoker>Irish Poker</IrishPoker>
           <CurrentPlayer users={users} username={username} roomId={roomId} />
           <PlayersInLobby users={users} />
@@ -104,7 +113,14 @@ function LobbyInfo({
                 playerData === undefined ? (
                   <>
                     <Button onClick={lockInPlayersHandler}>
-                      Lock in players
+                      {!showSpinner ? (
+                        "Lock in Players"
+                      ) : (
+                        <>
+                          Lock in Players
+                          <div className={styles.loading_spinner}></div>
+                        </>
+                      )}
                     </Button>
                   </>
                 ) : (

@@ -364,7 +364,7 @@ function GameNotifications({
                       {usersToDrink.map((user: string, index: number) => {
                         return (
                           <PlayerContainer key={user} className="item">
-                            <CloverIcon src="clover.svg" alt="clover" />
+                            🍻
                             <Player>{user} </Player>
                           </PlayerContainer>
                         );

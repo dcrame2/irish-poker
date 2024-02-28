@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { AnimatePresence, motion } from "framer-motion";
 import Chat from "../Chat";
 import { variables } from "@/styles/Variables";
-import { pSmall, h1styles, pXSmall } from "@/styles/Type";
+import { pSmall, h1styles, pXSmall, pBase } from "@/styles/Type";
 import { MediaQueries } from "@/styles/Utilities";
 import FullGame from "../Game/FullGame/Index";
 import LobbyInfo from "./LobbyInfo/Index";
@@ -127,6 +127,11 @@ const CloverPageTransitionContainer = styled(motion.div)`
     background-color: rgba(0, 0, 0, 0.9);
   }
 `;
+
+const DrinkingGame = styled.p`
+  ${pBase}
+  text-align: center;
+`;
 interface GameData {
   users: [];
   roomId: string;
@@ -164,6 +169,8 @@ const GameLobby = ({
   openMenuHandler,
   showMenu,
   setShowMenu,
+  showSpinner,
+  setShowSpinner,
 }: any) => {
   const [playerData, setPlayerData] = useState();
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
@@ -213,6 +220,7 @@ const GameLobby = ({
     setUsersLockedIn(true);
     setIsCurrentPlayer(users[0]?.username);
     setCurrentRound(0);
+    setShowSpinner(true);
   };
 
   const startGameHandler = () => {
@@ -520,10 +528,12 @@ const GameLobby = ({
                 username={username}
                 socket={socket}
                 allGameData={allGameData}
+                showSpinner={showSpinner}
               />
             )}
             {gameStarted && (
               <CloverPageTransitionContainer {...motionProps}>
+                <DrinkingGame>Drinking Game 🍻</DrinkingGame>
                 <IrishPoker>Irish Poker</IrishPoker>
                 <p>Game has started</p>
               </CloverPageTransitionContainer>

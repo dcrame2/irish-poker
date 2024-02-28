@@ -6,6 +6,7 @@ import { variables } from "@/styles/Variables";
 import { pXSmall, pBase, buttonType } from "@/styles/Type";
 import { MediaQueries } from "@/styles/Utilities";
 import axios from "axios";
+import styles from "../../../../src/styles/page.module.css";
 
 const ContactForm = styled.form`
   position: relative;
@@ -51,6 +52,10 @@ const TextArea = styled(motion.textarea)`
 const SubmitButton = styled(motion.button)`
   ${buttonType}
   width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   &:hover {
     background-color: ${variables.color2};
   }
@@ -58,8 +63,6 @@ const SubmitButton = styled(motion.button)`
 
 const FormSubmissionContainer = styled.div`
   border: 2px solid ${variables.color1};
-  padding: 24px;
-  width: 50%;
   margin-top: 8px;
   @media ${MediaQueries.mobile} {
     width: 100%;
@@ -73,16 +76,28 @@ const FormSubmissionMessage = styled.p`
 
 function Form() {
   const [formSubmitStatus, setFormSubmitStatus] = useState(null);
+  const [showSpinner, setShowSpinner] = useState(false);
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm();
 
   const onSubmit = (data: any) => {
+    setShowSpinner(true);
     axios
       .post("/api/form-submit", data)
-      .then((response: any) => setFormSubmitStatus(response.status));
+      .then((response: any) => {
+        setFormSubmitStatus(response.status);
+        setShowSpinner(false);
+        reset();
+      })
+      .catch((error: any) => {
+        console.error("Form submission error:", error);
+
+        setShowSpinner(false);
+      });
   };
 
   return (
@@ -115,14 +130,21 @@ function Form() {
             stiffness: 50,
           }}
         >
-          Submit
+          {!showSpinner ? (
+            "Submit"
+          ) : (
+            <>
+              Submit
+              <div className={styles.loading_spinner}></div>
+            </>
+          )}
         </SubmitButton>
       </ContactForm>
       {formSubmitStatus && (
         <FormSubmissionContainer>
           <FormSubmissionMessage>
             {formSubmitStatus === 200
-              ? "Thank you for your feedback it is much appreciated!"
+              ? "Thank you for your feedback it is much appreciated! 🍻🍀"
               : "An error has occured during the form submission, please try again."}
           </FormSubmissionMessage>
         </FormSubmissionContainer>
