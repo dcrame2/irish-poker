@@ -207,14 +207,6 @@ const GameLobby = ({
 
   const [disconnectedUser, setDisconnectedUser] = useState();
 
-  console.log(messageTracker, "message tracker");
-  console.log(playerData, "playerData");
-  // console.log(isCurrentPlayer, "isCurrentPLayer");
-
-  // console.log(currentPlayerIndex, "currentPlayerIndex");
-  // console.log(currentRound, "currentRound");
-  // console.log(users, "USSSSERSSS");
-
   const lockInPlayersHandler = () => {
     socket.emit("lockin_players", { users, roomId });
     setUsersLockedIn(true);
@@ -277,7 +269,7 @@ const GameLobby = ({
     // TODO: im close with this one.. i think i need to do something about the re-rendering or i need to involve another state varables
 
     socket.on("allPlayersCards", (playersCards: any) => {
-      console.log("Received allPlayersCards data:", playersCards);
+      // console.log("Received allPlayersCards data:", playersCards);
       setPlayerData(playersCards);
     });
 
@@ -286,7 +278,7 @@ const GameLobby = ({
     });
 
     socket.on("receive_updated_card_data", (updatedPlayersCards: []) => {
-      console.log(updatedPlayersCards, "updatedPlayersCards");
+      // console.log(updatedPlayersCards, "updatedPlayersCards");
       setAllGameData({ users, roomId, cardData: updatedPlayersCards });
     });
 
@@ -319,7 +311,6 @@ const GameLobby = ({
     });
 
     socket.on("receive_current_player_message", (data: any) => {
-      // console.log(data, "receive_current_player_message");
       setBooleanMessage(data.selectionMessage);
       setButtonsTrue(data.buttonsTrue);
 
@@ -329,7 +320,6 @@ const GameLobby = ({
     });
 
     socket.on("receive_other_players_message", (data: any) => {
-      // console.log(data, "receive_other_players_message");
       setBooleanMessage(data.selectionMessage);
       setButtonsTrue(data.buttonsTrue);
 
@@ -339,7 +329,6 @@ const GameLobby = ({
     });
 
     socket.on("receive_users_to_drink", (data: any) => {
-      // console.log(data, "receive_users_to_drink");
       setUsersToDrink(data.usersToDrink);
       setCurrentUserMessageTrue("");
       setOtherUsersMessageFalse("");
@@ -359,13 +348,11 @@ const GameLobby = ({
 
     // Listen for countdown updates from the Socket.IO server
     socket.on("receive_countdown", (data: any) => {
-      console.log(data.countdown, "COUNTDOWN");
       setCountdown(data.countdown);
     });
 
     socket.on("receive_reset_game", (data: any) => {
       setGameStarted(data.gameStarted);
-      console.log(data, "receive_reset_game");
       setPlayerData(data.cardData);
       setAllGameData({
         users: data.users,
@@ -378,7 +365,7 @@ const GameLobby = ({
     });
 
     socket.on("user_disconnected", (userId: string) => {
-      console.log("User disconnected:", userId);
+      // console.log("User disconnected:", userId);
 
       const user = users.find((user: any) => user.id === userId);
       if (user) {
@@ -458,6 +445,7 @@ const GameLobby = ({
       users: users,
       isCurrentPlayerIndex: 0,
     });
+    setShowSpinner(false);
   };
 
   const motionProps = {

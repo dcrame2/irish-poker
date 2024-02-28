@@ -23,6 +23,13 @@ const LobbyInfoContainer = styled(motion.div)`
   }
 `;
 
+const HeaderContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+`;
+
 const GameButtonContainer = styled.div`
   background-color: ${variables.color1};
   border-radius: 12px;
@@ -53,7 +60,6 @@ const OtherPlayersStartingGameMessage = styled.div`
   padding: 12px 24px;
   justify-content: center;
   align-items: center;
-  /* min-height: 100px; */
   margin-top: 20px;
   ${boxShadows}
 `;
@@ -100,35 +106,32 @@ function LobbyInfo({
     <LobbyInfoContainer {...motionProps}>
       {!gameStarted && (
         <>
-          <DrinkingGame>Drinking Game 🍻</DrinkingGame>
-          <IrishPoker>Irish Poker</IrishPoker>
+          <HeaderContainer>
+            <DrinkingGame>Drinking Game 🍻</DrinkingGame>
+            <IrishPoker>Irish Poker</IrishPoker>
+          </HeaderContainer>
           <CurrentPlayer users={users} username={username} roomId={roomId} />
           <PlayersInLobby users={users} />
           {users[0]?.username === username ? (
             <GameButtonContainer>
-              {
-                // users.length > 0 &&
-                // !usersLockedIn &&
-                // !gameStarted &&
-                playerData === undefined ? (
-                  <>
-                    <Button onClick={lockInPlayersHandler}>
-                      {!showSpinner ? (
-                        "Lock in Players"
-                      ) : (
-                        <>
-                          Lock in Players
-                          <div className={styles.loading_spinner}></div>
-                        </>
-                      )}
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    <Button onClick={startGameHandler}>Start Game</Button>
-                  </>
-                )
-              }
+              {playerData === undefined ? (
+                <>
+                  <Button onClick={lockInPlayersHandler}>
+                    {!showSpinner ? (
+                      "Lock in Players"
+                    ) : (
+                      <>
+                        Lock in Players
+                        <div className={styles.loading_spinner}></div>
+                      </>
+                    )}
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button onClick={startGameHandler}>Start Game</Button>
+                </>
+              )}
             </GameButtonContainer>
           ) : (
             <OtherPlayersStartingGameMessage>

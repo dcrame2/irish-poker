@@ -132,7 +132,7 @@ export default function UserSetup() {
 
   const handleJoin = () => {
     if (userName !== "" && roomId !== "") {
-      console.log(userName, "userName", roomId, "roomId");
+      // console.log(userName, "userName", roomId, "roomId");
       socket.emit("join_room", { userName, roomId });
       setShowChats(true);
     } else {

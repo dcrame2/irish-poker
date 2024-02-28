@@ -5,6 +5,7 @@ import {
   buttonType,
   boxShadows,
   boxShadowsRed,
+  boxShadowsMiddleGreen,
   pLarge,
   pSmall,
   pBase,
@@ -99,8 +100,10 @@ const TextContainer = styled.div`
     flex-direction: row;
     gap: 8px;
     min-height: 120px;
+    margin-bottom: 8px;
     .left-box,
     .right-box {
+      ${boxShadowsMiddleGreen}
       width: 50%;
       text-align: center;
       margin-bottom: 8px;
@@ -301,7 +304,7 @@ function GameNotifications({
       {booleanMessage !== null && activeModal && (
         <>
           {booleanMessage ? (
-            <CorrectMessaging key={`${socket.id}`} {...motionProps}>
+            <CorrectMessaging key={`${username}`} {...motionProps}>
               {!confirmedUsersToDrink ? (
                 <HeaderForCorrectMessage>LUCKY</HeaderForCorrectMessage>
               ) : (

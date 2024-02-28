@@ -383,7 +383,7 @@ function FullGame({
               }</span> guessed</div> <span class="option">${option}</span>
               </div>  <div class="right-box">The card was a: <div class="number-of"> <span class="value">${card?.value.toLowerCase()}</span>   of </div><span class="suit">${card?.suit.toLowerCase()}</span></div></div>
           
-          <div class="message-container">${isCurrentPlayer} was incorrect and needs to start drinking NOW! 🍻 </div>`,
+          <div class="message-container">${isCurrentPlayer} was incorrect and should take a drink! 🍻 </div>`,
       otherUsersMessageTrue: "",
       buttonsTrue: true,
     });
@@ -403,7 +403,7 @@ function FullGame({
           }</span> guessed</div> <span class="option">${option}</span>
           </div>  <div class="right-box">The card was a: <div class="number-of"> <span class="value">${card?.value.toLowerCase()}</span>   of </div><span class="suit">${card?.suit.toLowerCase()}</span></div></div>
       
-      <div class="message-container">${isCurrentPlayer} was incorrect and needs to start drinking NOW! 🍻  </div>`,
+      <div class="message-container">${isCurrentPlayer} was incorrect and should take a drink! 🍻</div>`,
       currentUsersMessageTrue: `
       <div class="current-user-message-container">
       <div class="left-box">
@@ -444,14 +444,14 @@ function FullGame({
   const motionProps = {
     initial: {
       opacity: 0,
-      y: "-100%",
+      y: "100%",
     },
     animate: {
       opacity: 1,
       y: 0,
     },
     exit: {
-      y: "-100%",
+      y: "100%",
       opacity: 0,
     },
     transition: {
