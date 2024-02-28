@@ -28,6 +28,26 @@ export const h1styles = css`
   }
 `;
 
+export const h1styles2 = css`
+  font-family: ${irishGrover};
+  /* text-transform: uppercase; */
+  font-size: 3.5rem;
+  line-height: 3.5rem;
+  color: #ffff;
+  text-align: center;
+  @media ${MediaQueries.tablet} {
+    font-size: 3rem;
+    line-height: 3.8rem;
+  }
+
+  @media ${MediaQueries.mobile} {
+    font-size: 2.5rem;
+    line-height: 2rem;
+    text-align: center;
+    /* margin-bottom: 8px; */
+  }
+`;
+
 export const h2styles = css`
   font-family: ${jost};
   font-size: 2rem;

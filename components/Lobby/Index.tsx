@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { AnimatePresence, motion } from "framer-motion";
 import Chat from "../Chat";
 import { variables } from "@/styles/Variables";
-import { pSmall, h1styles, pXSmall, pBase, pLarge } from "@/styles/Type";
+import { pSmall, h1styles2, pXSmall, pBase, pLarge } from "@/styles/Type";
 import { MediaQueries } from "@/styles/Utilities";
 import FullGame from "../Game/FullGame/Index";
 import LobbyInfo from "./LobbyInfo/Index";
@@ -18,8 +18,8 @@ const Player = styled.div`
 `;
 
 const IrishPoker = styled.h1`
-  ${h1styles}
-  /* position: relative; */
+  ${h1styles2}
+  color: ${variables.color4};
   z-index: 1001;
   display: flex;
 `;
@@ -460,38 +460,16 @@ const GameLobby = ({
     setShowSpinner(false);
   };
 
-  // const motionProps = {
-  //   initial: {
-  //     y: "0%",
-  //   },
-  //   animate: {
-  //     y: "100%",
-  //     transition: {
-  //       duration: 0.8,
-  //       delay: 1.5,
-  //     },
-  //     transitionEnd: {
-  //       y: "-100%",
-  //     },
-  //   },
-  //   exit: {
-  //     y: "0%",
-  //     transitionEnd: {
-  //       y: "0%",
-  //       delay: 0.3,
-  //     },
-  //   },
-  //   transition: {
-  //     duration: 0.8,
-  //   },
-  // };
-
   const motionProps = {
     initial: {
       y: "0%",
     },
     animate: {
       y: "100%",
+      transition: {
+        duration: 0.8,
+        delay: 1.8,
+      },
       transitionEnd: {
         y: "-100%",
       },
@@ -507,6 +485,28 @@ const GameLobby = ({
       duration: 0.8,
     },
   };
+
+  // const motionProps = {
+  //   initial: {
+  //     y: "0%",
+  //   },
+  //   animate: {
+  //     y: "100%",
+  //     transitionEnd: {
+  //       y: "-100%",
+  //     },
+  //   },
+  //   exit: {
+  //     y: "0%",
+  //     transitionEnd: {
+  //       y: "0%",
+  //       delay: 0.3,
+  //     },
+  //   },
+  //   transition: {
+  //     duration: 0.8,
+  //   },
+  // };
 
   return (
     <MainContainer>
@@ -559,8 +559,10 @@ const GameLobby = ({
             )}
             {gameStarted && (
               <CloverPageTransitionContainer {...motionProps}>
-                <IrishPoker>Game is starting</IrishPoker>
-                <div className={styles.loading_spinner1}></div>
+                <IrishPoker>
+                  Do not leave your browswer to avoid disconnection
+                </IrishPoker>
+                {/* <div className={styles.loading_spinner1}></div> */}
               </CloverPageTransitionContainer>
             )}
             {gameStarted && (
