@@ -4,13 +4,14 @@ import styled from "styled-components";
 import { AnimatePresence, motion } from "framer-motion";
 import Chat from "../Chat";
 import { variables } from "@/styles/Variables";
-import { pSmall, h1styles, pXSmall, pBase } from "@/styles/Type";
+import { pSmall, h1styles, pXSmall, pBase, pLarge } from "@/styles/Type";
 import { MediaQueries } from "@/styles/Utilities";
 import FullGame from "../Game/FullGame/Index";
 import LobbyInfo from "./LobbyInfo/Index";
 import GameNotifications from "../Game/GameNotifications/Index";
 import Menu from "../Menu/Index";
 import DisconnectedUser from "../Game/DisconnectedUser/Index";
+import styles from "../../src/styles/page.module.css";
 
 const Player = styled.div`
   ${pSmall}
@@ -18,8 +19,9 @@ const Player = styled.div`
 
 const IrishPoker = styled.h1`
   ${h1styles}
-  position: relative;
+  /* position: relative; */
   z-index: 1001;
+  display: flex;
 `;
 
 const MainContainer = styled.div`
@@ -116,6 +118,10 @@ const CloverPageTransitionContainer = styled(motion.div)`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  color: ${variables.white};
+  z-index: 2;
+  gap: 6px;
+
   &::before {
     z-index: 1;
     content: "";
@@ -130,7 +136,13 @@ const CloverPageTransitionContainer = styled(motion.div)`
 
 const DrinkingGame = styled.p`
   ${pBase}
+  z-index: 1001;
   text-align: center;
+`;
+
+const GameStarting = styled.p`
+  ${pLarge}
+  z-index: 1001;
 `;
 interface GameData {
   users: [];
@@ -454,6 +466,10 @@ const GameLobby = ({
     },
     animate: {
       y: "100%",
+      transition: {
+        duration: 0.8,
+        delay: 1.5,
+      },
       transitionEnd: {
         y: "-100%",
       },
@@ -521,9 +537,8 @@ const GameLobby = ({
             )}
             {gameStarted && (
               <CloverPageTransitionContainer {...motionProps}>
-                <DrinkingGame>Drinking Game 🍻</DrinkingGame>
-                <IrishPoker>Irish Poker</IrishPoker>
-                <p>Game has started</p>
+                <IrishPoker>Game is starting</IrishPoker>
+                <div className={styles.loading_spinner1}></div>
               </CloverPageTransitionContainer>
             )}
             {gameStarted && (
