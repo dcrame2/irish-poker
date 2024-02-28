@@ -21,7 +21,7 @@ export const h1styles = css`
   }
 
   @media ${MediaQueries.mobile} {
-    font-size: 3rem;
+    font-size: 3.5rem;
     line-height: 2.6rem;
     text-align: center;
     margin-bottom: 8px;

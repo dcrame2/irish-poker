@@ -3,7 +3,7 @@ import { io } from "socket.io-client";
 import React, { useState, useEffect } from "react";
 import GameLobby from "../Lobby/Index";
 import styled from "styled-components";
-import { buttonType, h1styles, inputType, pXSmall } from "@/styles/Type";
+import { buttonType, h1styles, inputType, pXSmall, pBase } from "@/styles/Type";
 import { AnimatePresence, motion } from "framer-motion";
 import { variables } from "@/styles/Variables";
 import Menu from "../Menu/Index";
@@ -115,11 +115,14 @@ const ConnectionMessage = styled.p`
   text-align: center;
 `;
 
+const DrinkingGame = styled.p`
+  ${pBase}
+  text-align: center;
+`;
+
 export default function UserSetup() {
   let socket: any;
-  // socket = io("https://irish-poker.onrender.com");
   socket = io(socketServerUrl());
-  // socket = io("http://localhost:3001");
 
   const [showChats, setShowChats] = useState(false);
   const [userName, setUserName] = useState("");
@@ -131,7 +134,6 @@ export default function UserSetup() {
     if (userName !== "" && roomId !== "") {
       console.log(userName, "userName", roomId, "roomId");
       socket.emit("join_room", { userName, roomId });
-      setShowSpinner(true);
       setShowChats(true);
     } else {
       alert("Please fill in Username and Room Id");
@@ -171,16 +173,14 @@ export default function UserSetup() {
       </HamburgerContainer>
       <Menu showMenu={showMenu} setShowMenu={setShowMenu} />
       <AnimatePresence>
-        {/* {!showChats ? ( */}
         <InnerContainer
           key="key1"
           {...motionProps}
           style={{ display: showChats ? "none" : "" }}
         >
+          <DrinkingGame>Drinking Game 🍻</DrinkingGame>
           <IrishPoker>Irish Poker</IrishPoker>
-          <ConnectionMessage>
-            Join the same Room Name to connect multiplayer
-          </ConnectionMessage>
+
           <Input
             type="text"
             placeholder="Username"
@@ -193,7 +193,9 @@ export default function UserSetup() {
             onChange={(e) => setroomId(e.target.value)}
             disabled={showSpinner}
           />
-
+          <ConnectionMessage>
+            Join the same Room Name to connect multiplayer
+          </ConnectionMessage>
           <Button onClick={() => handleJoin()}>
             {!showSpinner ? (
               "Join"
@@ -205,7 +207,6 @@ export default function UserSetup() {
             <MadeByText>Created by Dylan Cramer</MadeByText>
           </MadeByContainer>
         </InnerContainer>
-        {/* ) : ( */}
         <motion.div
           style={{ display: !showChats ? "none" : "" }}
           {...motionProps}
@@ -220,9 +221,10 @@ export default function UserSetup() {
             username={userName}
             setUsers={setUsers}
             setShowChats={setShowChats}
+            showSpinner={showSpinner}
+            setShowSpinner={setShowSpinner}
           />
         </motion.div>
-        {/* )} */}
       </AnimatePresence>
     </MainContainer>
   );
