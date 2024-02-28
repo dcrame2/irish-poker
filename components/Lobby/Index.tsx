@@ -560,7 +560,7 @@ const GameLobby = ({
             {gameStarted && (
               <CloverPageTransitionContainer {...motionProps}>
                 <IrishPoker>
-                  Do not leave your browswer to avoid disconnection
+                  Do not leave your browser to avoid disconnection
                 </IrishPoker>
                 {/* <div className={styles.loading_spinner1}></div> */}
               </CloverPageTransitionContainer>
