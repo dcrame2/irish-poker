@@ -8,10 +8,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { variables } from "@/styles/Variables";
 import Menu from "../Menu/Index";
 import { MediaQueries } from "@/styles/Utilities";
-
 import { socketServerUrl } from "../../utils/pathUrl";
-
-// const socketServerUrl = require("../../utils/pathUrl");
 
 const MainContainer = styled.div`
   background-image: url("clover.svg");
@@ -120,6 +117,12 @@ const DrinkingGame = styled.p`
   text-align: center;
 `;
 
+const TextContainer = styled.div`
+  p {
+    color: ${variables.color4};
+  }
+`;
+
 export default function UserSetup() {
   let socket: any;
   socket = io(socketServerUrl());
@@ -129,6 +132,9 @@ export default function UserSetup() {
   const [showSpinner, setShowSpinner] = useState(false);
   const [roomId, setroomId] = useState("");
   const [users, setUsers] = useState([]);
+
+  const [usenamerExistsMessage, setUsernameExistsMessage] = useState();
+  console.log(users, "USERSSSSS");
 
   const handleJoin = () => {
     if (userName !== "" && roomId !== "") {
@@ -143,6 +149,13 @@ export default function UserSetup() {
   useEffect(() => {
     socket.on("roomUsers", ({ users }: any) => {
       setUsers(users);
+    });
+
+    socket.on("username_exists", ({ message }: any) => {
+      setUsernameExistsMessage(message);
+      setShowChats(false);
+      // Display an alert to inform the user
+      // You can also set some state to indicate that the username is invalid or display an error message in the UI
     });
   }, [socket]);
 
@@ -186,12 +199,21 @@ export default function UserSetup() {
             placeholder="Username"
             onChange={(e) => setUserName(e.target.value)}
             disabled={showSpinner}
+            maxLength={10}
           />
+          {usenamerExistsMessage && (
+            <TextContainer
+              dangerouslySetInnerHTML={{
+                __html: usenamerExistsMessage,
+              }}
+            ></TextContainer>
+          )}
           <Input
             type="text"
             placeholder="Room Name"
             onChange={(e) => setroomId(e.target.value)}
             disabled={showSpinner}
+            maxLength={4}
           />
           <ConnectionMessage>
             Join the same Room Name to connect multiplayer
@@ -203,6 +225,7 @@ export default function UserSetup() {
               <div className={styles.loading_spinner}></div>
             )}
           </Button>
+
           <MadeByContainer>
             <MadeByText>Created by Dylan Cramer</MadeByText>
           </MadeByContainer>

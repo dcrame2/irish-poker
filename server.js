@@ -18,9 +18,7 @@ app.use(cors());
 const httpServer = http.createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    // origin: "https://irishpokeronline.netlify.app",
     origin: publicFrontend,
-    // origin: "http://localhost:3000",
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
@@ -31,8 +29,32 @@ io.on("connection", (socket) => {
   console.log("A user connected:", socket.id);
 
   // Joining a room
+  // socket.on("join_room", (data) => {
+  //   const user = userJoin(socket.id, data.userName, data.roomId);
+  //   socket.join(user.room);
+
+  //   io.to(user.room).emit("roomUsers", {
+  //     room: user.room,
+  //     users: getRoomUsers(user.room),
+  //   });
+  // });
+
   socket.on("join_room", (data) => {
-    const user = userJoin(socket.id, data.userName, data.roomId);
+    const { userName, roomId } = data;
+
+    // Check if username already exists in the room
+    const existingUser = getRoomUsers(roomId).find(
+      (user) => user.username === userName
+    );
+    if (existingUser) {
+      // Inform the client that the username is already in use
+      socket.emit("username_exists", {
+        message: "<p>Username is already in use in this room.</p>",
+      });
+      return;
+    }
+
+    const user = userJoin(socket.id, userName, roomId);
     socket.join(user.room);
 
     io.to(user.room).emit("roomUsers", {
