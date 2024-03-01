@@ -104,6 +104,7 @@ const PlayerAndCardContainer = styled.div<PlayerAndCardContainerProps>`
   padding: 8px;
   transition: all 0.5s ease-in;
   border-radius: 6px;
+  margin: 30px;
 
   ${({ isCurrentPlayer, username, activeModal }) =>
     isCurrentPlayer === username &&
@@ -112,6 +113,7 @@ const PlayerAndCardContainer = styled.div<PlayerAndCardContainerProps>`
       animation: ${pulseAnimation} 1s infinite;
     `};
   @media ${MediaQueries.mobile} {
+    margin: unset;
     gap: 4px;
     padding: 4px;
   }

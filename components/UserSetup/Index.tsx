@@ -157,10 +157,10 @@ export default function UserSetup() {
       setShowChats(false);
     });
 
-    socket.on("room_full", ({ message }: any) => {
-      setRoomFullMessage(message);
-      setShowChats(false);
-    });
+    // socket.on("room_full", ({ message, showFalse }: any) => {
+    //   setRoomFullMessage(message);
+    //   setShowChats(showFalse);
+    // });
   }, [socket]);
 
   const motionProps = {
