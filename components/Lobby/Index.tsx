@@ -217,7 +217,7 @@ const GameLobby = ({
   const [hasNewMessage, setHasNewMessage] = useState(false);
   const [messageTracker, setMessageTracker] = useState(0);
 
-  const [disconnectedUser, setDisconnectedUser] = useState();
+  const [disconnectedUser, setDisconnectedUser] = useState<any>();
 
   const lockInPlayersHandler = () => {
     socket.emit("lockin_players", { users, roomId });
@@ -385,8 +385,6 @@ const GameLobby = ({
         setTimeout(() => {
           setDisconnectedUser(undefined);
         }, 3000);
-      } else {
-        console.log("User not found");
       }
     });
 

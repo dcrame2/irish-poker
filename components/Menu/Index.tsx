@@ -182,6 +182,8 @@ function Menu({ showMenu, setShowMenu }: any) {
               {/* {showRules && ( */}
               <AllRulesContainer show={showRules}>
                 <RulesText>
+                  <p>1-13 players to keep the game to one deck of cards</p>
+                  <br />
                   <p>
                     Players proceed to guess on the characteristics of each card
                     in front of them with drinks either given or taken depending

@@ -84,6 +84,7 @@ io.on("connection", (socket) => {
     //   // Inform the client that the room is full
     //   socket.emit("room_full", {
     //     message: "<p>The room is already full. Cannot join.</p>",
+    //     showFalse: false,
     //   });
     //   return;
     // }
