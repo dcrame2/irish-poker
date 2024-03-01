@@ -43,7 +43,7 @@ interface PlayerUpNextProps {
 }
 
 const GameContainer = styled(motion.div)`
-  height: 100%;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
