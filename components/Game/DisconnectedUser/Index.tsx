@@ -48,7 +48,9 @@ function DisconnectedUser({ disconnectedUser }: any) {
     <AnimatePresence mode="wait">
       {disconnectedUser && (
         <DiconnectedUserContainer {...motionProps}>
-          {disconnectedUser} has been disconnected from the lobby
+          {disconnectedUser} has been disconnected from the lobby. You will need
+          to restart the game. We apologize for this inconvenience and are
+          working on disconnect logic.
         </DiconnectedUserContainer>
       )}
     </AnimatePresence>
