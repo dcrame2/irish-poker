@@ -135,7 +135,7 @@ export default function UserSetup() {
 
   const [usenamerExistsMessage, setUsernameExistsMessage] = useState();
   const [roomFullMessage, setRoomFullMessage] = useState();
-  console.log(users, "USERSSSSS");
+  // console.log(users, "USERSSSSS");
 
   const handleJoin = () => {
     if (userName !== "" && roomId !== "") {
