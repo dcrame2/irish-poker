@@ -83,6 +83,27 @@ const DrinkCount = styled.span`
   font-weight: 700;
   color: ${theme.gold};
   white-space: nowrap;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  line-height: 1.2;
+`;
+
+const Tonight = styled.span`
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: ${theme.creamDim};
+`;
+
+const DryBadge = styled.span`
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: ${theme.clover};
+  background: rgba(79, 200, 120, 0.15);
+  border: 1px solid rgba(79, 200, 120, 0.4);
+  padding: 2px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
 `;
 
 const Buttons = styled.div`
@@ -145,8 +166,14 @@ export default function GameOverOverlay({
                 {p.username}
                 {p.id === meId && " (you)"}
               </Name>
+              {p.drinks === 0 && <DryBadge>🍀 untouchable</DryBadge>}
               <DrinkCount>
-                🍺 {p.drinks} drink{p.drinks === 1 ? "" : "s"}
+                <span>
+                  🍺 {p.drinks} drink{p.drinks === 1 ? "" : "s"}
+                </span>
+                {p.totalDrinks > p.drinks && (
+                  <Tonight>tonight: {p.totalDrinks}</Tonight>
+                )}
               </DrinkCount>
             </Row>
           ))}

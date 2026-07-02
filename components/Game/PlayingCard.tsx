@@ -26,11 +26,15 @@ function isRed(suit: Suit) {
 
 const dealIn = keyframes`
   from {
-    transform: translateY(-30px) scale(0.6);
+    transform: translate(var(--deal-dx, 0px), var(--deal-dy, -30px))
+      rotate(14deg) scale(0.45);
     opacity: 0;
   }
+  30% {
+    opacity: 1;
+  }
   to {
-    transform: translateY(0) scale(1);
+    transform: translate(0, 0) rotate(0deg) scale(1);
     opacity: 1;
   }
 `;
@@ -39,8 +43,8 @@ const CardScene = styled.div<{ $index?: number }>`
   width: var(--card-w, 52px);
   aspect-ratio: 5 / 7;
   perspective: 600px;
-  animation: ${dealIn} 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-  animation-delay: ${({ $index }) => ($index ?? 0) * 0.08}s;
+  animation: ${dealIn} 0.55s cubic-bezier(0.22, 1.2, 0.36, 1) both;
+  animation-delay: ${({ $index }) => 0.15 + ($index ?? 0) * 0.09}s;
 `;
 
 const CardInner = styled.div<{ $flipped: boolean; $glow: string | null }>`

@@ -3,6 +3,8 @@ import styled, { css } from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
 import { theme, mq } from "@/styles/theme";
 import { ROUND_INFO } from "@lib/types";
+import type { MaskedCard } from "@lib/types";
+import PlayingCard from "./PlayingCard";
 
 // Always-present action bar below the table. On your turn it holds the
 // guess buttons; otherwise it shows whose turn it is. Being in normal
@@ -59,6 +61,36 @@ const OptionButton = styled(motion.button)<{ $tone: "red" | "black" | "gold" }>`
   }
 `;
 
+const RefCards = styled(motion.div)`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid ${theme.panelBorder};
+  --card-w: 44px;
+
+  @media ${mq.mobile} {
+    --card-w: 38px;
+    padding: 4px 8px;
+  }
+`;
+
+const RefLabel = styled.span`
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: ${theme.creamDim};
+  max-width: 64px;
+  line-height: 1.2;
+
+  @media ${mq.mobile} {
+    display: none;
+  }
+`;
+
 const StatusPill = styled(motion.p)`
   font-size: 1.05rem;
   color: ${theme.creamDim};
@@ -76,18 +108,38 @@ const StatusPill = styled(motion.p)`
 interface Props {
   isMyTurn: boolean;
   round: number;
+  refCards?: MaskedCard[];
   statusText: React.ReactNode;
   onGuess: (option: string) => void;
 }
 
-export default function GuessBar({ isMyTurn, round, statusText, onGuess }: Props) {
+export default function GuessBar({
+  isMyTurn,
+  round,
+  refCards = [],
+  statusText,
+  onGuess,
+}: Props) {
   const options = ROUND_INFO[Math.min(round, 3)].options;
+  const revealedRefs = refCards.filter((c) => !c.hidden);
 
   return (
     <Bar>
       <AnimatePresence mode="wait">
         {isMyTurn ? (
           <React.Fragment key={`opts-${round}`}>
+            {revealedRefs.length > 0 && (
+              <RefCards
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+              >
+                <RefLabel>{round === 1 ? "vs your card" : "your range"}</RefLabel>
+                {revealedRefs.map((c, i) => (
+                  <PlayingCard key={i} card={c} />
+                ))}
+              </RefCards>
+            )}
             {options.map((opt, i) => (
               <OptionButton
                 key={opt.key}

@@ -15,6 +15,7 @@ import {
   clearSession,
 } from "@lib/socket";
 import type { RoomState, GameEvent, ChatMsg } from "@lib/types";
+import { sound, haptic } from "@lib/sound";
 import Landing from "../Landing/Index";
 import Lobby from "../Lobby/Index";
 import GameTable from "../Game/Table";
@@ -46,7 +47,23 @@ const TopControls = styled.div`
   }
 `;
 
+const RightControls = styled.div`
+  display: flex;
+  gap: 10px;
+
+  > * {
+    pointer-events: auto;
+  }
+`;
+
 let toastSeq = 0;
+
+export interface FloatingEmote {
+  id: string;
+  playerId: string;
+  username: string;
+  emoji: string;
+}
 
 export default function App() {
   const [room, setRoom] = useState<RoomState | null>(null);
@@ -59,6 +76,10 @@ export default function App() {
   const [rejoining, setRejoining] = useState(false);
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [lastEvent, setLastEvent] = useState<GameEvent | null>(null);
+  const [emotes, setEmotes] = useState<FloatingEmote[]>([]);
+  const [muted, setMutedState] = useState(false);
+  // Bumping these counters fires a confetti/beer burst.
+  const [beerBurst, setBeerBurst] = useState(0);
 
   const meId = useMemo(() => getPlayerId(), []);
   const roomRef = useRef<RoomState | null>(null);
@@ -117,8 +138,24 @@ export default function App() {
     const onEvent = (ev: GameEvent) => {
       setLastEvent(ev);
       switch (ev.type) {
+        case "game_started":
+          sound.deal();
+          break;
+        case "guess_made":
+          sound.flip();
+          if (ev.correct) {
+            setTimeout(() => sound.lucky(), 350);
+          } else {
+            setTimeout(() => sound.unlucky(), 350);
+            if (ev.playerId === meId) {
+              haptic([120, 60, 120]);
+              setBeerBurst((b) => b + 1);
+            }
+          }
+          break;
         case "player_joined":
           if (ev.playerId !== meId) pushToast(`${ev.username} joined the party`, "success");
+          sound.pop();
           break;
         case "player_left":
           if (ev.playerId !== meId) pushToast(`${ev.username} left the party`, "info");
@@ -144,14 +181,28 @@ export default function App() {
         case "drinks_assigned":
           if (ev.drinkers?.length) {
             pushToast(`🍺 ${ev.pickerName} sent drinks to ${ev.drinkers.join(", ")}`, "gold");
+            sound.clink();
+            if (ev.drinkerIds?.includes(meId)) {
+              haptic([120, 60, 120]);
+              setBeerBurst((b) => b + 1);
+            }
           } else {
             pushToast(`${ev.pickerName} was merciful — nobody drinks`, "info");
           }
           break;
         case "game_over":
           pushToast("Game over! Check the damage 🍻", "gold");
+          sound.fanfare();
           break;
       }
+    };
+
+    const onEmote = (em: FloatingEmote) => {
+      sound.pop();
+      setEmotes((list) => [...list.slice(-11), em]);
+      setTimeout(() => {
+        setEmotes((list) => list.filter((e) => e.id !== em.id));
+      }, 2600);
     };
 
     socket.on("connect", onConnect);
@@ -159,8 +210,14 @@ export default function App() {
     socket.on("room_state", onRoomState);
     socket.on("chat_msg", onChat);
     socket.on("game_event", onEvent);
+    socket.on("emote", onEmote);
 
     if (socket.connected) onConnect();
+
+    // Browsers only allow audio after a user gesture — arm it on first tap.
+    const unlockAudio = () => sound.unlock();
+    window.addEventListener("pointerdown", unlockAudio, { once: true });
+    setMutedState(sound.isMuted());
 
     return () => {
       socket.off("connect", onConnect);
@@ -168,8 +225,24 @@ export default function App() {
       socket.off("room_state", onRoomState);
       socket.off("chat_msg", onChat);
       socket.off("game_event", onEvent);
+      socket.off("emote", onEmote);
+      window.removeEventListener("pointerdown", unlockAudio);
     };
   }, [meId, pushToast]);
+
+  // Chime + buzz the moment it becomes your turn.
+  const wasMyTurnRef = useRef(false);
+  useEffect(() => {
+    const myTurn =
+      room?.phase === "playing" &&
+      room.game?.awaiting === "guess" &&
+      room.game.currentPlayerId === meId;
+    if (myTurn && !wasMyTurnRef.current) {
+      sound.yourTurn();
+      haptic([80, 50, 80]);
+    }
+    wasMyTurnRef.current = !!myTurn;
+  }, [room, meId]);
 
   // ---- actions -------------------------------------------------------------
   const createRoom = useCallback(
@@ -235,17 +308,32 @@ export default function App() {
         >
           ☰
         </IconButton>
-        {room && (
+        <RightControls>
           <IconButton
-            aria-label="Chat"
+            aria-label={muted ? "Unmute sounds" : "Mute sounds"}
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.92 }}
-            onClick={openChat}
+            onClick={() => {
+              const next = !muted;
+              sound.setMuted(next);
+              setMutedState(next);
+              if (!next) sound.click();
+            }}
           >
-            💬
-            {unread > 0 && <Badge>{unread}</Badge>}
+            {muted ? "🔇" : "🔊"}
           </IconButton>
-        )}
+          {room && (
+            <IconButton
+              aria-label="Chat"
+              whileHover={{ scale: 1.08 }}
+              whileTap={{ scale: 0.92 }}
+              onClick={openChat}
+            >
+              💬
+              {unread > 0 && <Badge>{unread}</Badge>}
+            </IconButton>
+          )}
+        </RightControls>
       </TopControls>
 
       <AnimatePresence mode="wait">
@@ -268,6 +356,9 @@ export default function App() {
             meId={meId}
             clockOffsetRef={clockOffsetRef}
             lastEvent={lastEvent}
+            emotes={emotes}
+            beerBurst={beerBurst}
+            onEmote={(emoji) => send("send_emote", { emoji })}
             onGuess={(option) => send("make_guess", { option })}
             onPickDrinkers={(playerIds) => send("pick_drinkers", { playerIds })}
             onSkipTurn={() => send("skip_turn")}

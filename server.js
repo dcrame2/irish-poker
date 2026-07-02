@@ -412,6 +412,7 @@ function finishDrinkPick(room, pickerId, drinkerIds) {
     pickerId,
     pickerName: room.players.get(pickerId)?.username,
     drinkers: names,
+    drinkerIds: valid,
   });
   beginInterlude(room);
   broadcast(room);
@@ -742,6 +743,24 @@ io.on("connection", (socket) => {
     }
     ensureHost(room);
     broadcast(room);
+  });
+
+  const ALLOWED_EMOTES = ["🍻", "😂", "💀", "🔥", "👏", "🍀"];
+  socket.on("send_emote", ({ emoji } = {}) => {
+    const room = currentRoom();
+    const player = room?.players.get(socket.data.playerId);
+    if (!room || !player) return;
+    if (!ALLOWED_EMOTES.includes(emoji)) return;
+    // Light rate limit so nobody can flood the table.
+    const now = Date.now();
+    if (socket.data.lastEmoteAt && now - socket.data.lastEmoteAt < 400) return;
+    socket.data.lastEmoteAt = now;
+    io.to(room.code).emit("emote", {
+      id: `${now}-${player.id.slice(0, 6)}`,
+      playerId: player.id,
+      username: player.username,
+      emoji,
+    });
   });
 
   socket.on("chat_send", ({ text } = {}) => {

@@ -32,10 +32,11 @@ const Title = styled(DisplayTitle)`
 
 const CodePanel = styled(GlassPanel)`
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 18px;
-  padding: 14px 22px;
-  border-radius: 18px;
+  gap: 12px;
+  padding: 18px 26px;
+  border-radius: 20px;
 `;
 
 const CodeLabel = styled.span`
@@ -45,12 +46,35 @@ const CodeLabel = styled.span`
   color: ${theme.creamDim};
 `;
 
-const Code = styled.span`
+const CodeTiles = styled.div`
+  display: flex;
+  gap: 8px;
+`;
+
+const CodeTile = styled(motion.span)`
+  width: 52px;
+  height: 62px;
+  display: grid;
+  place-items: center;
   font-size: 2rem;
   font-weight: 800;
-  letter-spacing: 0.4em;
   color: ${theme.gold};
-  text-shadow: 0 0 24px rgba(233, 184, 76, 0.4);
+  text-shadow: 0 0 20px rgba(233, 184, 76, 0.45);
+  background: rgba(0, 0, 0, 0.4);
+  border: 1.5px solid ${theme.goldSoft};
+  border-radius: 12px;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.5);
+
+  @media ${mq.mobile} {
+    width: 46px;
+    height: 56px;
+    font-size: 1.7rem;
+  }
+`;
+
+const ShareRow = styled.div`
+  display: flex;
+  gap: 8px;
 `;
 
 const CopyBtn = styled.button`
@@ -172,18 +196,44 @@ interface Props {
 }
 
 export default function Lobby({ room, meId, onStart, onLeave }: Props) {
-  const [copied, setCopied] = useState(false);
+  const [copied, setCopied] = useState<"code" | "link" | null>(null);
   const [showRules, setShowRules] = useState(false);
   const isHost = room.hostId === meId;
   const host = room.players.find((p) => p.isHost);
 
+  const flashCopied = (what: "code" | "link") => {
+    setCopied(what);
+    setTimeout(() => setCopied(null), 1600);
+  };
+
   const copyCode = async () => {
     try {
       await navigator.clipboard.writeText(room.code);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1600);
+      flashCopied("code");
     } catch {
       /* clipboard unavailable — code is on screen anyway */
+    }
+  };
+
+  const shareLink = async () => {
+    const url = `${window.location.origin}?join=${room.code}`;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "Irish Poker 🍀",
+          text: "Join my party!",
+          url,
+        });
+        return;
+      } catch {
+        /* user cancelled the share sheet — fall through to clipboard */
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      flashCopied("link");
+    } catch {
+      /* ignore */
     }
   };
 
@@ -197,11 +247,27 @@ export default function Lobby({ room, meId, onStart, onLeave }: Props) {
       <Title>The Lobby</Title>
 
       <CodePanel>
-        <div style={{ display: "grid", gap: 2 }}>
-          <CodeLabel>Party code</CodeLabel>
-          <Code>{room.code}</Code>
-        </div>
-        <CopyBtn onClick={copyCode}>{copied ? "Copied ✓" : "Copy"}</CopyBtn>
+        <CodeLabel>Party code</CodeLabel>
+        <CodeTiles>
+          {room.code.split("").map((ch, i) => (
+            <CodeTile
+              key={i}
+              initial={{ rotateX: 90, opacity: 0 }}
+              animate={{ rotateX: 0, opacity: 1 }}
+              transition={{ delay: 0.15 + i * 0.1, type: "spring", stiffness: 220, damping: 16 }}
+            >
+              {ch}
+            </CodeTile>
+          ))}
+        </CodeTiles>
+        <ShareRow>
+          <CopyBtn onClick={shareLink}>
+            {copied === "link" ? "Link copied ✓" : "🔗 Share invite link"}
+          </CopyBtn>
+          <CopyBtn onClick={copyCode}>
+            {copied === "code" ? "Copied ✓" : "Copy code"}
+          </CopyBtn>
+        </ShareRow>
       </CodePanel>
 
       <PlayersPanel>

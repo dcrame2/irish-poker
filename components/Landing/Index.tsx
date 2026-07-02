@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { motion } from "framer-motion";
 import { theme, mq } from "@/styles/theme";
 import {
@@ -29,10 +29,28 @@ const Tagline = styled.p`
   text-transform: uppercase;
 `;
 
+const logoShimmer = keyframes`
+  0% { background-position: 200% center; }
+  100% { background-position: -200% center; }
+`;
+
 const Logo = styled(DisplayTitle)`
   font-size: clamp(3.2rem, 9vw, 5.2rem);
   line-height: 1;
   text-align: center;
+  background: linear-gradient(
+    100deg,
+    ${theme.cream} 38%,
+    #ffe9b0 48%,
+    ${theme.gold} 50%,
+    #ffe9b0 52%,
+    ${theme.cream} 62%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: ${logoShimmer} 5s linear infinite;
 `;
 
 const SuitRow = styled.div`
@@ -45,6 +63,34 @@ const SuitRow = styled.div`
   }
   span:nth-child(even) {
     color: ${theme.cream};
+  }
+`;
+
+const FanWrap = styled.div`
+  position: relative;
+  height: 74px;
+  width: 130px;
+  margin-bottom: -6px;
+`;
+
+const FanCard = styled(motion.div)<{ $suit: string; $red: boolean }>`
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 52px;
+  aspect-ratio: 5 / 7;
+  border-radius: 7px;
+  background: linear-gradient(160deg, #ffffff 0%, #f2efe6 100%);
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.45);
+  display: grid;
+  place-items: center;
+  font-size: 1.5rem;
+  color: ${({ $red }) => ($red ? "#d22730" : "#1b1f26")};
+  transform-origin: 50% 120%;
+
+  &::after {
+    content: "${({ $suit }) => $suit}";
   }
 `;
 
@@ -117,6 +163,10 @@ export default function Landing({ onCreate, onJoin }: Props) {
 
   useEffect(() => {
     setName(localStorage.getItem(NAME_KEY) || "");
+    // Invite links: irish-poker.com?join=ABCD prefills the party code.
+    const params = new URLSearchParams(window.location.search);
+    const invite = params.get("join");
+    if (invite) setCode(invite.toUpperCase().slice(0, 4));
   }, []);
 
   const validateName = () => {
@@ -151,6 +201,7 @@ export default function Landing({ onCreate, onJoin }: Props) {
     const err = await onJoin(code.trim().toUpperCase(), n);
     setBusy(null);
     if (err) setError(err);
+    else window.history.replaceState({}, "", window.location.pathname);
   };
 
   return (
@@ -161,13 +212,36 @@ export default function Landing({ onCreate, onJoin }: Props) {
       transition={{ duration: 0.45 }}
     >
       <div style={{ textAlign: "center", display: "grid", gap: 10, justifyItems: "center" }}>
+        <FanWrap aria-hidden>
+          {[
+            { suit: "♥", red: true, rot: -22, dx: -34 },
+            { suit: "☘", red: false, rot: 0, dx: 0 },
+            { suit: "♠", red: false, rot: 22, dx: 34 },
+          ].map((c, i) => (
+            <FanCard
+              key={c.suit}
+              $suit={c.suit}
+              $red={c.red}
+              style={c.suit === "☘" ? { color: theme.clover } : undefined}
+              initial={{ rotate: 0, x: "-50%", y: 30, opacity: 0 }}
+              animate={{ rotate: c.rot, x: `calc(-50% + ${c.dx}px)`, y: 0, opacity: 1 }}
+              transition={{ delay: 0.25 + i * 0.12, type: "spring", stiffness: 200, damping: 16 }}
+            />
+          ))}
+        </FanWrap>
         <Tagline>The classic drinking game</Tagline>
         <Logo>Irish Poker</Logo>
         <SuitRow aria-hidden>
-          <span>♥</span>
-          <span>♠</span>
-          <span>♦</span>
-          <span>♣</span>
+          {["♥", "♠", "♦", "♣"].map((s, i) => (
+            <motion.span
+              key={s}
+              initial={{ y: 14, opacity: 0, scale: 0.5 }}
+              animate={{ y: 0, opacity: 1, scale: 1 }}
+              transition={{ delay: 0.5 + i * 0.09, type: "spring", stiffness: 300, damping: 14 }}
+            >
+              {s}
+            </motion.span>
+          ))}
         </SuitRow>
       </div>
 

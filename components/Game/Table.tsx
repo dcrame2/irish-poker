@@ -1,5 +1,5 @@
 import React, { MutableRefObject, useMemo } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
 import { theme, mq } from "@/styles/theme";
 import type { RoomState, GameEvent } from "@lib/types";
@@ -9,6 +9,8 @@ import GuessBar from "./GuessBar";
 import ResultOverlay from "./ResultOverlay";
 import GameOverOverlay from "./GameOverOverlay";
 import Confetti from "./Confetti";
+import { EmoteBar, EmoteFloaters } from "./Emotes";
+import type { FloatingEmote } from "../App/Index";
 import { useCountdown } from "./useCountdown";
 import { GhostButton } from "../ui/shared";
 
@@ -25,6 +27,11 @@ const Wrap = styled(motion.main)`
   }
 `;
 
+const sheen = keyframes`
+  0%, 100% { opacity: 0.05; transform: translateX(-12%) rotate(-8deg); }
+  50% { opacity: 0.14; transform: translateX(12%) rotate(-8deg); }
+`;
+
 const TableFelt = styled.div`
   position: relative;
   flex: 1;
@@ -36,8 +43,36 @@ const TableFelt = styled.div`
     inset 0 0 60px rgba(0, 0, 0, 0.5),
     inset 0 0 6px rgba(255, 255, 255, 0.12),
     0 30px 80px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
   /* Card size scales with viewport and shrinks as the table gets crowded */
   --card-w: clamp(26px, calc((5.2vw + 4.5vh) / var(--crowd, 1.4)), 58px);
+
+  /* gold pinstripe just inside the rail */
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 6px;
+    border-radius: inherit;
+    border: 1.5px solid rgba(233, 184, 76, 0.28);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* slow light sweep across the felt */
+  &::after {
+    content: "";
+    position: absolute;
+    inset: -20%;
+    background: linear-gradient(
+      100deg,
+      transparent 42%,
+      rgba(255, 255, 255, 0.35) 50%,
+      transparent 58%
+    );
+    animation: ${sheen} 9s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 1;
+  }
 `;
 
 const CenterHub = styled.div`
@@ -127,6 +162,9 @@ interface Props {
   meId: string;
   clockOffsetRef: MutableRefObject<number>;
   lastEvent: GameEvent | null;
+  emotes: FloatingEmote[];
+  beerBurst: number;
+  onEmote: (emoji: string) => void;
   onGuess: (option: string) => void;
   onPickDrinkers: (playerIds: string[]) => void;
   onSkipTurn: () => void;
@@ -138,6 +176,9 @@ export default function GameTable({
   room,
   meId,
   clockOffsetRef,
+  emotes,
+  beerBurst,
+  onEmote,
   onGuess,
   onPickDrinkers,
   onSkipTurn,
@@ -180,6 +221,15 @@ export default function GameTable({
   const celebrating =
     game.lastResult?.type === "guess" && game.lastResult.correct === true;
   const crowd = Math.max(1.2, Math.sqrt(seats.length) * 0.72);
+  const seatPos: Record<string, { x: number; y: number }> = {};
+  for (const s of seats) seatPos[s.id] = { x: s.x, y: s.y };
+  const myHand = game.hands[meId] ?? [];
+  const refCards =
+    game.round === 1
+      ? myHand.slice(0, 1)
+      : game.round === 2
+      ? myHand.slice(0, 2)
+      : [];
 
   return (
     <Wrap
@@ -247,11 +297,16 @@ export default function GameTable({
             />
           );
         })}
+
+        <EmoteFloaters emotes={emotes} seatPos={seatPos} />
       </TableFelt>
+
+      <EmoteBar onEmote={onEmote} />
 
       <GuessBar
         isMyTurn={isMyTurn}
         round={game.round}
+        refCards={refCards}
         statusText={
           room.phase === "results" ? (
             <>That&apos;s the game! 🍻</>
@@ -285,6 +340,7 @@ export default function GameTable({
       )}
 
       <Confetti active={!!celebrating} />
+      <Confetti fireKey={beerBurst} emoji="🍺" />
     </Wrap>
   );
 }

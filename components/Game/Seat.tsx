@@ -87,8 +87,14 @@ interface Props {
 }
 
 function Seat({ player, hand, x, y, isMe, isTurn }: Props) {
+  // Cards animate in from the center of the table toward this seat.
+  const dealVars = {
+    "--deal-dx": `${((50 - x) * 0.8).toFixed(1)}vw`,
+    "--deal-dy": `${((50 - y) * 0.7).toFixed(1)}vh`,
+  } as React.CSSProperties;
+
   return (
-    <SeatWrap $x={x} $y={y} $me={isMe}>
+    <SeatWrap $x={x} $y={y} $me={isMe} style={dealVars}>
       <NamePlate $dim={!player.connected}>
         <Avatar $color={avatarColor(player.avatar)} $size={26}>
           {player.username.charAt(0)}

@@ -173,8 +173,30 @@ export default function ResultOverlay({
             animate={{ scale: 1, y: 0, opacity: 1 }}
             exit={{ scale: 0.9, y: 20, opacity: 0 }}
             transition={{ type: "spring", stiffness: 300, damping: 26 }}
+            style={{
+              borderColor:
+                good === true
+                  ? "rgba(79, 200, 120, 0.55)"
+                  : good === false
+                  ? "rgba(230, 72, 77, 0.55)"
+                  : undefined,
+              boxShadow:
+                good === true
+                  ? "0 0 60px rgba(79, 200, 120, 0.25), 0 24px 60px rgba(0,0,0,0.55)"
+                  : good === false
+                  ? "0 0 60px rgba(230, 72, 77, 0.25), 0 24px 60px rgba(0,0,0,0.55)"
+                  : undefined,
+            }}
           >
-            <Verdict $good={good}>{verdictText}</Verdict>
+            <Verdict
+              as={motion.h1}
+              $good={good}
+              initial={{ scale: 0.2, rotate: -8 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ type: "spring", stiffness: 380, damping: 13, delay: 0.1 }}
+            >
+              {verdictText}
+            </Verdict>
 
             {result.card && <PlayingCard card={result.card} />}
 
