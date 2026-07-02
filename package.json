@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:server": "PORT=4101 nodemon server.js",
     "build": "next build",
-    "none": "next start",
     "lint": "next lint",
     "start": "nodemon server"
   },

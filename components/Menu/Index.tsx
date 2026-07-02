@@ -1,238 +1,227 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
-import { variables } from "@/styles/Variables";
-import Close from "../../svg/close/Index";
-import { h2styles, pBase, pSmall, pLarge2 } from "@/styles/Type";
-import Feedback from "./Feedback/Index";
-import { MediaQueries } from "@/styles/Utilities";
+import { theme } from "@/styles/theme";
+import RulesContent from "./RulesContent";
+import {
+  GoldButton,
+  DangerButton,
+  TextInput,
+  DisplayTitle,
+} from "../ui/shared";
 
-interface RulesContainerProps {
-  show: boolean;
-}
+const Backdrop = styled(motion.div)`
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 90;
+`;
 
-const MenuContainer = styled(motion.div)`
-  position: absolute;
-  height: 100dvh;
-  display: flex;
-  flex-direction: column;
-  z-index: 20;
+const Drawer = styled(motion.aside)`
+  position: fixed;
   top: 0;
-  right: 0;
   left: 0;
   bottom: 0;
-  background-color: ${variables.color2};
-  padding: 12px;
-`;
-
-const MenuInnerContainer = styled.div`
-  height: fit-content;
-`;
-
-const CloseContainer = styled(motion.div)`
-  width: 20px;
-  position: absolute;
-  top: 22px;
-  right: 15px;
-  height: 20px;
-  z-index: 21;
-`;
-
-const Header = styled.h2`
-  ${h2styles}
-  text-align: center;
-`;
-
-const RulesContainer = styled.div<RulesContainerProps>`
-  background-color: ${variables.color1};
-  margin: 16px 0 0px;
-  padding: 12px 24px;
-  border-radius: 12px;
-  max-height: ${(props) => (props.show ? "800px" : "60px")};
-  overflow: hidden;
-  transition: max-height 0.5s ease-in-out;
-  @media ${MediaQueries.mobile} {
-    max-height: ${(props) => (props.show ? "800px" : "50px")};
-  }
-`;
-
-const RulesInnerContainer = styled.button<RulesContainerProps>`
-  ${pBase}
-  position: relative;
+  width: min(400px, 100vw);
+  background: rgba(5, 20, 12, 0.97);
+  border-right: 1px solid ${theme.panelBorder};
+  backdrop-filter: blur(16px);
+  z-index: 95;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  overflow-y: auto;
+  padding: 20px;
+  gap: 18px;
+`;
+
+const Header = styled.div`
+  display: flex;
   align-items: center;
-  border: none;
-  background-color: ${variables.color1};
-  width: 100%;
-  transition: transform ease-in 0.3s;
-
-  &::after {
-    content: "";
-    width: 20px;
-    height: 20px;
-    background-size: contain;
-    background-image: url("dropdown_arrow.png");
-    transform: ${(props) => (props.show ? "rotate(180deg)" : "rotate(0deg)")};
-    transition: transform ease-in 0.3s;
-  }
-`;
-
-const AllRulesContainer = styled.div<RulesContainerProps>`
-  opacity: ${(props) => (props.show ? "1" : "0")};
-  transition: opacity ease-in 0.3s;
-  /* border-top: 2px solid ${variables.white}; */
-`;
-
-const RulesText = styled.div`
-  margin: 12px 0;
-  ${pSmall}
-  p {
-  }
-  ul,
-  ol {
-    margin-left: 30px;
-    margin-top: 12px;
-    margin-bottom: 12px;
-  }
-`;
-
-const LabelName = styled.p`
-  ${pLarge2}
-`;
-
-const FeedbackContainer = styled.div`
-  background-color: ${variables.color1};
-  margin: 16px 0 0px;
-  padding: 24px 24px;
-  border-radius: 12px;
-  overflow: hidden;
-  transition: max-height 0.5s ease-in;
-`;
-
-const FeedbackInnerContainer = styled.div`
-  ${pBase}
-  position: relative;
-  display: flex;
   justify-content: space-between;
+`;
 
+const Logo = styled(DisplayTitle)`
+  font-size: 1.9rem;
+`;
+
+const CloseBtn = styled.button`
+  background: none;
   border: none;
-  background-color: ${variables.darkGreen};
+  color: ${theme.cream};
+  font-size: 1.7rem;
+  line-height: 1;
+`;
+
+const Tabs = styled.div`
+  display: flex;
+  gap: 8px;
+`;
+
+const Tab = styled.button<{ $active: boolean }>`
+  flex: 1;
+  padding: 10px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: ${({ $active }) => ($active ? theme.feltDark : theme.cream)};
+  background: ${({ $active }) => ($active ? theme.gold : theme.glass)};
+  border: 1px solid
+    ${({ $active }) => ($active ? theme.gold : theme.panelBorder)};
+  transition: all 0.15s;
+`;
+
+const Section = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+`;
+
+const TextArea = styled.textarea`
   width: 100%;
-  &::after {
-    content: "";
-    width: 20px;
-    height: 20px;
-    background-size: contain;
-    background-image: url("dropdown_arrow.png");
+  min-height: 110px;
+  font-size: 1rem;
+  color: ${theme.cream};
+  background: rgba(0, 0, 0, 0.35);
+  border: 1.5px solid ${theme.panelBorder};
+  border-radius: 14px;
+  padding: 12px 16px;
+  outline: none;
+  resize: vertical;
+
+  &::placeholder {
+    color: rgba(244, 239, 225, 0.4);
+  }
+  &:focus {
+    border-color: ${theme.gold};
   }
 `;
 
-function Menu({ showMenu, setShowMenu }: any) {
-  const [showRules, setShowRules] = useState(false);
+const Note = styled.p<{ $error?: boolean }>`
+  font-size: 0.92rem;
+  color: ${({ $error }) => ($error ? theme.danger : theme.success)};
+`;
 
-  const [showFeedback, setShowFeedback] = useState(false);
+const Spacer = styled.div`
+  flex: 1;
+`;
 
-  const motionPropsLeft = {
-    initial: {
-      opacity: 0,
-      x: -300,
-    },
-    animate: {
-      x: 0,
-      opacity: 1,
-    },
-    exit: {
-      x: -300,
-      opacity: 0,
-    },
-    transition: {
-      duration: 0.4,
-    },
-  };
+interface Props {
+  open: boolean;
+  onClose: () => void;
+  inRoom: boolean;
+  onLeave: () => void;
+}
 
-  const closeChatHandler = () => {
-    setShowMenu(false);
-  };
+export default function Menu({ open, onClose, inRoom, onLeave }: Props) {
+  const [tab, setTab] = useState<"rules" | "feedback">("rules");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
+    "idle"
+  );
 
-  const showRulesHandler = () => {
-    setShowRules(!showRules);
-  };
-
-  const showFeedbackHandler = () => {
-    setShowFeedback(true);
+  const sendFeedback = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!message.trim()) return;
+    setStatus("sending");
+    try {
+      const res = await fetch("/api/form-submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, message }),
+      });
+      if (!res.ok) throw new Error("failed");
+      setStatus("sent");
+      setMessage("");
+    } catch {
+      setStatus("error");
+    }
   };
 
   return (
-    <AnimatePresence mode="wait">
-      {showMenu && (
-        <MenuContainer {...motionPropsLeft}>
-          <MenuInnerContainer>
-            <Header>Menu</Header>
-            <CloseContainer
-              whileHover={{ scale: 1.1 }}
-              onClick={closeChatHandler}
-            >
-              <Close />
-            </CloseContainer>
-            <RulesContainer show={showRules} onClick={showRulesHandler}>
-              <RulesInnerContainer show={showRules}>
-                <LabelName>Rules</LabelName>
-              </RulesInnerContainer>
-              {/* {showRules && ( */}
-              <AllRulesContainer show={showRules}>
-                <RulesText>
-                  <p>1-13 players to keep the game to one deck of cards</p>
-                  <br />
-                  <p>
-                    Players proceed to guess on the characteristics of each card
-                    in front of them with drinks either given or taken depending
-                    on whether they're right or not. So starting to the left of
-                    the dealer each player must guess about their unexposed
-                    cards, one at a time, according to:
-                  </p>
-                  <ol>
-                    <li>Color of card (red/black)</li>
-                    <li>Card is higher or lower than first card</li>
-                    <li>
-                      Card is in-between or outside of first and second cards
-                    </li>
-                    <li>Suit of card (Diamond, Heart, Spade, Club)</li>
-                  </ol>
-                  <p>
-                    When a player is either right or wrong they will either
-                    "give" or "take" drinks. According to the rounds drinks are
-                    valued:
-                  </p>{" "}
-                  <ul>
-                    <li>2 gives/takes</li>
-                    <li> 4 gives/takes</li>
-                    <li> 6 gives/takes</li>
-                    <li> 8 gives/takes</li>
-                  </ul>{" "}
-                  <p>
-                    So the first player to the left of the dealer guesses the
-                    color of the card; if he/she gets it right, they "give" 2
-                    drinks. They can be given in any amount to any other player
-                    at the table (either all to one player or spread around).
-                    Then the next player guesses color, gives/ takes etc. Once
-                    the first round has gone past every player they start the
-                    second round where the drinks are escalated as shown above.
-                  </p>
-                  <br />
-                  <p>Ace is high!</p>
-                </RulesText>
-              </AllRulesContainer>
-              {/* )} */}
-            </RulesContainer>
-            <FeedbackContainer>
-              <Feedback />
-            </FeedbackContainer>
-          </MenuInnerContainer>
-        </MenuContainer>
+    <AnimatePresence>
+      {open && (
+        <>
+          <Backdrop
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+          />
+          <Drawer
+            initial={{ x: "-100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "-100%" }}
+            transition={{ type: "spring", stiffness: 300, damping: 32 }}
+          >
+            <Header>
+              <Logo>Irish Poker ☘</Logo>
+              <CloseBtn onClick={onClose} aria-label="Close menu">
+                ×
+              </CloseBtn>
+            </Header>
+
+            <Tabs>
+              <Tab $active={tab === "rules"} onClick={() => setTab("rules")}>
+                How to Play
+              </Tab>
+              <Tab
+                $active={tab === "feedback"}
+                onClick={() => setTab("feedback")}
+              >
+                Feedback
+              </Tab>
+            </Tabs>
+
+            {tab === "rules" && <RulesContent />}
+
+            {tab === "feedback" && (
+              <Section as="form" onSubmit={sendFeedback}>
+                <TextInput
+                  placeholder="Name (optional)"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+                <TextInput
+                  placeholder="Email (optional)"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                <TextArea
+                  placeholder="Tell me what's broken, what's fun, or what you want next…"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                />
+                <GoldButton
+                  type="submit"
+                  disabled={status === "sending" || !message.trim()}
+                >
+                  {status === "sending" ? "Sending…" : "Send Feedback"}
+                </GoldButton>
+                {status === "sent" && <Note>Thanks — got it! 🍀</Note>}
+                {status === "error" && (
+                  <Note $error>Couldn&apos;t send right now, try again later.</Note>
+                )}
+              </Section>
+            )}
+
+            <Spacer />
+
+            {inRoom && (
+              <DangerButton
+                onClick={() => {
+                  onLeave();
+                  onClose();
+                }}
+              >
+                Leave party
+              </DangerButton>
+            )}
+          </Drawer>
+        </>
       )}
     </AnimatePresence>
   );
 }
-
-export default Menu;
