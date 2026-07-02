@@ -1,615 +1,336 @@
-"use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import { AnimatePresence, motion } from "framer-motion";
-import Chat from "../Chat";
-import { variables } from "@/styles/Variables";
-import { pSmall, h1styles2, pXSmall, pBase, pLarge } from "@/styles/Type";
-import { MediaQueries } from "@/styles/Utilities";
-import FullGame from "../Game/FullGame/Index";
-import LobbyInfo from "./LobbyInfo/Index";
-import GameNotifications from "../Game/GameNotifications/Index";
-import Menu from "../Menu/Index";
-import DisconnectedUser from "../Game/DisconnectedUser/Index";
-import styles from "../../src/styles/page.module.css";
+import { motion, AnimatePresence } from "framer-motion";
+import { theme, mq, avatarColor } from "@/styles/theme";
+import type { RoomState } from "@lib/types";
+import {
+  DisplayTitle,
+  GoldButton,
+  DangerButton,
+  GlassPanel,
+  Avatar,
+  pulseGold,
+} from "../ui/shared";
+import RulesContent from "../Menu/RulesContent";
 
-const Player = styled.div`
-  ${pSmall}
-`;
-
-const IrishPoker = styled.h1`
-  ${h1styles2}
-  color: ${variables.color4};
-  z-index: 1001;
+const Wrap = styled(motion.main)`
+  min-height: 100dvh;
   display: flex;
-`;
-
-const MainContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 60px;
-  height: 100dvh;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 86px 20px 40px;
   position: relative;
-  z-index: 9;
+  z-index: 1;
 `;
 
-const MainInnerContainer = styled.div`
-  width: 100%;
-  display: grid;
-  @media ${MediaQueries.mobile} {
-    grid-template-columns: unset;
-  }
-`;
-
-const FullGameContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const HamburgerContainer = styled(motion.button)`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: ${variables.darkGreen};
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  border: none;
-  z-index: 19;
-`;
-
-const HamburgerIcon = styled.img`
-  width: 30px;
-  height: 30px;
-`;
-
-const MessageIconContainer = styled(motion.button)`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: ${variables.darkGreen};
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  border: none;
-  z-index: 19;
-`;
-
-const RedDot = styled.div`
-  width: fit-content;
-  min-width: 18px;
-  height: fit-content;
-  background-color: red;
-  border-radius: 50%;
-  position: absolute;
-  top: -4px;
-  right: -4px;
-`;
-
-const RedDotNumber = styled.p`
-  ${pXSmall}
-`;
-
-const MessageIcon = styled.img`
-  width: 30px;
-  height: 30px;
-`;
-
-const CloverPageTransitionContainer = styled(motion.div)`
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  background-image: url("clover.svg");
-  background-repeat: no-repeat;
-  background-position: right;
-  background-color: ${variables.black};
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: ${variables.white};
-  z-index: 2;
-  gap: 6px;
-
-  &::before {
-    z-index: 1;
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.9);
-  }
-`;
-
-const DrinkingGame = styled.p`
-  ${pBase}
-  z-index: 1001;
+const Title = styled(DisplayTitle)`
+  font-size: clamp(2.2rem, 6vw, 3.4rem);
   text-align: center;
 `;
 
-const GameStarting = styled.p`
-  ${pLarge}
-  z-index: 1001;
+const CodePanel = styled(GlassPanel)`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 26px;
+  border-radius: 20px;
 `;
-interface GameData {
-  users: [];
-  roomId: string;
-  cardData: [];
+
+const CodeLabel = styled.span`
+  font-size: 0.8rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: ${theme.creamDim};
+`;
+
+const CodeTiles = styled.div`
+  display: flex;
+  gap: 8px;
+`;
+
+const CodeTile = styled(motion.span)`
+  width: 52px;
+  height: 62px;
+  display: grid;
+  place-items: center;
+  font-size: 2rem;
+  font-weight: 800;
+  color: ${theme.gold};
+  text-shadow: 0 0 20px rgba(233, 184, 76, 0.45);
+  background: rgba(0, 0, 0, 0.4);
+  border: 1.5px solid ${theme.goldSoft};
+  border-radius: 12px;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.5);
+
+  @media ${mq.mobile} {
+    width: 46px;
+    height: 56px;
+    font-size: 1.7rem;
+  }
+`;
+
+const ShareRow = styled.div`
+  display: flex;
+  gap: 8px;
+`;
+
+const CopyBtn = styled.button`
+  background: ${theme.glass};
+  border: 1px solid ${theme.panelBorder};
+  color: ${theme.cream};
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-size: 0.9rem;
+  transition: background 0.15s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.14);
+  }
+`;
+
+const PlayersPanel = styled(GlassPanel)`
+  width: min(560px, 100%);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+`;
+
+const PanelHeading = styled.h2`
+  font-size: 0.9rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: ${theme.creamDim};
+  font-weight: 600;
+`;
+
+const PlayerGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+`;
+
+const PlayerChip = styled(motion.div)<{ $dim: boolean }>`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: ${theme.glass};
+  border: 1px solid ${theme.panelBorder};
+  opacity: ${({ $dim }) => ($dim ? 0.45 : 1)};
+`;
+
+const PlayerName = styled.span`
+  font-weight: 600;
+  font-size: 1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+const HostTag = styled.span`
+  font-size: 0.85rem;
+`;
+
+const StatusDot = styled.span<{ $on: boolean }>`
+  width: 8px;
+  height: 8px;
+  min-width: 8px;
+  border-radius: 50%;
+  margin-left: auto;
+  background: ${({ $on }) => ($on ? theme.success : theme.danger)};
+  box-shadow: 0 0 8px ${({ $on }) => ($on ? theme.success : theme.danger)};
+`;
+
+const StartButton = styled(GoldButton)`
+  animation: ${pulseGold} 2s infinite;
+  font-size: 1.15rem;
+  padding: 16px 42px;
+`;
+
+const WaitingNote = styled.p`
+  color: ${theme.creamDim};
+  font-size: 1rem;
+  text-align: center;
+`;
+
+const RulesToggle = styled.button`
+  background: none;
+  border: none;
+  color: ${theme.gold};
+  font-size: 0.95rem;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+`;
+
+const RulesBox = styled(motion.div)`
+  width: min(560px, 100%);
+  overflow: hidden;
+`;
+
+const RulesInner = styled(GlassPanel)`
+  padding: 20px 22px;
+`;
+
+const Row = styled.div`
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  @media ${mq.mobile} {
+    width: 100%;
+  }
+`;
+
+interface Props {
+  room: RoomState;
+  meId: string;
+  onStart: () => void;
+  onLeave: () => void;
 }
 
-type SingleCard = {
-  player: string;
-  image: string;
-  code: string;
-  images: [];
-  suit: string;
-  value: string;
-  selectedOption?: string;
-  socketId: string;
-  cardNext?: boolean;
-};
+export default function Lobby({ room, meId, onStart, onLeave }: Props) {
+  const [copied, setCopied] = useState<"code" | "link" | null>(null);
+  const [showRules, setShowRules] = useState(false);
+  const isHost = room.hostId === meId;
+  const host = room.players.find((p) => p.isHost);
 
-type Player = SingleCard[];
-type PlayerData = {};
-
-interface IMsgDataTypes {
-  roomId: String | number;
-  user: String;
-  msg: String;
-  time: String;
-}
-
-const GameLobby = ({
-  socket,
-  username,
-  roomId,
-  users,
-  setUsers,
-  openMenuHandler,
-  showMenu,
-  setShowMenu,
-  showSpinner,
-  setShowSpinner,
-}: any) => {
-  const [playerData, setPlayerData] = useState();
-  const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
-
-  const [allGameData, setAllGameData] = useState<GameData | undefined>();
-  const [isCurrentPlayer, setIsCurrentPlayer] = useState();
-
-  const [usersLockedIn, setUsersLockedIn] = useState(false);
-  const [gameStarted, setGameStarted] = useState(false);
-  const [currentRound, setCurrentRound] = useState(0);
-
-  const [booleanMessage, setBooleanMessage] = useState(null);
-  const [buttonsTrue, setButtonsTrue] = useState(false);
-
-  const [currentUsersMessageTrue, setCurrentUserMessageTrue] = useState("");
-  const [currentUsersMessageFalse, setCurrentUsersMessageFalse] = useState("");
-  const [otherUsersMessageTrue, setOtherUsersMessageTrue] = useState("");
-  const [otherUsersMessageFalse, setOtherUsersMessageFalse] = useState("");
-  const [usersToDrink, setUsersToDrink] = useState<any[]>();
-
-  const [confirmedUsersToDrink, setConfirmedUsersToDrink] = useState(false);
-
-  const [countdown, setCountdown] = useState(7);
-
-  const [activeModal, setActiveModal] = useState<boolean>();
-  const [whoDrinksTriggered, setWhoDrinksTriggered] = useState(false);
-
-  const [statusCode, setStatusCode] = useState(null);
-
-  const [chat, setChat] = useState([]);
-
-  const [hasNewMessage, setHasNewMessage] = useState(false);
-  const [messageTracker, setMessageTracker] = useState(0);
-
-  const [disconnectedUser, setDisconnectedUser] = useState<any>();
-
-  const lockInPlayersHandler = () => {
-    socket.emit("lockin_players", { users, roomId });
-    setUsersLockedIn(true);
-    setIsCurrentPlayer(users[0]?.username);
-    setCurrentRound(0);
-    setShowSpinner(true);
+  const flashCopied = (what: "code" | "link") => {
+    setCopied(what);
+    setTimeout(() => setCopied(null), 1600);
   };
 
-  const startGameHandler = () => {
-    socket.emit("start_game", {
-      users,
-      roomId,
-      cardData: playerData,
-      gameStarted: true,
-    });
-    socket.emit("send_current_player", {
-      roomId,
-      isCurrentPlayer,
-      currentRound: 0,
-    });
-    setGameStarted(true);
-    setCurrentRound(0);
-  };
-
-  const whoDrinksHandler = (user: any) => {
-    if (usersToDrink?.includes(user)) {
-      // If the user is already in the array, remove them
-      setUsersToDrink(usersToDrink?.filter((u: any) => u !== user));
-    } else {
-      // If the user is not in the array, add them
-      setUsersToDrink((prevUsersToDrink) => [
-        ...(prevUsersToDrink ?? []),
-        user,
-      ]);
+  const copyCode = async () => {
+    try {
+      await navigator.clipboard.writeText(room.code);
+      flashCopied("code");
+    } catch {
+      /* clipboard unavailable — code is on screen anyway */
     }
-    setWhoDrinksTriggered(true);
   };
 
-  const confirmWhoDrinksHandler = () => {
-    socket.emit("send_users_to_drink", {
-      roomId,
-      usersToDrink,
-      activeModal: true,
-      confirmedUsersToDrink: true,
-      countdown: 7,
-    });
-
-    setActiveModal(false);
-    setButtonsTrue(false);
-    setWhoDrinksTriggered(false);
-  };
-
-  useEffect(() => {
-    if (chat.length > 0) {
-      setHasNewMessage(true);
+  const shareLink = async () => {
+    const url = `${window.location.origin}?join=${room.code}`;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "Irish Poker 🍀",
+          text: "Join my party!",
+          url,
+        });
+        return;
+      } catch {
+        /* user cancelled the share sheet — fall through to clipboard */
+      }
     }
-
-    setMessageTracker(chat.length);
-
-    // TODO: im close with this one.. i think i need to do something about the re-rendering or i need to involve another state varables
-
-    socket.on("allPlayersCards", (playersCards: any) => {
-      // console.log("Received allPlayersCards data:", playersCards);
-      setPlayerData(playersCards);
-    });
-
-    socket.on("card_status_code", (data: any) => {
-      setStatusCode(data);
-    });
-
-    socket.on("receive_updated_card_data", (updatedPlayersCards: []) => {
-      // console.log(updatedPlayersCards, "updatedPlayersCards");
-      setAllGameData({ users, roomId, cardData: updatedPlayersCards });
-    });
-
-    socket.on("all_game_data", (gameData: any) => {
-      setAllGameData(gameData);
-      setGameStarted(gameData.gameStarted);
-    });
-
-    socket.on("receive_updatedIndex", (data: number) => {
-      setCurrentPlayerIndex(data);
-    });
-
-    socket.on("receive_current_player", ({ isCurrentPlayer }: any) => {
-      setIsCurrentPlayer(isCurrentPlayer);
-    });
-
-    if (
-      allGameData?.cardData?.every(
-        (player: Player) => player[currentRound]?.selectedOption
-      )
-    ) {
-      socket.emit("send_current_round", {
-        roomId,
-        currentRound: currentRound + 1,
-      });
+    try {
+      await navigator.clipboard.writeText(url);
+      flashCopied("link");
+    } catch {
+      /* ignore */
     }
-
-    socket.on("receive_current_round", (data: any) => {
-      setCurrentRound(data);
-    });
-
-    socket.on("receive_current_player_message", (data: any) => {
-      setBooleanMessage(data.selectionMessage);
-      setButtonsTrue(data.buttonsTrue);
-
-      setCurrentUserMessageTrue(data.currentUsersMessageTrue);
-      setCurrentUsersMessageFalse(data.currentUsersMessageFalse);
-      setOtherUsersMessageTrue(data.otherUsersMessageTrue);
-    });
-
-    socket.on("receive_other_players_message", (data: any) => {
-      setBooleanMessage(data.selectionMessage);
-      setButtonsTrue(data.buttonsTrue);
-
-      setOtherUsersMessageTrue(data.otherUsersMessageTrue);
-      setCurrentUsersMessageFalse(data.currentUsersMessageFalse);
-      setCurrentUserMessageTrue(data.currentUsersMessageTrue);
-    });
-
-    socket.on("receive_users_to_drink", (data: any) => {
-      setUsersToDrink(data.usersToDrink);
-      setCurrentUserMessageTrue("");
-      setOtherUsersMessageFalse("");
-      setOtherUsersMessageTrue("");
-      setCurrentUsersMessageFalse("");
-      setButtonsTrue(false);
-      setActiveModal(data.activeModal);
-      setConfirmedUsersToDrink(data.confirmedUsersToDrink);
-      setCountdown(data.countdown);
-    });
-
-    socket.on("receive_modal_active", (data: any) => {
-      setActiveModal(data.activeModal);
-    });
-
-    setIsCurrentPlayer(users[currentPlayerIndex]?.username);
-
-    // Listen for countdown updates from the Socket.IO server
-    socket.on("receive_countdown", (data: any) => {
-      setCountdown(data.countdown);
-    });
-
-    socket.on("receive_reset_game", (data: any) => {
-      setGameStarted(data.gameStarted);
-      setPlayerData(data.cardData);
-      setAllGameData({
-        users: data.users,
-        roomId: data.roomId,
-        cardData: data.cardData,
-      });
-      setCurrentRound(data.currentRound);
-      setUsersLockedIn(data.usersLockedIn);
-      setCurrentPlayerIndex(data.currentPlayerIndex);
-    });
-
-    socket.on("user_disconnected", (userId: string) => {
-      // console.log("User disconnected:", userId);
-
-      const user = users.find((user: any) => user.id === userId);
-      if (user) {
-        setDisconnectedUser(user.username);
-        setTimeout(() => {
-          setDisconnectedUser(undefined);
-        }, 3000);
-      }
-    });
-
-    // Decrement the countdown every second while the modal is active
-    const countdownTimer = setInterval(() => {
-      if (activeModal && countdown > 0 && gameStarted) {
-        setCountdown((prevCountdown) => prevCountdown - 1);
-      }
-    }, 1000);
-
-    // Handle closing the modal when countdown reaches zero
-    if (countdown === 0) {
-      if (booleanMessage === false) {
-        setActiveModal(false);
-      }
-      if (
-        (usersToDrink !== undefined && confirmedUsersToDrink) ||
-        users.length === 1
-      ) {
-        setActiveModal(false);
-        setConfirmedUsersToDrink(false);
-        setUsersToDrink(undefined);
-      }
-      setCountdown(7);
-    }
-
-    return () => {
-      clearInterval(countdownTimer);
-      socket.off("receive_countdown");
-    };
-  }, [
-    socket,
-    currentPlayerIndex,
-    playerData,
-    allGameData,
-    isCurrentPlayer,
-    currentRound,
-    booleanMessage,
-    currentUsersMessageTrue,
-    currentUsersMessageFalse,
-    otherUsersMessageTrue,
-    otherUsersMessageFalse,
-    usersToDrink,
-    buttonsTrue,
-    countdown,
-    gameStarted,
-    chat,
-    hasNewMessage,
-    messageTracker,
-    disconnectedUser,
-  ]);
-
-  const [showChat, setShowChat] = useState(false);
-
-  const showChatHandler = () => {
-    setShowChat(true);
-    setHasNewMessage(false);
   };
-
-  const backToLobbyHandler = () => {
-    socket.emit("send_reset_game", {
-      roomId: roomId,
-      gameStarted: false,
-      cardData: undefined,
-      currentRound: 0,
-      usersLockedIn: false,
-      currentPlayerIndex: 0,
-      users: users,
-      isCurrentPlayerIndex: 0,
-    });
-    setShowSpinner(false);
-  };
-
-  const motionProps = {
-    initial: {
-      y: "0%",
-    },
-    animate: {
-      y: "100%",
-      transition: {
-        duration: 0.8,
-        delay: 1.8,
-      },
-      transitionEnd: {
-        y: "-100%",
-      },
-    },
-    exit: {
-      y: "0%",
-      transitionEnd: {
-        y: "0%",
-        delay: 0.3,
-      },
-    },
-    transition: {
-      duration: 0.8,
-    },
-  };
-
-  // const motionProps = {
-  //   initial: {
-  //     y: "0%",
-  //   },
-  //   animate: {
-  //     y: "100%",
-  //     transitionEnd: {
-  //       y: "-100%",
-  //     },
-  //   },
-  //   exit: {
-  //     y: "0%",
-  //     transitionEnd: {
-  //       y: "0%",
-  //       delay: 0.3,
-  //     },
-  //   },
-  //   transition: {
-  //     duration: 0.8,
-  //   },
-  // };
 
   return (
-    <MainContainer>
-      <MainInnerContainer>
-        <FullGameContainer>
-          <HamburgerContainer
-            whileHover={{ scale: 1.1 }}
-            onClick={openMenuHandler}
-          >
-            <HamburgerIcon src="hamburger-menu.svg" />
-          </HamburgerContainer>
-          <MessageIconContainer
-            whileHover={{ scale: 1.1 }}
-            onClick={showChatHandler}
-          >
-            <MessageIcon src="chat_icon.svg" />
-            {hasNewMessage && (
-              <RedDot>
-                <RedDotNumber>{messageTracker}</RedDotNumber>
-              </RedDot>
-            )}
-          </MessageIconContainer>
-          <Chat
-            socket={socket}
-            username={username}
-            roomId={roomId}
-            users={users}
-            setShowChat={setShowChat}
-            showChat={showChat}
-            setChat={setChat}
-            chat={chat}
-            setMessageTracker={setMessageTracker}
-          />
-          <Menu showMenu={showMenu} setShowMenu={setShowMenu} />
-          <AnimatePresence mode="wait">
-            {!gameStarted && (
-              <LobbyInfo
-                playerData={playerData}
-                roomId={roomId}
-                gameStarted={gameStarted}
-                users={users}
-                usersLockedIn={usersLockedIn}
-                startGameHandler={startGameHandler}
-                lockInPlayersHandler={lockInPlayersHandler}
-                username={username}
-                socket={socket}
-                allGameData={allGameData}
-                showSpinner={showSpinner}
-              />
-            )}
-            {gameStarted && (
-              <CloverPageTransitionContainer {...motionProps}>
-                <IrishPoker>
-                  Do not leave your browser to avoid disconnection
-                </IrishPoker>
-                {/* <div className={styles.loading_spinner1}></div> */}
-              </CloverPageTransitionContainer>
-            )}
-            {gameStarted && (
-              <FullGame
-                backToLobbyHandler={backToLobbyHandler}
-                username={username}
-                users={users}
-                allGameData={allGameData}
-                currentPlayerIndex={currentPlayerIndex}
-                currentRound={currentRound}
-                isCurrentPlayer={isCurrentPlayer}
-                socket={socket}
-                roomId={roomId}
-                countdown={countdown}
-                setGameStarted={setGameStarted}
-                setCurrentRound={setCurrentRound}
-                setPlayerData={setPlayerData}
-                setUsersLockedIn={setUsersLockedIn}
-                setCurrentPlayerIndex={setCurrentPlayerIndex}
-                setUsers={setUsers}
-                setAllGameData={setAllGameData}
-                activeModal={activeModal}
-              />
-            )}
+    <Wrap
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.4 }}
+    >
+      <Title>The Lobby</Title>
+
+      <CodePanel>
+        <CodeLabel>Party code</CodeLabel>
+        <CodeTiles>
+          {room.code.split("").map((ch, i) => (
+            <CodeTile
+              key={i}
+              initial={{ rotateX: 90, opacity: 0 }}
+              animate={{ rotateX: 0, opacity: 1 }}
+              transition={{ delay: 0.15 + i * 0.1, type: "spring", stiffness: 220, damping: 16 }}
+            >
+              {ch}
+            </CodeTile>
+          ))}
+        </CodeTiles>
+        <ShareRow>
+          <CopyBtn onClick={shareLink}>
+            {copied === "link" ? "Link copied ✓" : "🔗 Share invite link"}
+          </CopyBtn>
+          <CopyBtn onClick={copyCode}>
+            {copied === "code" ? "Copied ✓" : "Copy code"}
+          </CopyBtn>
+        </ShareRow>
+      </CodePanel>
+
+      <PlayersPanel>
+        <PanelHeading>
+          Players — {room.players.length}/10
+        </PanelHeading>
+        <PlayerGrid>
+          <AnimatePresence>
+            {room.players.map((p) => (
+              <PlayerChip
+                key={p.id}
+                $dim={!p.connected}
+                layout
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+              >
+                <Avatar $color={avatarColor(p.avatar)} $size={34}>
+                  {p.username.charAt(0)}
+                </Avatar>
+                <PlayerName>
+                  {p.username}
+                  {p.id === meId && " (you)"}
+                </PlayerName>
+                {p.isHost && <HostTag title="Host">👑</HostTag>}
+                <StatusDot $on={p.connected} />
+              </PlayerChip>
+            ))}
           </AnimatePresence>
+        </PlayerGrid>
+      </PlayersPanel>
 
-          <DisconnectedUser disconnectedUser={disconnectedUser} />
+      {isHost ? (
+        <StartButton onClick={onStart}>Deal the Cards 🃏</StartButton>
+      ) : (
+        <WaitingNote>
+          Waiting for {host?.username ?? "the host"} to deal the cards…
+        </WaitingNote>
+      )}
 
-          <GameNotifications
-            booleanMessage={booleanMessage}
-            activeModal={activeModal}
-            socket={socket}
-            currentUsersMessageTrue={currentUsersMessageTrue}
-            otherUsersMessageTrue={otherUsersMessageTrue}
-            users={users}
-            buttonsTrue={buttonsTrue}
-            whoDrinksHandler={whoDrinksHandler}
-            confirmWhoDrinksHandler={confirmWhoDrinksHandler}
-            usersToDrink={usersToDrink}
-            currentUsersMessageFalse={currentUsersMessageFalse}
-            username={username}
-            confirmedUsersToDrink={confirmedUsersToDrink}
-            countdown={countdown}
-            whoDrinksTriggered={whoDrinksTriggered}
-          />
-        </FullGameContainer>
-      </MainInnerContainer>
-    </MainContainer>
+      <Row>
+        <RulesToggle onClick={() => setShowRules((s) => !s)}>
+          {showRules ? "Hide the rules" : "How do you play?"}
+        </RulesToggle>
+        <DangerButton onClick={onLeave} style={{ padding: "8px 18px" }}>
+          Leave party
+        </DangerButton>
+      </Row>
+
+      <AnimatePresence>
+        {showRules && (
+          <RulesBox
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.35 }}
+          >
+            <RulesInner>
+              <RulesContent />
+            </RulesInner>
+          </RulesBox>
+        )}
+      </AnimatePresence>
+    </Wrap>
   );
-};
-
-export default GameLobby;
+}
