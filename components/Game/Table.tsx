@@ -1,4 +1,10 @@
-import React, { MutableRefObject, useMemo } from "react";
+import React, {
+  MutableRefObject,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import styled, { keyframes } from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
 import { theme, mq } from "@/styles/theme";
@@ -47,6 +53,12 @@ const TableFelt = styled.div`
   /* Card size scales with viewport and shrinks as the table gets crowded */
   --card-w: clamp(26px, calc((5.2vw + 4.5vh) / var(--crowd, 1.4)), 58px);
 
+  /* compact grid: two seats share each row, so size cards to half the width */
+  &[data-compact="true"] {
+    --card-w: clamp(19px, 9.4vw, 42px);
+    border-radius: 34px;
+  }
+
   /* gold pinstripe just inside the rail */
   &::before {
     content: "";
@@ -92,6 +104,55 @@ const CenterHub = styled.div`
   > * {
     pointer-events: auto;
   }
+`;
+
+/* ---- compact (phone) layout: nothing absolute, nothing can clip ---- */
+
+const CompactScroll = styled.div`
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* flex-start (not space-between) so an overflowing player list scrolls
+     instead of clipping the top row */
+  justify-content: flex-start;
+  gap: 12px;
+  /* extra bottom room so the floating emote bar never covers my cards */
+  padding: 16px 8px 72px;
+`;
+
+const OthersGrid = styled.div`
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  justify-items: center;
+  row-gap: 12px;
+  column-gap: 4px;
+
+  /* center a lone seat on an odd row */
+  > *:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+`;
+
+const CompactHub = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  text-align: center;
+  padding: 4px 0;
+  /* soak up leftover vertical space so hub floats between rows and my seat */
+  margin: auto 0;
+`;
+
+const MeRow = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
 `;
 
 const RoundBadge = styled.div`
@@ -172,6 +233,20 @@ interface Props {
   onBackToLobby: () => void;
 }
 
+// Below this width the ellipse can't physically fit wide seats, so the
+// table switches to a stacked grid where nothing can overlap or clip.
+function useIsCompact() {
+  const [compact, setCompact] = useState(false);
+  useEffect(() => {
+    const mql = window.matchMedia("(max-width: 760px)");
+    const update = () => setCompact(mql.matches);
+    update();
+    mql.addEventListener("change", update);
+    return () => mql.removeEventListener("change", update);
+  }, []);
+  return compact;
+}
+
 export default function GameTable({
   room,
   meId,
@@ -187,25 +262,51 @@ export default function GameTable({
 }: Props) {
   const game = room.game;
   const skipSeconds = useCountdown(game?.skipDeadline, clockOffsetRef);
+  const compact = useIsCompact();
+  const compactScrollRef = useRef<HTMLDivElement>(null);
+  const currentTurnId = game?.currentPlayerId ?? null;
 
-  // Seat everyone around the table with "me" pinned to the bottom.
-  const seats = useMemo(() => {
+  // On phones the player list can overflow — keep the view pinned to the
+  // bottom (my cards + the round hub) on entry and whenever my turn starts.
+  useEffect(() => {
+    const el = compactScrollRef.current;
+    if (!el) return;
+    if (currentTurnId === meId || currentTurnId === null) {
+      el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+    }
+  }, [compact, currentTurnId, meId]);
+
+  useEffect(() => {
+    const el = compactScrollRef.current;
+    if (el) el.scrollTop = el.scrollHeight;
+  }, [compact]);
+
+  // Everyone in turn order, rotated so I'm last (bottom of the table).
+  const seatOrder = useMemo(() => {
     if (!game) return [];
     const order = game.turnOrder.filter((id) =>
       room.players.some((p) => p.id === id)
     );
-    const myIdx = Math.max(0, order.indexOf(meId));
-    const n = order.length;
-    return order.map((id, i) => {
-      const rel = (i - myIdx + n) % n;
-      const angle = (Math.PI / 2) + (2 * Math.PI * rel) / n;
+    const myIdx = order.indexOf(meId);
+    if (myIdx === -1) return order;
+    return order.map((_, i) => order[(myIdx + 1 + i) % order.length]);
+  }, [game, room.players, meId]);
+
+  // Ellipse positions for the wide layout, with side seats clamped so a
+  // full hand of cards never pokes past the felt.
+  const seats = useMemo(() => {
+    const n = seatOrder.length;
+    return seatOrder.map((id, i) => {
+      // i = 0..n-1 with me last; angle walks the ellipse from the bottom
+      const rel = (i + 1) % n;
+      const angle = Math.PI / 2 + (2 * Math.PI * rel) / n;
       return {
         id,
-        x: 50 + 40 * Math.cos(angle),
-        y: 50 + 33 * Math.sin(angle),
+        x: Math.min(86, Math.max(14, 50 + 40 * Math.cos(angle))),
+        y: Math.min(84, Math.max(13, 50 + 33 * Math.sin(angle))),
       };
     });
-  }, [game, room.players, meId]);
+  }, [seatOrder]);
 
   if (!game) return null;
 
@@ -231,6 +332,70 @@ export default function GameTable({
       ? myHand.slice(0, 2)
       : [];
 
+  const hubContent = (
+    <>
+      <RoundBadge>Round {game.round + 1} of 4</RoundBadge>
+      <RoundTitle>{roundInfo.title}</RoundTitle>
+      <RoundDots>
+        {[0, 1, 2, 3].map((r) => (
+          <Dot
+            key={r}
+            $state={r < game.round ? "done" : r === game.round ? "now" : "todo"}
+          />
+        ))}
+      </RoundDots>
+      {room.phase === "playing" && (
+        <AnimatePresence mode="wait">
+          <TurnBanner
+            key={`${currentId}-${game.round}`}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+          >
+            {isMyTurn ? (
+              <strong>Your turn — {roundInfo.question}</strong>
+            ) : (
+              <>
+                Waiting on <strong>{currentPlayer?.username ?? "…"}</strong>
+              </>
+            )}
+          </TurnBanner>
+        </AnimatePresence>
+      )}
+      {showSkip && (
+        <SkipRow>
+          <SkipNote>
+            {currentPlayer?.username} is offline — skipping in {skipSeconds ?? "…"}s
+          </SkipNote>
+          {iAmHost && (
+            <GhostButton onClick={onSkipTurn} style={{ padding: "6px 16px" }}>
+              Skip now
+            </GhostButton>
+          )}
+        </SkipRow>
+      )}
+    </>
+  );
+
+  const renderSeat = (id: string, pos?: { x: number; y: number }) => {
+    const player = room.players.find((p) => p.id === id);
+    if (!player) return null;
+    return (
+      <Seat
+        key={id}
+        player={player}
+        hand={game.hands[id] ?? []}
+        x={pos?.x}
+        y={pos?.y}
+        isMe={id === meId}
+        isTurn={id === currentId && game.awaiting !== "interlude"}
+      />
+    );
+  };
+
+  const othersIds = seatOrder.filter((id) => id !== meId);
+  const meSeated = seatOrder.includes(meId);
+
   return (
     <Wrap
       initial={{ opacity: 0, scale: 0.96 }}
@@ -238,67 +403,24 @@ export default function GameTable({
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <TableFelt style={{ ["--crowd" as any]: crowd }}>
-        <CenterHub>
-          <RoundBadge>Round {game.round + 1} of 4</RoundBadge>
-          <RoundTitle>{roundInfo.title}</RoundTitle>
-          <RoundDots>
-            {[0, 1, 2, 3].map((r) => (
-              <Dot
-                key={r}
-                $state={r < game.round ? "done" : r === game.round ? "now" : "todo"}
-              />
-            ))}
-          </RoundDots>
-          {room.phase === "playing" && (
-            <AnimatePresence mode="wait">
-              <TurnBanner
-                key={`${currentId}-${game.round}`}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-              >
-                {isMyTurn ? (
-                  <strong>Your turn — {roundInfo.question}</strong>
-                ) : (
-                  <>
-                    Waiting on <strong>{currentPlayer?.username ?? "…"}</strong>
-                  </>
-                )}
-              </TurnBanner>
-            </AnimatePresence>
-          )}
-          {showSkip && (
-            <SkipRow>
-              <SkipNote>
-                {currentPlayer?.username} is offline — skipping in {skipSeconds ?? "…"}s
-              </SkipNote>
-              {iAmHost && (
-                <GhostButton onClick={onSkipTurn} style={{ padding: "6px 16px" }}>
-                  Skip now
-                </GhostButton>
-              )}
-            </SkipRow>
-          )}
-        </CenterHub>
+      <TableFelt
+        data-compact={compact ? "true" : "false"}
+        style={{ ["--crowd" as any]: crowd }}
+      >
+        {compact ? (
+          <CompactScroll ref={compactScrollRef}>
+            <OthersGrid>{othersIds.map((id) => renderSeat(id))}</OthersGrid>
+            <CompactHub>{hubContent}</CompactHub>
+            {meSeated && <MeRow>{renderSeat(meId)}</MeRow>}
+          </CompactScroll>
+        ) : (
+          <>
+            <CenterHub>{hubContent}</CenterHub>
+            {seats.map(({ id, x, y }) => renderSeat(id, { x, y }))}
+          </>
+        )}
 
-        {seats.map(({ id, x, y }) => {
-          const player = room.players.find((p) => p.id === id);
-          if (!player) return null;
-          return (
-            <Seat
-              key={id}
-              player={player}
-              hand={game.hands[id] ?? []}
-              x={x}
-              y={y}
-              isMe={id === meId}
-              isTurn={id === currentId && game.awaiting !== "interlude"}
-            />
-          );
-        })}
-
-        <EmoteFloaters emotes={emotes} seatPos={seatPos} />
+        <EmoteFloaters emotes={emotes} seatPos={compact ? {} : seatPos} />
       </TableFelt>
 
       <EmoteBar onEmote={onEmote} />

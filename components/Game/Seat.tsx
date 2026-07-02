@@ -10,17 +10,32 @@ const glowPulse = keyframes`
   50% { box-shadow: 0 0 0 2px rgba(233, 184, 76, 0.45), 0 0 10px rgba(233, 184, 76, 0.25); }
 `;
 
-const SeatWrap = styled.div<{ $x: number; $y: number; $me: boolean }>`
-  position: absolute;
-  left: ${({ $x }) => $x}%;
-  top: ${({ $y }) => $y}%;
-  transform: translate(-50%, -50%) scale(${({ $me }) => ($me ? 1.15 : 1)});
+// Positioned absolutely around the ellipse on wide screens ($x/$y given),
+// or laid out statically by the compact grid on phones ($x/$y undefined).
+const SeatWrap = styled.div<{ $x?: number; $y?: number; $me: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 6px;
-  transition: left 0.6s ease, top 0.6s ease;
   z-index: ${({ $me }) => ($me ? 5 : 3)};
+  max-width: 100%;
+
+  ${({ $x, $y, $me }) =>
+    $x !== undefined && $y !== undefined
+      ? css`
+          position: absolute;
+          left: ${$x}%;
+          top: ${$y}%;
+          transform: translate(-50%, -50%) scale(${$me ? 1.15 : 1});
+          transition: left 0.6s ease, top 0.6s ease;
+        `
+      : css`
+          position: relative;
+          ${$me &&
+          css`
+            --card-w: clamp(26px, 12vw, 52px);
+          `}
+        `}
 `;
 
 const CardRow = styled.div<{ $turn: boolean }>`
@@ -80,18 +95,22 @@ const OfflineTag = styled.span`
 interface Props {
   player: PlayerView;
   hand: MaskedCard[];
-  x: number;
-  y: number;
+  x?: number;
+  y?: number;
   isMe: boolean;
   isTurn: boolean;
 }
 
 function Seat({ player, hand, x, y, isMe, isTurn }: Props) {
   // Cards animate in from the center of the table toward this seat.
-  const dealVars = {
-    "--deal-dx": `${((50 - x) * 0.8).toFixed(1)}vw`,
-    "--deal-dy": `${((50 - y) * 0.7).toFixed(1)}vh`,
-  } as React.CSSProperties;
+  const dealVars = (
+    x !== undefined && y !== undefined
+      ? {
+          "--deal-dx": `${((50 - x) * 0.8).toFixed(1)}vw`,
+          "--deal-dy": `${((50 - y) * 0.7).toFixed(1)}vh`,
+        }
+      : { "--deal-dy": "-24px" }
+  ) as unknown as React.CSSProperties;
 
   return (
     <SeatWrap $x={x} $y={y} $me={isMe} style={dealVars}>
