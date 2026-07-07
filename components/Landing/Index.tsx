@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 import styled, { keyframes } from "styled-components";
 import { motion } from "framer-motion";
 import { theme, mq } from "@/styles/theme";
@@ -143,11 +144,29 @@ const ErrorMsg = styled(motion.p)`
   text-align: center;
 `;
 
-const Footer = styled.p`
+const Footer = styled.div`
   position: absolute;
   bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   font-size: 0.85rem;
   color: ${theme.creamDim};
+`;
+
+const FootLink = styled(Link)`
+  color: ${theme.creamDim};
+  text-decoration: none;
+  text-underline-offset: 3px;
+
+  &:hover {
+    color: ${theme.gold};
+    text-decoration: underline;
+  }
+`;
+
+const FootDot = styled.span`
+  opacity: 0.5;
 `;
 
 const NAME_KEY = "irish-poker:name";
@@ -291,7 +310,11 @@ export default function Landing({ onCreate, onJoin }: Props) {
 
       <AdBanner slot={AD_SLOTS.landing} height={90} maxWidth={430} />
 
-      <Footer>Made with ☘ by Dylan Cramer</Footer>
+      <Footer>
+        <span>Made with ☘ by Dylan Cramer</span>
+        <FootDot>·</FootDot>
+        <FootLink href="/privacy">Privacy</FootLink>
+      </Footer>
     </Wrap>
   );
 }

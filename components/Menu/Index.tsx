@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Link from "next/link";
 import styled from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
 import { theme } from "@/styles/theme";
@@ -103,6 +104,18 @@ const Note = styled.p<{ $error?: boolean }>`
 
 const Spacer = styled.div`
   flex: 1;
+`;
+
+const PrivacyLink = styled(Link)`
+  color: ${theme.creamDim};
+  font-size: 0.85rem;
+  text-align: center;
+  text-decoration: none;
+
+  &:hover {
+    color: ${theme.gold};
+    text-decoration: underline;
+  }
 `;
 
 interface Props {
@@ -219,6 +232,10 @@ export default function Menu({ open, onClose, inRoom, onLeave }: Props) {
                 Leave party
               </DangerButton>
             )}
+
+            <PrivacyLink href="/privacy" onClick={onClose}>
+              Privacy Policy
+            </PrivacyLink>
           </Drawer>
         </>
       )}
