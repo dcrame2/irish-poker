@@ -12,6 +12,8 @@ import {
   pulseGold,
 } from "../ui/shared";
 import RulesContent from "../Menu/RulesContent";
+import AdBanner from "../Ads/AdBanner";
+import { AD_SLOTS } from "@lib/ads";
 
 const Wrap = styled(motion.main)`
   min-height: 100dvh;
@@ -331,6 +333,8 @@ export default function Lobby({ room, meId, onStart, onLeave }: Props) {
           </RulesBox>
         )}
       </AnimatePresence>
+
+      <AdBanner slot={AD_SLOTS.lobby} height={90} maxWidth={560} />
     </Wrap>
   );
 }

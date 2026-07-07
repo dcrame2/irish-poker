@@ -10,6 +10,8 @@ import {
   Avatar,
   DisplayTitle,
 } from "../ui/shared";
+import AdBanner from "../Ads/AdBanner";
+import { AD_SLOTS } from "@lib/ads";
 
 const Dim = styled(motion.div)`
   position: fixed;
@@ -189,6 +191,8 @@ export default function GameOverOverlay({
             {host?.username ?? "The host"} can start the next round
           </WaitNote>
         )}
+
+        <AdBanner slot={AD_SLOTS.gameOver} height={100} />
       </Panel>
     </Dim>
   );

@@ -19,6 +19,8 @@ import { EmoteBar, EmoteFloaters } from "./Emotes";
 import type { FloatingEmote } from "../App/Index";
 import { useCountdown } from "./useCountdown";
 import { GhostButton } from "../ui/shared";
+import AdBanner from "../Ads/AdBanner";
+import { AD_SLOTS } from "@lib/ads";
 
 const Wrap = styled(motion.main)`
   height: 100dvh;
@@ -202,6 +204,12 @@ const SkipNote = styled.p`
 const RoundDots = styled.div`
   display: flex;
   gap: 8px;
+`;
+
+/* Thin anchor ad pinned under the guess bar; the fixed height keeps it out
+   of the flex math mid-game and the gap keeps it clear of the guess buttons */
+const AnchorAd = styled(AdBanner)`
+  margin-top: 6px;
 `;
 
 const Dot = styled.span<{ $state: "done" | "now" | "todo" }>`
@@ -395,6 +403,7 @@ export default function GameTable({
 
   const othersIds = seatOrder.filter((id) => id !== meId);
   const meSeated = seatOrder.includes(meId);
+  const showAnchor = room.phase !== "results";
 
   return (
     <Wrap
@@ -402,6 +411,9 @@ export default function GameTable({
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
+      // Height the bottom ad banner occupies (50px + 6px gap) — the fixed
+      // emote bar reads this to stay clear of the guess bar.
+      style={{ ["--anchor-h" as any]: showAnchor ? "56px" : "0px" }}
     >
       <TableFelt
         data-compact={compact ? "true" : "false"}
@@ -444,6 +456,8 @@ export default function GameTable({
         }
         onGuess={onGuess}
       />
+
+      {showAnchor && <AnchorAd slot={AD_SLOTS.gameAnchor} height={50} />}
 
       <ResultOverlay
         room={room}

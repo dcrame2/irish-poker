@@ -9,7 +9,9 @@ export const EMOTES = ["🍻", "😂", "💀", "🔥", "👏", "🍀"];
 const Bar = styled.div`
   position: fixed;
   left: 12px;
-  bottom: calc(104px + env(safe-area-inset-bottom));
+  /* --anchor-h is the height of the bottom ad banner (set on the table
+     Wrap) so the bar keeps floating just above the guess bar */
+  bottom: calc(104px + var(--anchor-h, 0px) + env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -24,7 +26,7 @@ const Bar = styled.div`
     flex-direction: row;
     left: 50%;
     transform: translateX(-50%);
-    bottom: calc(88px + env(safe-area-inset-bottom));
+    bottom: calc(88px + var(--anchor-h, 0px) + env(safe-area-inset-bottom));
     padding: 5px 10px;
   }
 `;
