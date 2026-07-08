@@ -76,7 +76,7 @@ export default function ConnectionBanner({
           exit={{ y: -50 }}
         >
           <Spinner />
-          Connection lost — reconnecting… your seat is safe
+          Connection lost, reconnecting… your seat is safe
         </Banner>
       )}
       {!showTrouble && (showRestored || rejoining) && (

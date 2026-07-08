@@ -17,18 +17,23 @@ const SuitGlyph = styled.span<{
   $size: number;
   $duration: number;
   $delay: number;
+  $opacity: number;
 }>`
   position: absolute;
   left: ${({ $left }) => $left}%;
   bottom: -10vh;
   font-size: ${({ $size }) => $size}rem;
   color: rgba(233, 184, 76, 0.5);
+  --drift-o: ${({ $opacity }) => $opacity};
   animation: floatSuit ${({ $duration }) => $duration}s linear infinite;
   animation-delay: ${({ $delay }) => $delay}s;
   will-change: transform;
 `;
 
-const GLYPHS = ["♠", "♥", "♦", "♣", "☘"];
+// Suits + party emoji. Emoji keep their native colors, so they float at a
+// slightly higher opacity to read through the dark felt.
+const GLYPHS = ["♠", "♥", "♦", "♣", "☘", "🍺", "♠", "♥", "♦", "♣", "☘", "🍻"];
+const EMOJI = new Set(["🍺", "🍻"]);
 
 interface Drift {
   id: number;
@@ -37,6 +42,7 @@ interface Drift {
   size: number;
   duration: number;
   delay: number;
+  opacity: number;
 }
 
 export default function FloatingSuits() {
@@ -44,14 +50,18 @@ export default function FloatingSuits() {
 
   useEffect(() => {
     setDrifts(
-      Array.from({ length: 14 }, (_, i) => ({
-        id: i,
-        glyph: GLYPHS[i % GLYPHS.length],
-        left: Math.random() * 100,
-        size: 1 + Math.random() * 2.2,
-        duration: 18 + Math.random() * 22,
-        delay: -Math.random() * 30,
-      }))
+      Array.from({ length: 26 }, (_, i) => {
+        const glyph = GLYPHS[i % GLYPHS.length];
+        return {
+          id: i,
+          glyph,
+          left: Math.random() * 100,
+          size: 1.2 + Math.random() * 2.8,
+          duration: 16 + Math.random() * 22,
+          delay: -Math.random() * 30,
+          opacity: EMOJI.has(glyph) ? 0.34 : 0.22,
+        };
+      })
     );
   }, []);
 
@@ -64,6 +74,7 @@ export default function FloatingSuits() {
           $size={d.size}
           $duration={d.duration}
           $delay={d.delay}
+          $opacity={d.opacity}
         >
           {d.glyph}
         </SuitGlyph>

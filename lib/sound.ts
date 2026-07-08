@@ -1,4 +1,4 @@
-// Tiny synthesized SFX engine — everything is generated with WebAudio,
+// Tiny synthesized SFX engine; everything is generated with WebAudio,
 // no audio files to download. All sounds are short, soft, and muteable.
 
 const MUTE_KEY = "irish-poker:muted";
@@ -119,7 +119,7 @@ export const sound = {
     tone({ freq: 880, type: "sine", dur: 0.28, vol: 0.18, delay: 0.14 });
   },
 
-  // Correct call — little ascending arpeggio
+  // Correct call: little ascending arpeggio
   lucky() {
     const notes = [523, 659, 784, 1046];
     notes.forEach((f, i) =>
@@ -127,13 +127,13 @@ export const sound = {
     );
   },
 
-  // Wrong call — descending womp
+  // Wrong call: descending womp
   unlucky() {
     tone({ freq: 220, type: "sawtooth", dur: 0.4, vol: 0.12, glideTo: 130 });
     tone({ freq: 110, type: "sine", dur: 0.45, vol: 0.14, glideTo: 65, delay: 0.05 });
   },
 
-  // Drinks handed out — glass clink
+  // Drinks handed out: glass clink
   clink() {
     tone({ freq: 1720, type: "sine", dur: 0.1, vol: 0.14 });
     tone({ freq: 2350, type: "sine", dur: 0.16, vol: 0.1, delay: 0.06 });

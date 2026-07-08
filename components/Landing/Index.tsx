@@ -11,7 +11,7 @@ import {
   GlassPanel,
 } from "../ui/shared";
 import AdBanner from "../Ads/AdBanner";
-import { AD_SLOTS } from "@lib/ads";
+import { AD_SLOTS, IN_GAME_ADS } from "@lib/ads";
 
 const Wrap = styled(motion.main)`
   min-height: 100dvh;
@@ -308,10 +308,14 @@ export default function Landing({ onCreate, onJoin }: Props) {
         )}
       </Card>
 
-      <AdBanner slot={AD_SLOTS.landing} height={90} maxWidth={430} />
+      {IN_GAME_ADS && (
+        <AdBanner slot={AD_SLOTS.landing} height={90} maxWidth={430} />
+      )}
 
       <Footer>
         <span>Made with ☘ by Dylan Cramer</span>
+        <FootDot>·</FootDot>
+        <FootLink href="/">About</FootLink>
         <FootDot>·</FootDot>
         <FootLink href="/privacy">Privacy</FootLink>
       </Footer>

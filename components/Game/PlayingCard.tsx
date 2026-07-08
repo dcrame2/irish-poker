@@ -3,7 +3,7 @@ import styled, { css, keyframes } from "styled-components";
 import { theme } from "@/styles/theme";
 import type { MaskedCard, Suit } from "@lib/types";
 
-// Cards are drawn entirely with CSS/text — crisp at any size, zero network
+// Cards are drawn entirely with CSS/text: crisp at any size, zero network
 // requests. Size is controlled by the --card-w CSS variable on any ancestor.
 
 const SUIT_GLYPH: Record<Suit, string> = {

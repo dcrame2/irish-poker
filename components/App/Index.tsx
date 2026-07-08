@@ -5,8 +5,10 @@ import React, {
   useRef,
   useState,
 } from "react";
+import Link from "next/link";
 import styled from "styled-components";
 import { AnimatePresence } from "framer-motion";
+import { theme, mq } from "@/styles/theme";
 import {
   getSocket,
   getPlayerId,
@@ -53,6 +55,45 @@ const RightControls = styled.div`
 
   > * {
     pointer-events: auto;
+  }
+`;
+
+const LeftControls = styled.div`
+  display: flex;
+  gap: 10px;
+  align-items: center;
+
+  > * {
+    pointer-events: auto;
+  }
+`;
+
+/* Visible route back to the marketing/home page from the landing screen
+   (hidden mid-party so nobody fat-fingers their way out of a game) */
+const HomePill = styled(Link)`
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  height: 46px;
+  padding: 0 18px;
+  border-radius: 999px;
+  border: 1px solid ${theme.panelBorder};
+  background: ${theme.panel};
+  color: ${theme.cream};
+  font-size: 0.95rem;
+  font-weight: 500;
+  backdrop-filter: blur(10px);
+  box-shadow: ${theme.shadowMd};
+  transition: border-color 0.15s, color 0.15s;
+
+  &:hover {
+    border-color: ${theme.gold};
+    color: ${theme.gold};
+  }
+
+  @media ${mq.mobile} {
+    height: 42px;
+    padding: 0 14px;
   }
 `;
 
@@ -162,7 +203,7 @@ export default function App() {
           break;
         case "player_disconnected":
           if (ev.playerId !== meId)
-            pushToast(`${ev.username} lost connection — the game keeps going`, "warn");
+            pushToast(`${ev.username} lost connection, the game keeps going`, "warn");
           break;
         case "player_reconnected":
           if (ev.playerId !== meId) pushToast(`${ev.username} is back!`, "success");
@@ -187,7 +228,7 @@ export default function App() {
               setBeerBurst((b) => b + 1);
             }
           } else {
-            pushToast(`${ev.pickerName} was merciful — nobody drinks`, "info");
+            pushToast(`${ev.pickerName} was merciful. Nobody drinks`, "info");
           }
           break;
         case "game_over":
@@ -214,7 +255,7 @@ export default function App() {
 
     if (socket.connected) onConnect();
 
-    // Browsers only allow audio after a user gesture — arm it on first tap.
+    // Browsers only allow audio after a user gesture; arm it on first tap.
     const unlockAudio = () => sound.unlock();
     window.addEventListener("pointerdown", unlockAudio, { once: true });
     setMutedState(sound.isMuted());
@@ -300,14 +341,17 @@ export default function App() {
         rejoining={rejoining}
       />
       <TopControls>
-        <IconButton
-          aria-label="Menu"
-          whileHover={{ scale: 1.08 }}
-          whileTap={{ scale: 0.92 }}
-          onClick={() => setShowMenu(true)}
-        >
-          ☰
-        </IconButton>
+        <LeftControls>
+          <IconButton
+            aria-label="Menu"
+            whileHover={{ scale: 1.08 }}
+            whileTap={{ scale: 0.92 }}
+            onClick={() => setShowMenu(true)}
+          >
+            ☰
+          </IconButton>
+          {!room && <HomePill href="/">☘ Home</HomePill>}
+        </LeftControls>
         <RightControls>
           <IconButton
             aria-label={muted ? "Unmute sounds" : "Mute sounds"}

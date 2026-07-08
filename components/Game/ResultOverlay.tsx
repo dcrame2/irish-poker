@@ -203,13 +203,13 @@ export default function ResultOverlay({
             {result.type === "guess" ? (
               <Detail>
                 <strong>{result.username}</strong> called{" "}
-                <strong>{result.option}</strong> — it was the{" "}
+                <strong>{result.option}</strong>, but it was the{" "}
                 <strong>{cardText}</strong>
               </Detail>
             ) : (
               <Detail>
                 <strong>{result.username}</strong> wasn&apos;t around, so the
-                card flipped itself{cardText && <> — <strong>{cardText}</strong></>}
+                card flipped itself{cardText && <>: <strong>{cardText}</strong></>}
               </Detail>
             )}
 
@@ -220,7 +220,7 @@ export default function ResultOverlay({
                 transition={{ delay: 0.25, type: "spring", stiffness: 300 }}
               >
                 {result.playerId === meId
-                  ? "Wrong call — take a drink! 🍺"
+                  ? "Wrong call. Take a drink! 🍺"
                   : `${result.username} drinks! 🍺`}
               </DrinkCallout>
             )}

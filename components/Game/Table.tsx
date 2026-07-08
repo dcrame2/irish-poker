@@ -20,7 +20,7 @@ import type { FloatingEmote } from "../App/Index";
 import { useCountdown } from "./useCountdown";
 import { GhostButton } from "../ui/shared";
 import AdBanner from "../Ads/AdBanner";
-import { AD_SLOTS } from "@lib/ads";
+import { AD_SLOTS, IN_GAME_ADS } from "@lib/ads";
 
 const Wrap = styled(motion.main)`
   height: 100dvh;
@@ -274,7 +274,7 @@ export default function GameTable({
   const compactScrollRef = useRef<HTMLDivElement>(null);
   const currentTurnId = game?.currentPlayerId ?? null;
 
-  // On phones the player list can overflow — keep the view pinned to the
+  // On phones the player list can overflow; keep the view pinned to the
   // bottom (my cards + the round hub) on entry and whenever my turn starts.
   useEffect(() => {
     const el = compactScrollRef.current;
@@ -361,7 +361,7 @@ export default function GameTable({
             exit={{ opacity: 0, y: -8 }}
           >
             {isMyTurn ? (
-              <strong>Your turn — {roundInfo.question}</strong>
+              <strong>Your turn: {roundInfo.question}</strong>
             ) : (
               <>
                 Waiting on <strong>{currentPlayer?.username ?? "…"}</strong>
@@ -373,7 +373,7 @@ export default function GameTable({
       {showSkip && (
         <SkipRow>
           <SkipNote>
-            {currentPlayer?.username} is offline — skipping in {skipSeconds ?? "…"}s
+            {currentPlayer?.username} is offline. Skipping in {skipSeconds ?? "…"}s
           </SkipNote>
           {iAmHost && (
             <GhostButton onClick={onSkipTurn} style={{ padding: "6px 16px" }}>
@@ -403,7 +403,7 @@ export default function GameTable({
 
   const othersIds = seatOrder.filter((id) => id !== meId);
   const meSeated = seatOrder.includes(meId);
-  const showAnchor = room.phase !== "results";
+  const showAnchor = IN_GAME_ADS && room.phase !== "results";
 
   return (
     <Wrap
@@ -411,7 +411,7 @@ export default function GameTable({
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      // Height the bottom ad banner occupies (50px + 6px gap) — the fixed
+      // Height the bottom ad banner occupies (50px + 6px gap); the fixed
       // emote bar reads this to stay clear of the guess bar.
       style={{ ["--anchor-h" as any]: showAnchor ? "56px" : "0px" }}
     >

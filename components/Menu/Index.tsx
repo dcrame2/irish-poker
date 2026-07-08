@@ -106,6 +106,12 @@ const Spacer = styled.div`
   flex: 1;
 `;
 
+const FooterLinks = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+`;
+
 const PrivacyLink = styled(Link)`
   color: ${theme.creamDim};
   font-size: 0.85rem;
@@ -213,7 +219,7 @@ export default function Menu({ open, onClose, inRoom, onLeave }: Props) {
                 >
                   {status === "sending" ? "Sending…" : "Send Feedback"}
                 </GoldButton>
-                {status === "sent" && <Note>Thanks — got it! 🍀</Note>}
+                {status === "sent" && <Note>Thanks, got it! 🍀</Note>}
                 {status === "error" && (
                   <Note $error>Couldn&apos;t send right now, try again later.</Note>
                 )}
@@ -233,9 +239,14 @@ export default function Menu({ open, onClose, inRoom, onLeave }: Props) {
               </DangerButton>
             )}
 
-            <PrivacyLink href="/privacy" onClick={onClose}>
-              Privacy Policy
-            </PrivacyLink>
+            <FooterLinks>
+              <PrivacyLink href="/" onClick={onClose}>
+                🏠 About Irish Poker
+              </PrivacyLink>
+              <PrivacyLink href="/privacy" onClick={onClose}>
+                Privacy Policy
+              </PrivacyLink>
+            </FooterLinks>
           </Drawer>
         </>
       )}

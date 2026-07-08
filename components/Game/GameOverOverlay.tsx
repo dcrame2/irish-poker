@@ -11,7 +11,7 @@ import {
   DisplayTitle,
 } from "../ui/shared";
 import AdBanner from "../Ads/AdBanner";
-import { AD_SLOTS } from "@lib/ads";
+import { AD_SLOTS, IN_GAME_ADS } from "@lib/ads";
 
 const Dim = styled(motion.div)`
   position: fixed;
@@ -149,7 +149,7 @@ export default function GameOverOverlay({
         transition={{ type: "spring", stiffness: 260, damping: 24, delay: 0.2 }}
       >
         <Title>Sláinte! 🍻</Title>
-        <Subtitle>That&apos;s the game — here&apos;s the damage</Subtitle>
+        <Subtitle>That&apos;s the game. Here&apos;s the damage</Subtitle>
 
         <Standings>
           {standings.map((p, i) => (
@@ -192,7 +192,7 @@ export default function GameOverOverlay({
           </WaitNote>
         )}
 
-        <AdBanner slot={AD_SLOTS.gameOver} height={100} />
+        {IN_GAME_ADS && <AdBanner slot={AD_SLOTS.gameOver} height={100} />}
       </Panel>
     </Dim>
   );

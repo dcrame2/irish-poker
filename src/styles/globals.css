@@ -74,10 +74,10 @@ a {
     opacity: 0;
   }
   8% {
-    opacity: 0.12;
+    opacity: var(--drift-o, 0.12);
   }
   92% {
-    opacity: 0.12;
+    opacity: var(--drift-o, 0.12);
   }
   100% {
     transform: translateY(-15vh) rotate(360deg);

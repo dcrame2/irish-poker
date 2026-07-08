@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://irish-poker.com/sitemap.xml

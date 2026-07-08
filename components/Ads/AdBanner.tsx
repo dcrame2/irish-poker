@@ -40,7 +40,7 @@ const Placeholder = styled.div`
 `;
 
 // AdSense rewrites the DOM inside the <ins>, so React must never touch it
-// again after the initial push — memo keeps re-renders away.
+// again after the initial push; memo keeps re-renders away.
 const AdUnit = memo(function AdUnit({ slot }: { slot: string }) {
   const pushed = useRef(false);
   useEffect(() => {
@@ -49,7 +49,7 @@ const AdUnit = memo(function AdUnit({ slot }: { slot: string }) {
     try {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
     } catch {
-      /* ad blocker — the frame just stays empty */
+      /* ad blocker; the frame just stays empty */
     }
   }, []);
   return (
@@ -70,7 +70,7 @@ interface Props {
 }
 
 export default function AdBanner({ slot, height, maxWidth, className }: Props) {
-  // AdSense never serves on localhost — show the reserved box instead so
+  // AdSense never serves on localhost; show the reserved box instead so
   // layout can be checked in dev.
   if (process.env.NODE_ENV !== "production") {
     return (

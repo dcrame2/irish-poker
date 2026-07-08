@@ -11,3 +11,9 @@ export const AD_SLOTS = {
   gameOver: "3721387615",
   gameAnchor: "2162939533",
 };
+
+// AdSense rejected the site for "ads on screens without publisher content"
+// (the game screens are pure UI with no crawlable text). Until the site is
+// approved, ads may only run on the content pages (/, /how-to-play, /faq).
+// Flip this to true after approval to re-enable the in-game placements.
+export const IN_GAME_ADS = false;

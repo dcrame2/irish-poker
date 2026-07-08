@@ -13,7 +13,7 @@ import {
 } from "../ui/shared";
 import RulesContent from "../Menu/RulesContent";
 import AdBanner from "../Ads/AdBanner";
-import { AD_SLOTS } from "@lib/ads";
+import { AD_SLOTS, IN_GAME_ADS } from "@lib/ads";
 
 const Wrap = styled(motion.main)`
   min-height: 100dvh;
@@ -213,12 +213,12 @@ export default function Lobby({ room, meId, onStart, onLeave }: Props) {
       await navigator.clipboard.writeText(room.code);
       flashCopied("code");
     } catch {
-      /* clipboard unavailable — code is on screen anyway */
+      /* clipboard unavailable; code is on screen anyway */
     }
   };
 
   const shareLink = async () => {
-    const url = `${window.location.origin}?join=${room.code}`;
+    const url = `${window.location.origin}/play?join=${room.code}`;
     if (navigator.share) {
       try {
         await navigator.share({
@@ -228,7 +228,7 @@ export default function Lobby({ room, meId, onStart, onLeave }: Props) {
         });
         return;
       } catch {
-        /* user cancelled the share sheet — fall through to clipboard */
+        /* user cancelled the share sheet; fall through to clipboard */
       }
     }
     try {
@@ -274,7 +274,7 @@ export default function Lobby({ room, meId, onStart, onLeave }: Props) {
 
       <PlayersPanel>
         <PanelHeading>
-          Players — {room.players.length}/10
+          Players {room.players.length}/10
         </PanelHeading>
         <PlayerGrid>
           <AnimatePresence>
@@ -334,7 +334,9 @@ export default function Lobby({ room, meId, onStart, onLeave }: Props) {
         )}
       </AnimatePresence>
 
-      <AdBanner slot={AD_SLOTS.lobby} height={90} maxWidth={560} />
+      {IN_GAME_ADS && (
+        <AdBanner slot={AD_SLOTS.lobby} height={90} maxWidth={560} />
+      )}
     </Wrap>
   );
 }

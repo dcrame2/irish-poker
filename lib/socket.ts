@@ -14,7 +14,7 @@ const SESSION_KEY = "irish-poker:session";
 
 let socket: Socket | null = null;
 
-// sessionStorage (not localStorage) so every browser tab is its own player —
+// sessionStorage (not localStorage) so every browser tab is its own player;
 // you can test multiplayer with two tabs. It survives refreshes and network
 // drops; if the whole browser dies, the server lets you reclaim your seat by
 // rejoining with the same name.

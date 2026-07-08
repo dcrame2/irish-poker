@@ -70,23 +70,23 @@ export default function RulesContent() {
       <Heading>How to Play</Heading>
       <P>
         Everyone gets <strong>4 face-down cards</strong>. The game runs 4
-        rounds — in each round, every player takes a turn guessing something
+        rounds. In each round, every player takes a turn guessing something
         about their next card before it flips.
       </P>
       <RoundList>
         <Round>
-          <strong>Red or Black</strong> — call the color of your first card.
+          <strong>Red or Black</strong>: call the color of your first card.
         </Round>
         <Round>
-          <strong>Higher or Lower</strong> — will your second card beat your
+          <strong>Higher or Lower</strong>: will your second card beat your
           first? (A tie loses!)
         </Round>
         <Round>
-          <strong>Inside or Outside</strong> — does your third card land
+          <strong>Inside or Outside</strong>: does your third card land
           between your first two, or outside them? (Landing on one loses!)
         </Round>
         <Round>
-          <strong>Name the Suit</strong> — the big one. Call the exact suit of
+          <strong>Name the Suit</strong>: the big one. Call the exact suit of
           your last card.
         </Round>
       </RoundList>
@@ -95,7 +95,7 @@ export default function RulesContent() {
         You pick who drinks. Most drinks at the end takes the crown of shame.
       </P>
       <P>
-        Play in the same room or across the world — if someone loses
+        Play in the same room or across the world. If someone loses
         connection, the game keeps going and their seat is saved until they
         return.
       </P>

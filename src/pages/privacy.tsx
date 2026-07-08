@@ -3,16 +3,20 @@ import Link from "next/link";
 import styled from "styled-components";
 import { theme, mq } from "@/styles/theme";
 import { DisplayTitle } from "../../components/ui/shared";
+import {
+  PageShell,
+  MarketingNav,
+  MarketingFooter,
+} from "../../components/Marketing/shared";
 
 const LAST_UPDATED = "July 7, 2026";
 const CONTACT_EMAIL = "dcrame2@gmail.com";
 
 const Page = styled.main`
-  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 48px 20px 80px;
+  padding: 30px 20px 60px;
   position: relative;
   z-index: 1;
 `;
@@ -93,10 +97,10 @@ export default function Privacy() {
   return (
     <>
       <Head>
-        <title>Privacy Policy — Irish Poker</title>
+        <title>Privacy Policy | Irish Poker</title>
         <meta
           name="description"
-          content="Privacy Policy for Irish Poker, the online multiplayer drinking card game — what data we collect, how cookies and advertising work, and how to contact us."
+          content="Privacy Policy for Irish Poker, the online multiplayer drinking card game: what data we collect, how cookies and advertising work, and how to contact us."
         />
         <meta
           name="viewport"
@@ -106,8 +110,10 @@ export default function Privacy() {
         <link rel="icon" href="favicon.ico" />
       </Head>
 
-      <Page>
-        <Article>
+      <PageShell>
+        <MarketingNav />
+        <Page>
+          <Article>
           <DisplayTitle as="h1">Privacy Policy</DisplayTitle>
           <Updated>Last updated: {LAST_UPDATED}</Updated>
 
@@ -139,7 +145,7 @@ export default function Privacy() {
           <ul>
             <li>
               <strong>A display name</strong> you type when you create or join a
-              party. Use any nickname you like — it is shown to other players in
+              party. Use any nickname you like; it is shown to other players in
               your party and is not verified.
             </li>
             <li>
@@ -147,7 +153,7 @@ export default function Privacy() {
               dealt to you, your guesses, drink tallies, emotes, and chat
               messages you send. This is exchanged in real time with our game
               server so the game can run, and is held only in memory for the
-              duration of a party — it is not written to a long-term database.
+              duration of a party; it is not written to a long-term database.
             </li>
             <li>
               <strong>Local browser storage.</strong> We store a random player
@@ -244,9 +250,11 @@ export default function Privacy() {
             <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
           </p>
 
-          <BackLink href="/">← Back to the game</BackLink>
-        </Article>
-      </Page>
+            <BackLink href="/play">← Back to the game</BackLink>
+          </Article>
+        </Page>
+        <MarketingFooter />
+      </PageShell>
     </>
   );
 }

@@ -155,7 +155,7 @@ export default function ChatDrawer({ open, onClose, chat, meId, onSend }: Props)
             </CloseBtn>
           </Header>
           <Messages>
-            {chat.length === 0 && <Empty>No messages yet — say sláinte!</Empty>}
+            {chat.length === 0 && <Empty>No messages yet. Say sláinte!</Empty>}
             {chat.map((m) => (
               <Bubble key={m.id} $mine={m.playerId === meId}>
                 {m.playerId !== meId && <Sender>{m.username}</Sender>}
