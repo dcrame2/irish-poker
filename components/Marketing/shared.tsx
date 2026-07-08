@@ -389,15 +389,27 @@ const Band = styled(motion.div)`
   position: relative;
   overflow: hidden;
 
+  /* decorative flourish. Transparency lives on opacity (not the color alpha)
+     because iOS renders "☘" as a color emoji that ignores the color property
+     but still honours opacity. Smaller and cornered on mobile so it never
+     crowds the text. */
   &::before {
     content: "☘";
     position: absolute;
     right: -30px;
     bottom: -46px;
     font-size: 13rem;
-    color: rgba(233, 184, 76, 0.06);
+    color: ${theme.gold};
+    opacity: 0.07;
     transform: rotate(-14deg);
     pointer-events: none;
+
+    @media ${mq.mobile} {
+      font-size: 7rem;
+      right: -14px;
+      bottom: -22px;
+      opacity: 0.05;
+    }
   }
 
   /* slow pub-light sweep across the sign */
