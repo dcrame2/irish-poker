@@ -1,4 +1,3 @@
-import Head from "next/head";
 import styled from "styled-components";
 import { motion } from "framer-motion";
 import { theme, mq } from "@/styles/theme";
@@ -19,6 +18,7 @@ import {
   stagger,
 } from "../../components/Marketing/shared";
 import AdBanner from "../../components/Ads/AdBanner";
+import Seo from "../../components/Marketing/Seo";
 import { AD_SLOTS } from "@lib/ads";
 
 /* ------------------------------ article bits ----------------------------- */
@@ -161,64 +161,53 @@ const AdSlot = styled.div`
 export default function HowToPlay() {
   return (
     <>
-      <Head>
-        <title>How to Play Irish Poker: Full Rules, Odds & Strategy Guide</title>
-        <meta
-          name="description"
-          content="The complete guide to Irish Poker: setup, all four rounds (Red or Black, Higher or Lower, Inside or Outside, Name the Suit), drinking rules, odds, strategy tips, and popular house-rule variations."
-        />
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, viewport-fit=cover"
-        />
-        <meta name="theme-color" content="#071a10" />
-        <link rel="canonical" href="https://irish-poker.com/how-to-play" />
-        <link rel="icon" href="favicon.ico" />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "HowTo",
-              name: "How to Play Irish Poker",
-              description:
-                "Learn the rules of Irish Poker, the classic four-round drinking card game: Red or Black, Higher or Lower, Inside or Outside, and Name the Suit.",
-              step: [
-                {
-                  "@type": "HowToStep",
-                  name: "Deal",
-                  text: "Every player receives four face-down cards they may not look at.",
-                },
-                {
-                  "@type": "HowToStep",
-                  name: "Round 1: Red or Black",
-                  text: "Each player guesses the color of their first card before flipping it.",
-                },
-                {
-                  "@type": "HowToStep",
-                  name: "Round 2: Higher or Lower",
-                  text: "Each player guesses whether their second card is higher or lower than their first. Ties lose.",
-                },
-                {
-                  "@type": "HowToStep",
-                  name: "Round 3: Inside or Outside",
-                  text: "Each player guesses whether their third card falls between their first two cards or outside them. Matching either card loses.",
-                },
-                {
-                  "@type": "HowToStep",
-                  name: "Round 4: Name the Suit",
-                  text: "Each player guesses the exact suit of their final card.",
-                },
-                {
-                  "@type": "HowToStep",
-                  name: "Drink or give",
-                  text: "A wrong guess means you drink. A correct guess means you choose another player to drink.",
-                },
-              ],
-            }),
-          }}
-        />
-      </Head>
+      <Seo
+        title="How to Play Irish Poker: Full Rules, Odds & Strategy Guide"
+        description="The complete guide to Irish Poker: setup, all four rounds (Red or Black, Higher or Lower, Inside or Outside, Name the Suit), drinking rules, odds, strategy tips, and popular house-rule variations."
+        path="/how-to-play"
+        ogType="article"
+        jsonLd={[
+          {
+            "@context": "https://schema.org",
+            "@type": "HowTo",
+            name: "How to Play Irish Poker",
+            description:
+              "Learn the rules of Irish Poker, the classic four-round drinking card game: Red or Black, Higher or Lower, Inside or Outside, and Name the Suit.",
+            step: [
+              {
+                "@type": "HowToStep",
+                name: "Deal",
+                text: "Every player receives four face-down cards they may not look at.",
+              },
+              {
+                "@type": "HowToStep",
+                name: "Round 1: Red or Black",
+                text: "Each player guesses the color of their first card before flipping it.",
+              },
+              {
+                "@type": "HowToStep",
+                name: "Round 2: Higher or Lower",
+                text: "Each player guesses whether their second card is higher or lower than their first. Ties lose.",
+              },
+              {
+                "@type": "HowToStep",
+                name: "Round 3: Inside or Outside",
+                text: "Each player guesses whether their third card falls between their first two cards or outside them. Matching either card loses.",
+              },
+              {
+                "@type": "HowToStep",
+                name: "Round 4: Name the Suit",
+                text: "Each player guesses the exact suit of their final card.",
+              },
+              {
+                "@type": "HowToStep",
+                name: "Drink or give",
+                text: "A wrong guess means you drink. A correct guess means you choose another player to drink.",
+              },
+            ],
+          },
+        ]}
+      />
 
       <PageShell>
         <MarketingNav />
@@ -499,7 +488,15 @@ export default function HowToPlay() {
               </ul>
               <p>
                 Whatever you add, agree on it <strong>before</strong> the deal.
-                Mid-game rules committees are how parties die.
+                Mid-game rules committees are how parties die. Want more?
+                We&apos;ve collected{" "}
+                <a
+                  href="/guides/irish-poker-house-rules"
+                  style={{ color: theme.gold, textDecoration: "underline" }}
+                >
+                  12 house rules worth stealing
+                </a>{" "}
+                — with honest verdicts on each.
               </p>
             </motion.div>
 

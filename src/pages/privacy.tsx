@@ -1,119 +1,34 @@
-import Head from "next/head";
 import Link from "next/link";
-import styled from "styled-components";
-import { theme, mq } from "@/styles/theme";
 import { DisplayTitle } from "../../components/ui/shared";
 import {
   PageShell,
   MarketingNav,
   MarketingFooter,
 } from "../../components/Marketing/shared";
+import {
+  ProseMain,
+  ProseArticle,
+  Updated,
+  BackLink,
+} from "../../components/Marketing/prose";
+import Seo from "../../components/Marketing/Seo";
 
-const LAST_UPDATED = "July 7, 2026";
+const LAST_UPDATED = "August 16, 2026";
 const CONTACT_EMAIL = "dcrame2@gmail.com";
-
-const Page = styled.main`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 30px 20px 60px;
-  position: relative;
-  z-index: 1;
-`;
-
-const Article = styled.article`
-  width: min(720px, 100%);
-  color: ${theme.cream};
-  line-height: 1.6;
-
-  h1 {
-    font-size: clamp(2rem, 6vw, 3rem);
-    text-align: center;
-    margin-bottom: 8px;
-  }
-
-  h2 {
-    font-family: ${theme.fontDisplay};
-    font-weight: 400;
-    color: ${theme.gold};
-    font-size: 1.4rem;
-    margin: 34px 0 10px;
-  }
-
-  p,
-  li {
-    color: ${theme.creamDim};
-    font-size: 1.02rem;
-  }
-
-  p {
-    margin: 10px 0;
-  }
-
-  ul {
-    margin: 10px 0 10px 22px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  a {
-    color: ${theme.gold};
-    text-underline-offset: 3px;
-  }
-
-  strong {
-    color: ${theme.cream};
-  }
-
-  @media ${mq.mobile} {
-    h2 {
-      font-size: 1.25rem;
-    }
-  }
-`;
-
-const Updated = styled.p`
-  text-align: center;
-  color: ${theme.creamDim};
-  font-size: 0.9rem;
-  letter-spacing: 0.06em;
-  margin-bottom: 8px;
-`;
-
-const BackLink = styled(Link)`
-  display: inline-block;
-  margin: 28px 0 8px;
-  color: ${theme.gold};
-  font-weight: 600;
-  text-decoration: none;
-
-  &:hover {
-    text-decoration: underline;
-  }
-`;
 
 export default function Privacy() {
   return (
     <>
-      <Head>
-        <title>Privacy Policy | Irish Poker</title>
-        <meta
-          name="description"
-          content="Privacy Policy for Irish Poker, the online multiplayer drinking card game: what data we collect, how cookies and advertising work, and how to contact us."
-        />
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, viewport-fit=cover"
-        />
-        <meta name="theme-color" content="#071a10" />
-        <link rel="icon" href="favicon.ico" />
-      </Head>
+      <Seo
+        title="Privacy Policy | Irish Poker"
+        description="Privacy Policy for Irish Poker, the online multiplayer drinking card game: what data we collect, how cookies and advertising work, and how to contact us."
+        path="/privacy"
+      />
 
       <PageShell>
         <MarketingNav />
-        <Page>
-          <Article>
+        <ProseMain>
+          <ProseArticle>
           <DisplayTitle as="h1">Privacy Policy</DisplayTitle>
           <Updated>Last updated: {LAST_UPDATED}</Updated>
 
@@ -124,7 +39,8 @@ export default function Privacy() {
             <a href="https://irish-poker.com">irish-poker.com</a>. This policy
             explains what information the game handles when you play, how it is
             used, and the choices you have. By using the game you agree to the
-            practices described here.
+            practices described here and to our{" "}
+            <Link href="/terms">Terms of Use</Link>.
           </p>
 
           <h2>Who can use Irish Poker</h2>
@@ -163,10 +79,10 @@ export default function Privacy() {
               time through your browser settings.
             </li>
             <li>
-              <strong>Optional feedback.</strong> If you use the feedback form,
-              any name, email, and message you choose to enter are emailed to us
-              so we can read and reply. All fields are optional except the
-              message.
+              <strong>Optional feedback.</strong> If you use the feedback form
+              or the <Link href="/contact">contact page</Link>, any name, email,
+              and message you choose to enter are emailed to us so we can read
+              and reply. All fields are optional except the message.
             </li>
           </ul>
 
@@ -247,12 +163,13 @@ export default function Privacy() {
           <h2>Contact</h2>
           <p>
             Questions about this policy? Email{" "}
-            <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
+            <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> or use the{" "}
+            <Link href="/contact">contact page</Link>.
           </p>
 
             <BackLink href="/play">← Back to the game</BackLink>
-          </Article>
-        </Page>
+          </ProseArticle>
+        </ProseMain>
         <MarketingFooter />
       </PageShell>
     </>

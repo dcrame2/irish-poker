@@ -11,15 +11,22 @@ import FloatingSuits from "../FloatingSuits/Index";
    they exist both for players and for search engines / AdSense review.
 --------------------------------------------------------------------------- */
 
+/* Framer inlines `initial` styles into the server-rendered HTML, which left
+   every section at opacity: 0 for crawlers and no-JS visitors — the whole
+   page looked blank until hydration. Only apply the hidden starting state on
+   the client: the static HTML ships fully visible, and the reveal animation
+   still plays once JS loads. */
+const canAnimate = typeof window !== "undefined";
+
 export const fadeUp = {
-  initial: { opacity: 0, y: 26 },
+  initial: canAnimate ? { opacity: 0, y: 26 } : false,
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true, margin: "-60px" },
   transition: { duration: 0.55, ease: "easeOut" },
 } as const;
 
 export const stagger = (i: number) => ({
-  initial: { opacity: 0, y: 26 },
+  initial: canAnimate ? { opacity: 0, y: 26 } : false,
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true, margin: "-60px" },
   transition: { duration: 0.5, ease: "easeOut", delay: 0.08 * i },
@@ -178,6 +185,7 @@ export function MarketingNav() {
       </NavLogo>
       <NavLinks>
         <NavLink href="/how-to-play">How to Play</NavLink>
+        <NavLink href="/guides">Guides</NavLink>
         <NavLink href="/#faq">FAQ</NavLink>
         <PlayCta href="/play">Play Free 🍀</PlayCta>
         <Burger
@@ -202,11 +210,17 @@ export function MarketingNav() {
             <Link href="/how-to-play" onClick={close}>
               How to Play
             </Link>
+            <Link href="/guides" onClick={close}>
+              Guides
+            </Link>
             <Link href="/#faq" onClick={close}>
               FAQ
             </Link>
-            <Link href="/privacy" onClick={close}>
-              Privacy Policy
+            <Link href="/about" onClick={close}>
+              About
+            </Link>
+            <Link href="/contact" onClick={close}>
+              Contact
             </Link>
           </MobileMenu>
         )}
@@ -551,12 +565,15 @@ export function MarketingFooter() {
               <h4>Play</h4>
               <Link href="/play">Start a party</Link>
               <Link href="/how-to-play">How to play</Link>
+              <Link href="/guides">Guides</Link>
               <Link href="/#faq">FAQ</Link>
             </FootCol>
             <FootCol>
               <h4>Site</h4>
+              <Link href="/about">About</Link>
+              <Link href="/contact">Contact</Link>
               <Link href="/privacy">Privacy policy</Link>
-              <a href="mailto:dcrame2@gmail.com">Contact</a>
+              <Link href="/terms">Terms of use</Link>
             </FootCol>
           </FootCols>
         </FootTop>

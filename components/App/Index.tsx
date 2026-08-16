@@ -106,7 +106,12 @@ export interface FloatingEmote {
   emoji: string;
 }
 
-export default function App() {
+export default function App({
+  onRoomChange,
+}: {
+  /* Lets /play hide its SEO/content section while a party is active. */
+  onRoomChange?: (inRoom: boolean) => void;
+}) {
   const [room, setRoom] = useState<RoomState | null>(null);
   const [chat, setChat] = useState<ChatMsg[]>([]);
   const [unread, setUnread] = useState(0);
@@ -121,6 +126,10 @@ export default function App() {
   const [muted, setMutedState] = useState(false);
   // Bumping these counters fires a confetti/beer burst.
   const [beerBurst, setBeerBurst] = useState(0);
+
+  useEffect(() => {
+    onRoomChange?.(room !== null);
+  }, [room, onRoomChange]);
 
   const meId = useMemo(() => getPlayerId(), []);
   const roomRef = useRef<RoomState | null>(null);

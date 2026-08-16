@@ -37,6 +37,25 @@ const Spinner = styled.span`
   animation: ${spin} 0.8s linear infinite;
 `;
 
+const DismissX = styled.button`
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: inherit;
+  font-size: 1.35rem;
+  line-height: 1;
+  padding: 4px 8px;
+  opacity: 0.75;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 1;
+  }
+`;
+
 interface Props {
   connected: boolean;
   everConnected: boolean;
@@ -86,8 +105,25 @@ export default function ConnectionBanner({
           initial={{ y: -50 }}
           animate={{ y: 0 }}
           exit={{ y: -50 }}
+          onClick={rejoining ? undefined : () => setShowRestored(false)}
+          style={rejoining ? undefined : { cursor: "pointer" }}
         >
-          {rejoining ? "Reconnecting to your game…" : "Reconnected ✓"}
+          {rejoining ? (
+            "Reconnecting to your game…"
+          ) : (
+            <>
+              Reconnected ✓
+              <DismissX
+                aria-label="Dismiss"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowRestored(false);
+                }}
+              >
+                ×
+              </DismissX>
+            </>
+          )}
         </Banner>
       )}
     </AnimatePresence>
